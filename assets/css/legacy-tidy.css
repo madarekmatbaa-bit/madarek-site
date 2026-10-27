@@ -1,0 +1,260 @@
+/* mdk-tidy — 26-10-2026 (أدرك، بموافقة عمار): خط أصغر، صور أصغر شوي، مسافات أوسع.
+   للتراجع: امسح هالكتلة من CSS إضافي بالمخصص (Customizer). */
+
+/* ---------- قاعدة ---------- */
+:root{--wd-text-font-size:15px}
+body .wd-nav-main>li>a{font-size:14.5px!important}
+
+/* عناوين المحتوى العامة (وصف المنتج، نص الأقسام) */
+body .wc-tab h2,body .term-description h2,body .woocommerce-product-details__short-description h2{font-size:20px;line-height:1.5;margin:32px 0 12px}
+body .wc-tab h3,body .term-description h3,body .woocommerce-product-details__short-description h3{font-size:17px;line-height:1.55;margin:24px 0 8px}
+/* أسئلة شائعة ونصوص داخل الأقسام */
+body .mdk-split>div>h3,body .mdk-wrap>h3{font-size:17px;line-height:1.55}
+body .mdk-split>div>p,body .mdk-wrap>p:not([class]){font-size:15px;line-height:1.9}
+body .wc-tab p,body .wc-tab li,body .term-description p,body .term-description li{font-size:15px;line-height:1.9}
+
+/* عناوين متوازنة بلا كلمة يتيمة */
+body .mdk-h2,body .mdk-page-hero h1,body .ms-ch h1,body .ms-ch h2,body .mdk-cta-band h2,body .mdk-agb h2{text-wrap:balance}
+body .mdk-lead,body .mdk-page-hero p,body .ms-ch p{text-wrap:pretty}
+
+/* ---------- الحاوية والأقسام ---------- */
+body .mdk-wrap{max-width:1160px;padding:0 32px}
+body .mdk-sec{padding:clamp(80px,8.5vw,124px) 0}
+body .mdk-head{margin-bottom:52px;gap:28px}
+body .mdk-eyebrow{font-size:12.5px}
+body .mdk-h2{font-size:clamp(24px,2.3vw,32px);line-height:1.4;margin:10px 0}
+body .mdk-lead{font-size:15.5px;line-height:1.9;max-width:580px}
+body .mdk-link{font-size:14.5px}
+body .mdk-btn{font-size:14.5px;padding:13px 24px}
+
+/* رأس الصفحات الداخلية */
+body .mdk-page-hero,body .mdk-g .mdk-page-hero{padding:104px 0 88px}
+body .mdk-page-hero h1{font-size:clamp(28px,2.8vw,40px);line-height:1.4;margin:14px 0 14px;max-width:880px}
+body .mdk-page-hero p{font-size:16px;line-height:1.9;max-width:600px}
+
+/* ---------- الرئيسية: الافتتاحية (العلبة) ---------- */
+body .ms-ch h1{font-size:clamp(32px,3.5vw,52px);line-height:1.2}
+body .ms-ch h2{font-size:clamp(28px,3vw,44px);line-height:1.2}
+body .ms-ch p{font-size:clamp(14.5px,1.05vw,16px);line-height:1.9}
+body .ms-btn{font-size:14px;padding:12px 22px}
+body .ms-cats a{font-size:13px;padding:6px 13px}
+body .ms-stats b{font-size:24px}
+
+/* أجندة 2027 */
+body .mdk-agb{padding:40px 0 8px}
+body .mdk-agb .agb{padding:44px 52px;gap:40px}
+body .mdk-agb h2{font-size:clamp(22px,2.2vw,28px)}
+body .mdk-agb p{font-size:14.5px}
+body .mdk-agb .agb-price b{font-size:24px}
+body .mdk-agb .agb-cta{font-size:14px;padding:11px 20px}
+body .mdk-agb .agb-img{height:250px}
+
+/* شريط التحميلات */
+body .mdk-dl{padding-top:56px}
+body .mdk-dl-in{padding:32px 40px}
+body .mdk-dl-txt h3{font-size:18px}
+body .mdk-dl-txt p{font-size:14px}
+body .mdk-dl-btn b{font-size:14px}
+body .mdk-dl-btn small{font-size:12px}
+
+/* الأقسام (بطاقات) */
+body .mdk-cats{gap:24px}
+body .mdk-cat h3{font-size:17px}
+body .mdk-cat p{font-size:13px;line-height:1.7}
+body .mdk-cat-img img{max-height:170px}
+body .mdk-cat .mdk-arrow{width:34px;height:34px}
+
+/* لماذا مدارك */
+body .mdk-why2 .mdk-why2-list{column-gap:48px;row-gap:36px}
+body .mdk-why2 .mdk-why2-list h3{font-size:16.5px}
+body .mdk-why2 .mdk-why2-list p{font-size:14.5px}
+body .mdk-feats{gap:24px}
+body .mdk-feat{padding:32px 28px}
+body .mdk-feat h3{font-size:17px}
+body .mdk-feat p{font-size:14.5px}
+
+/* الخطوات */
+body .mdk-steps{gap:20px}
+body .mdk-step{padding:30px 24px}
+body .mdk-step h3{font-size:16px}
+body .mdk-step p{font-size:14px}
+
+/* مراكز التنفيذ */
+body .mdk-hubs{gap:20px;margin-top:48px}
+body .mdk-hub{padding:28px}
+body .mdk-hub h3{font-size:17px}
+body .mdk-hub p{font-size:14px}
+body .mdk-chip{font-size:13px;padding:8px 16px}
+
+/* الفريق */
+body .mdk-people{gap:20px}
+body .mdk-person .who b{font-size:15px}
+body .mdk-person q{font-size:14px}
+
+/* نص السيو بالرئيسية */
+body .mdk-seo-grid{gap:28px}
+body .mdk-seo-col{padding:30px}
+body .mdk-seo-col h3{font-size:16px}
+body .mdk-seo-col p{font-size:14px}
+body .mdk-seo-mk{font-size:13.5px}
+
+/* شريط اطلب عرض سعر */
+body .mdk-cta-band{padding:64px 72px;gap:48px}
+body .mdk-cta-band h2{font-size:clamp(24px,2.4vw,32px)}
+body .mdk-cta-band p{font-size:15.5px}
+body .mdk-contact{padding:14px 18px}
+body .mdk-contact b{font-size:15.5px}
+body .mdk-contact small{font-size:12.5px}
+body .mdk-contact i{font-size:13px;padding:7px 13px}
+
+/* من نحن */
+body .mdk-split{gap:72px}
+body .mdk-split img{max-width:460px;display:block;margin-inline:auto}
+body .mdk-hero-img img{max-width:460px}
+body .mdk-vm{gap:24px}
+body .mdk-vm div{padding:28px}
+body .mdk-vm h3{font-size:17px}
+body .mdk-vm p{font-size:14.5px}
+body .mdk-stat{padding:36px 20px}
+body .mdk-stat b{font-size:28px}
+body .mdk-stat span{font-size:13.5px}
+body .mdk-timeline{gap:24px}
+body .mdk-tl b{font-size:22px}
+body .mdk-tl h3{font-size:16px}
+body .mdk-tl p{font-size:14px}
+body .mdk-machines span{font-size:13px;padding:8px 14px}
+
+/* تواصل معنا */
+body .mdk-cards3{gap:24px}
+body .mdk-box{padding:30px}
+body .mdk-box h3{font-size:17px}
+body .mdk-box p{font-size:14.5px}
+
+/* ---------- صفحات الأدلة والأسواق (.mdk-g) ---------- */
+body .mdk-g .g-sec{padding:clamp(80px,8.5vw,120px) 0}
+body .mdk-g .g-head{max-width:640px;margin-bottom:48px}
+body .mdk-g .g-grid{gap:24px}
+body .mdk-g .g-card{padding:30px 28px}
+body .mdk-g .g-card h4{font-size:16px}
+body .mdk-g .g-card p{font-size:14.5px}
+body .mdk-g .g-card-t{font-size:16px}
+body .mdk-g .g-lead{font-size:15.5px}
+body .mdk-g .g-list li{font-size:14.5px}
+body .mdk-g .g-split{gap:72px}
+body .mdk-g .g-figure{padding:28px}
+body .mdk-g .g-figure img{max-width:420px}
+body .mdk-g .g-chip b{font-size:14.5px}
+body .mdk-g .g-chip span{font-size:13.5px}
+body .mdk-g .g-band{padding:56px 64px}
+body .mdk-g .g-mk{padding:32px 28px 26px}
+body .mdk-g .g-mk h3{font-size:20px}
+body .mdk-g .g-mk p{font-size:14.5px}
+body .mdk-g .g-seasons h4{font-size:16px}
+body .mdk-g .g-seasons p{font-size:14px}
+body .mdk-g .g-vs .g-card h3{font-size:18px}
+body .mdk-g .g-scale b{font-size:19px}
+body .mdk-g .g-terms b{font-size:16px}
+body .mdk-g .g-tags span{font-size:12.5px}
+body .mdk-g .g-steps li{font-size:14.5px}
+body .mdk-g .g-tags{display:flex;flex-wrap:wrap;gap:8px}
+body .mdk-g .g-tags span{background:#fff;border:1px solid var(--gl,#DCD8D1);border-radius:999px;padding:5px 14px;font-size:13px;font-weight:500;color:var(--gn,#0D244C)}
+
+/* ---------- المتجر والأقسام ---------- */
+html body .wd-woo-page-title h1.entry-title{font-size:clamp(26px,2.4vw,32px)!important;line-height:1.35!important}
+body .wd-products.wd-grid-g{--wd-gap-lg:28px!important;--wd-gap-sm:14px!important}
+body .product-grid-item .wd-entities-title,body .wd-product .wd-entities-title{font-size:14px}
+body .product-grid-item .wd-product-cats a,body .wd-product .wd-product-cats a{font-size:12px}
+@media (min-width:768px){body .mdk-sh-lead{font-size:15px}}
+
+/* صفحة المنتج */
+html body.single-product h1.product_title{font-size:24px!important;line-height:1.45!important}
+html body.single-product .summary .price,html body.single-product .wd-single-price .price{font-size:21px!important}
+body.single-product .wd-breadcrumbs{font-size:13.5px}
+body.single-product .wd-breadcrumbs a,body.single-product .wd-breadcrumbs span{font-size:13.5px}
+body.single-product .wd-single-gallery .woocommerce-product-gallery{max-width:520px;margin-inline:auto}
+body .mdk-quote-btn{font-size:15px;min-height:48px}
+body.single-product .related-products .title,body.single-product .woodmart-title-container{font-size:18px}
+
+/* ---------- الفوتر ---------- */
+body .mdk-footer{padding-top:96px}
+body .mdk-fgrid{gap:48px}
+body .mdk-footer p,body .mdk-footer li{font-size:13.5px}
+body .mdk-footer h4{font-size:15px;margin-bottom:18px}
+body .mdk-fbottom{margin-top:72px;font-size:12.5px}
+
+/* ---------- كمبيوتر فقط ---------- */
+@media (min-width:1025px){
+  body .mdk-cats{gap:24px}
+  body .mdk-cat h3{font-size:17px}
+  body .mdk-cat-img img{max-height:160px}
+  body .mdk-cat-body{padding:16px 22px 22px}
+}
+
+/* ---------- تابلت ---------- */
+@media (max-width:1024px){
+  body .mdk-cta-band{padding:48px 36px}
+  body .mdk-split{gap:48px}
+}
+
+/* ---------- موبايل ---------- */
+@media (max-width:767px){
+  body .ms-ch h1{font-size:clamp(26px,7.4vw,32px)}
+  body .ms-ch h2{font-size:clamp(24px,6.8vw,30px)}
+  body .ms-ch p{font-size:14px;line-height:1.8}
+  body .ms-btn{font-size:13.5px;padding:11px 16px}
+  body .ms-stats b{font-size:20px}
+  html body.single-product h1.product_title{font-size:20px!important}
+  html body.single-product .summary .price,html body.single-product .wd-single-price .price{font-size:19px!important}
+  body .wc-tab h2,body .term-description h2{font-size:18px}
+  body .wc-tab h3,body .term-description h3{font-size:16px}
+  body .wc-tab p,body .wc-tab li,body .term-description p,body .term-description li{font-size:14.5px}
+  html body .wd-woo-page-title h1.entry-title{font-size:24px!important}
+}
+@media (max-width:860px){
+  body .mdk-agb .agb{padding:28px 22px;gap:20px}
+  body .mdk-agb .agb-img{height:210px}
+}
+@media (max-width:640px){
+  body .mdk-wrap{padding:0 22px}
+  body .mdk-sec{padding:72px 0}
+  body .mdk-g .g-sec{padding:64px 0}
+  body .mdk-head{margin-bottom:32px}
+  body .mdk-h2{font-size:23px}
+  body .mdk-lead{font-size:15px}
+  body .mdk-page-hero,body .mdk-g .mdk-page-hero{padding:56px 0 48px}
+  body .mdk-page-hero h1{font-size:26px}
+  body .mdk-page-hero p{font-size:15px;line-height:1.85}
+  body .mdk-btn{font-size:14px;padding:12px 20px}
+  body .mdk-cats{gap:14px}
+  body .mdk-cat h3{font-size:14.5px}
+  body .mdk-cat-img img{max-height:104px}
+  body .mdk-cat-body{padding:10px 12px 14px}
+  body .mdk-cta-band{padding:40px 22px;border-radius:22px}
+  body .mdk-cta-band h2{font-size:23px}
+  body .mdk-cta-band p{font-size:14.5px}
+  body .mdk-contact b{font-size:14.5px}
+  body .mdk-stat b{font-size:24px}
+  body .mdk-stat span{font-size:12.5px}
+  body .mdk-tl b{font-size:20px}
+  body .mdk-split img{max-width:300px}
+  body .mdk-g .g-figure img{max-width:280px}
+  body .mdk-g .g-figure{padding:20px}
+  body .mdk-g .g-band{padding:36px 22px}
+  body .mdk-g .g-card{padding:24px 22px}
+  body .mdk-g .g-mk h3{font-size:18px}
+  body .mdk-g .g-grid{gap:16px}
+  body .mdk-dl-in{padding:24px 20px}
+  body .mdk-dl-txt h3{font-size:16.5px}
+  body .mdk-footer{padding-top:72px}
+  body .mdk-fbottom{margin-top:48px}
+  body .mdk-seo-col{padding:24px}
+  body .mdk-team .mdk-people{gap:12px}
+}
+
+/* محاذاة شريط المنتجات بالرئيسية مع باقي الأقسام */
+body .e-con:has(>.e-con-inner>.elementor-widget-wd_products_tabs)>.e-con-inner{max-width:1096px}
+
+/* نص المتجر والأقسام (أسفل الصفحة) */
+body .e-con.mdk-sh-about .wd-shop-desc{font-size:15px}
+body .e-con.mdk-sh-about .wd-shop-desc h2{font-size:19px}
+@media (max-width:767px){body .e-con.mdk-sh-about .wd-shop-desc h2{font-size:17px}}

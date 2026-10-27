@@ -1,0 +1,462 @@
+{
+ "menu": [
+  {
+   "name": "الصفحة الرئيسية",
+   "path": "/"
+  },
+  {
+   "name": "المنتجات",
+   "path": "/shop/",
+   "children": [
+    {
+     "name": "الهدايا الدعائية",
+     "path": "/product-category/promotional-ar/",
+     "children": [
+      {
+       "name": "الأقلام",
+       "path": "/product-category/promotional-ar/pens/",
+       "children": [
+        {
+         "name": "أقلام معدنية",
+         "path": "/product-category/promotional-ar/pens/metal-kalem/"
+        },
+        {
+         "name": "أقلام بلاستيكية",
+         "path": "/product-category/promotional-ar/pens/klp/"
+        },
+        {
+         "name": "أقلام صديقة للبيئة",
+         "path": "/product-category/promotional-ar/pens/eco-pens/"
+        },
+        {
+         "name": "أطقم أقلام",
+         "path": "/product-category/promotional-ar/pens/pen-sets/"
+        },
+        {
+         "name": "أقلام رصاص وتمييز",
+         "path": "/product-category/promotional-ar/pens/pencils-highlighters/"
+        }
+       ]
+      },
+      {
+       "name": "إلكترونيات دعائية",
+       "path": "/product-category/promotional-ar/electronics/",
+       "children": [
+        {
+         "name": "باوربانك",
+         "path": "/product-category/promotional-ar/electronics/power-banks/"
+        },
+        {
+         "name": "ذاكرة USB",
+         "path": "/product-category/promotional-ar/electronics/fla/"
+        },
+        {
+         "name": "شواحن وكابلات",
+         "path": "/product-category/promotional-ar/electronics/chargers-cables/"
+        },
+        {
+         "name": "سماعات ومكبرات صوت",
+         "path": "/product-category/promotional-ar/electronics/speakers-headphones/"
+        }
+       ]
+      },
+      {
+       "name": "أكواب وترامس",
+       "path": "/product-category/promotional-ar/drinkware/",
+       "children": [
+        {
+         "name": "ترامس",
+         "path": "/product-category/promotional-ar/drinkware/thermoses/"
+        },
+        {
+         "name": "أكواب وفناجين",
+         "path": "/product-category/promotional-ar/drinkware/mugs-cups/"
+        },
+        {
+         "name": "زجاجات مياه",
+         "path": "/product-category/promotional-ar/drinkware/water-bottles/"
+        }
+       ]
+      },
+      {
+       "name": "الساعات",
+       "path": "/product-category/promotional-ar/clocks/",
+       "children": [
+        {
+         "name": "ساعات حائط",
+         "path": "/product-category/promotional-ar/clocks/wall-clocks/"
+        },
+        {
+         "name": "ساعات مكتبية",
+         "path": "/product-category/promotional-ar/clocks/desk-clocks/"
+        }
+       ]
+      },
+      {
+       "name": "مستلزمات مكتبية",
+       "path": "/product-category/promotional-ar/desk-accessories/",
+       "children": [
+        {
+         "name": "حوامل أقلام",
+         "path": "/product-category/promotional-ar/desk-accessories/pen-holders/"
+        },
+        {
+         "name": "قواعد ماوس وأكواب",
+         "path": "/product-category/promotional-ar/desk-accessories/mouse-pads-coasters/"
+        },
+        {
+         "name": "حافظات بطاقات",
+         "path": "/product-category/promotional-ar/desk-accessories/card-holders/"
+        },
+        {
+         "name": "آلات حاسبة",
+         "path": "/product-category/promotional-ar/desk-accessories/calculators/"
+        },
+        {
+         "name": "منظمات وأطقم مكتب",
+         "path": "/product-category/promotional-ar/desk-accessories/desk-organizers/"
+        }
+       ]
+      },
+      {
+       "name": "ميداليات",
+       "path": "/product-category/promotional-ar/anh/"
+      },
+      {
+       "name": "أطقم الهدايا",
+       "path": "/product-category/promotional-ar/gift-sets/"
+      },
+      {
+       "name": "الحقائب",
+       "path": "/product-category/promotional-ar/bags/"
+      },
+      {
+       "name": "أدوات وإكسسوارات",
+       "path": "/product-category/promotional-ar/tools/"
+      },
+      {
+       "name": "إكسسوارات الهواتف",
+       "path": "/product-category/promotional-ar/phone-accessories/"
+      },
+      {
+       "name": "إكسسوارات السيارات",
+       "path": "/product-category/promotional-ar/car-accessories/"
+      },
+      {
+       "name": "عناية شخصية",
+       "path": "/product-category/promotional-ar/personal-care/"
+      },
+      {
+       "name": "ولاعات",
+       "path": "/product-category/promotional-ar/lighters/"
+      },
+      {
+       "name": "هدايا الأطفال",
+       "path": "/product-category/promotional-ar/kids-gifts/"
+      },
+      {
+       "name": "هدايا منزلية",
+       "path": "/product-category/promotional-ar/home-gifts/"
+      },
+      {
+       "name": "شارات وأساور",
+       "path": "/product-category/promotional-ar/badges/"
+      },
+      {
+       "name": "المظلات",
+       "path": "/product-category/promotional-ar/umbrellas/"
+      }
+     ]
+    },
+    {
+     "name": "المطبوعات الورقية",
+     "path": "/product-category/offset-ar/"
+    },
+    {
+     "name": "دفاتر وأجندات",
+     "path": "/product-category/notebooks/"
+    },
+    {
+     "name": "قرطاسية وتلوين",
+     "path": "/product-category/stationery/"
+    },
+    {
+     "name": "التغليف والتعبئة",
+     "path": "/product-category/packaging/",
+     "children": [
+      {
+       "name": "علب الهدايا",
+       "path": "/product-category/packaging/gift-boxes/"
+      }
+     ]
+    },
+    {
+     "name": "الأعلام والعرض الإعلاني",
+     "path": "/product-category/flag-ar/",
+     "children": [
+      {
+       "name": "أعلام مكتبية",
+       "path": "/product-category/flag-ar/desk-flags/"
+      },
+      {
+       "name": "الأعلام والساريات",
+       "path": "/product-category/flag-ar/flags-poles/"
+      }
+     ]
+    },
+    {
+     "name": "الألبسة والمنسوجات",
+     "path": "/product-category/tekstil-ar/"
+    },
+    {
+     "name": "الدروع والتكريم",
+     "path": "/product-category/kristal/"
+    }
+   ]
+  },
+  {
+   "name": "نصائح الطباعة",
+   "path": "/print-tips/"
+  },
+  {
+   "name": "الأسواق",
+   "path": "/markets/"
+  },
+  {
+   "name": "الشحن",
+   "path": "/shipping/"
+  },
+  {
+   "name": "من نحن",
+   "path": "/about-us/"
+  },
+  {
+   "name": "تواصل معنا",
+   "path": "/contact-us/"
+  }
+ ],
+ "cat_nav": [
+  {
+   "name": "الهدايا الدعائية",
+   "path": "/product-category/promotional-ar/",
+   "children": [
+    {
+     "name": "الأقلام",
+     "path": "/product-category/promotional-ar/pens/",
+     "children": [
+      {
+       "name": "أقلام معدنية",
+       "path": "/product-category/promotional-ar/pens/metal-kalem/"
+      },
+      {
+       "name": "أقلام بلاستيكية",
+       "path": "/product-category/promotional-ar/pens/klp/"
+      },
+      {
+       "name": "أقلام صديقة للبيئة",
+       "path": "/product-category/promotional-ar/pens/eco-pens/"
+      },
+      {
+       "name": "أطقم أقلام",
+       "path": "/product-category/promotional-ar/pens/pen-sets/"
+      },
+      {
+       "name": "أقلام رصاص وتمييز",
+       "path": "/product-category/promotional-ar/pens/pencils-highlighters/"
+      }
+     ]
+    },
+    {
+     "name": "إلكترونيات دعائية",
+     "path": "/product-category/promotional-ar/electronics/",
+     "children": [
+      {
+       "name": "باوربانك",
+       "path": "/product-category/promotional-ar/electronics/power-banks/"
+      },
+      {
+       "name": "ذاكرة USB",
+       "path": "/product-category/promotional-ar/electronics/fla/"
+      },
+      {
+       "name": "شواحن وكابلات",
+       "path": "/product-category/promotional-ar/electronics/chargers-cables/"
+      },
+      {
+       "name": "سماعات ومكبرات صوت",
+       "path": "/product-category/promotional-ar/electronics/speakers-headphones/"
+      }
+     ]
+    },
+    {
+     "name": "أكواب وترامس",
+     "path": "/product-category/promotional-ar/drinkware/",
+     "children": [
+      {
+       "name": "ترامس",
+       "path": "/product-category/promotional-ar/drinkware/thermoses/"
+      },
+      {
+       "name": "أكواب وفناجين",
+       "path": "/product-category/promotional-ar/drinkware/mugs-cups/"
+      },
+      {
+       "name": "زجاجات مياه",
+       "path": "/product-category/promotional-ar/drinkware/water-bottles/"
+      }
+     ]
+    },
+    {
+     "name": "الساعات",
+     "path": "/product-category/promotional-ar/clocks/",
+     "children": [
+      {
+       "name": "ساعات حائط",
+       "path": "/product-category/promotional-ar/clocks/wall-clocks/"
+      },
+      {
+       "name": "ساعات مكتبية",
+       "path": "/product-category/promotional-ar/clocks/desk-clocks/"
+      }
+     ]
+    },
+    {
+     "name": "مستلزمات مكتبية",
+     "path": "/product-category/promotional-ar/desk-accessories/",
+     "children": [
+      {
+       "name": "حوامل أقلام",
+       "path": "/product-category/promotional-ar/desk-accessories/pen-holders/"
+      },
+      {
+       "name": "قواعد ماوس وأكواب",
+       "path": "/product-category/promotional-ar/desk-accessories/mouse-pads-coasters/"
+      },
+      {
+       "name": "حافظات بطاقات",
+       "path": "/product-category/promotional-ar/desk-accessories/card-holders/"
+      },
+      {
+       "name": "آلات حاسبة",
+       "path": "/product-category/promotional-ar/desk-accessories/calculators/"
+      },
+      {
+       "name": "منظمات وأطقم مكتب",
+       "path": "/product-category/promotional-ar/desk-accessories/desk-organizers/"
+      }
+     ]
+    },
+    {
+     "name": "ميداليات",
+     "path": "/product-category/promotional-ar/anh/"
+    },
+    {
+     "name": "أطقم الهدايا",
+     "path": "/product-category/promotional-ar/gift-sets/"
+    },
+    {
+     "name": "الحقائب",
+     "path": "/product-category/promotional-ar/bags/"
+    },
+    {
+     "name": "أدوات وإكسسوارات",
+     "path": "/product-category/promotional-ar/tools/"
+    },
+    {
+     "name": "إكسسوارات الهواتف",
+     "path": "/product-category/promotional-ar/phone-accessories/"
+    },
+    {
+     "name": "إكسسوارات السيارات",
+     "path": "/product-category/promotional-ar/car-accessories/"
+    },
+    {
+     "name": "عناية شخصية",
+     "path": "/product-category/promotional-ar/personal-care/"
+    },
+    {
+     "name": "ولاعات",
+     "path": "/product-category/promotional-ar/lighters/"
+    },
+    {
+     "name": "هدايا منزلية",
+     "path": "/product-category/promotional-ar/home-gifts/"
+    },
+    {
+     "name": "المظلات",
+     "path": "/product-category/promotional-ar/umbrellas/"
+    }
+   ]
+  },
+  {
+   "name": "المطبوعات الورقية",
+   "path": "/product-category/offset-ar/",
+   "children": [
+    {
+     "name": "أكياس ورقية مطبوعة",
+     "path": "/product-category/offset-ar/paper-bags/"
+    },
+    {
+     "name": "دفاتر محاسبية ونماذج",
+     "path": "/product-category/offset-ar/paper-carbon-forms/"
+    },
+    {
+     "name": "دفاتر وملاحظات مطبوعة",
+     "path": "/product-category/offset-ar/paper-printed-notepads/"
+    },
+    {
+     "name": "مطبوعات المطاعم والخدمات",
+     "path": "/product-category/offset-ar/paper-restaurant/"
+    },
+    {
+     "name": "ملفات وبطاقات",
+     "path": "/product-category/offset-ar/paper-folders-cards/"
+    },
+    {
+     "name": "ورق رسمي وأظرف",
+     "path": "/product-category/offset-ar/paper-letterhead-envelopes/"
+    }
+   ]
+  },
+  {
+   "name": "دفاتر وأجندات",
+   "path": "/product-category/notebooks/"
+  },
+  {
+   "name": "قرطاسية وتلوين",
+   "path": "/product-category/stationery/"
+  },
+  {
+   "name": "التغليف والتعبئة",
+   "path": "/product-category/packaging/",
+   "children": [
+    {
+     "name": "علب الهدايا",
+     "path": "/product-category/packaging/gift-boxes/"
+    }
+   ]
+  },
+  {
+   "name": "الأعلام والعرض الإعلاني",
+   "path": "/product-category/flag-ar/",
+   "children": [
+    {
+     "name": "أعلام مكتبية",
+     "path": "/product-category/flag-ar/desk-flags/"
+    },
+    {
+     "name": "الأعلام والساريات",
+     "path": "/product-category/flag-ar/flags-poles/"
+    }
+   ]
+  },
+  {
+   "name": "الألبسة والمنسوجات",
+   "path": "/product-category/tekstil-ar/"
+  },
+  {
+   "name": "الدروع والتكريم",
+   "path": "/product-category/kristal/"
+  }
+ ]
+}

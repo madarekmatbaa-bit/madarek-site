@@ -1,0 +1,2 @@
+{% extends "base.html" %}
+{% block main %}<div class="mdk-search-page"><h1>البحث في المنتجات</h1><form action="/search/" method="get" role="search"><input type="search" name="s" id="sq" placeholder="اسم المنتج أو الكود أو القسم" aria-label="بحث" autocomplete="off"><button type="submit">بحث</button></form><p class="count" id="sc" aria-live="polite"></p><div class="products wd-products wd-grid-g cards-boxed" id="sr"></div><div class="wd-loop-footer"><button type="button" class="wd-load-more" id="sm" hidden>تصفح المزيد من المنتجات</button></div></div>{% endblock %}

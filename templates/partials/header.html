@@ -1,0 +1,25 @@
+{%- macro caret() %}<svg class="caret" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>{% endmacro -%}
+{%- macro dmenu(items, depth=0) -%}
+<ul{% if depth==0 %} class="menu"{% endif %}>
+{%- for m in items %}
+<li{% if m.path == active_menu %} class="on"{% endif %}><a href="{{ m.path }}"{% if m.path == path %} aria-current="page"{% endif %}>{% if depth==0 %}<span class="t">{{ m.name }}</span>{% else %}{{ m.name }}{% endif %}{% if m.children %}{{ caret() }}{% endif %}</a>{% if m.children %}{{ dmenu(m.children, depth+1) }}{% endif %}</li>
+{%- endfor %}
+</ul>
+{%- endmacro -%}
+<div class="tb">
+  <div class="container">
+    <div class="tb-info">مبيعات سوريا:&nbsp;<a href="https://wa.me/963980243748" target="_blank" rel="noopener"><bdi>+963 980 243 748</bdi></a><i>·</i>الأسواق الخارجية:&nbsp;<a href="https://wa.me/905510059096" target="_blank" rel="noopener"><bdi>+90 551 005 90 96</bdi></a><i>·</i>إسطنبول:&nbsp;<a href="https://wa.me/905074886377" target="_blank" rel="noopener"><bdi>+90 507 488 63 77</bdi></a><i>·</i><a href="mailto:sales@madarekmatbaa.com">sales@madarekmatbaa.com</a><i>·</i><a class="portal-link" href="https://portal.madarekmatbaa.net/" target="_blank" rel="noopener">بوابة الموظفين</a></div>
+    <div class="tb-social">{% for s in social %}<a href="{{ s.url }}" target="_blank" rel="noopener noreferrer nofollow" aria-label="{{ s.label }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="{{ icons[s.icon] }}"/></svg></a>{% endfor %}</div>
+  </div>
+</div>
+<header class="hdr" id="hdr">
+  <div class="container">
+    <button class="burger" type="button" aria-label="القائمة" aria-controls="mnav" aria-expanded="false"><span></span><span></span><span></span></button>
+    <a class="hdr-logo" href="/" rel="home"><img src="/wp-content/uploads/2026/10/madarek-wordmark-navy.png" width="1144" height="606" alt="مدارك — MADAREK"></a>
+    <nav class="hdr-nav" aria-label="القائمة الرئيسية">{{ dmenu(nav.menu) }}</nav>
+    <div class="hdr-tools">
+      <button class="hdr-search" type="button" aria-label="بحث" aria-controls="so"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg></button>
+      <a class="btn-cta" href="https://wa.me/905510059096?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%20%D9%85%D8%AF%D8%A7%D8%B1%D9%83%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%B9%D8%B1%D8%B6%20%D8%B3%D8%B9%D8%B1" target="_blank" rel="noopener"><span class="full">اطلب عرض سعر</span><span class="short">عرض سعر</span></a>
+    </div>
+  </div>
+</header>

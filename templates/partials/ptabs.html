@@ -1,0 +1,12 @@
+{% from "partials/card.html" import card %}
+<section class="mdk mdk-ptabs"><div class="mdk-wrap">
+{{ head|safe }}
+<div class="wd-products-tabs" data-ptabs>
+  <div class="ptabs-bar">
+    <div class="ptabs-nav" role="tablist">{% for t in tabs %}<button type="button" role="tab" id="pt{{ loop.index }}" aria-controls="pp{{ loop.index }}" aria-selected="{{ 'true' if loop.first else 'false' }}"{% if not loop.first %} tabindex="-1"{% endif %}>{{ t.name }}</button>{% endfor %}</div>
+    <div class="ptabs-arrows"><button type="button" class="ptabs-prev" aria-label="السابق" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button><button type="button" class="ptabs-next" aria-label="التالي"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button></div>
+  </div>
+  {% for t in tabs %}<div class="ptabs-panel" role="tabpanel" id="pp{{ loop.index }}" aria-labelledby="pt{{ loop.index }}" data-cat="{{ t.cat.id }}" data-order="{{ t.order }}"{% if not loop.first %} hidden{% endif %}><div class="products wd-products">{% for p in t['items'] %}{{ card(p) }}{% endfor %}</div><p class="ptabs-all"><a class="mdk-link" href="{{ t.cat.path }}">كل منتجات {{ t.name }}</a></p></div>
+  {% endfor %}
+</div>
+</div></section>

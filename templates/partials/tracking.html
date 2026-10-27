@@ -1,0 +1,13 @@
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SPX5KH9TWN"></script>
+<script>
+window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',region:['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IS','IE','IT','LV','LI','LT','LU','MT','NL','NO','PL','PT','RO','SK','SI','ES','SE','GB','CH'],wait_for_update:500});
+gtag('js',new Date());
+gtag('config','G-SPX5KH9TWN');
+gtag('config','AW-10926140940',{groups:'GLA',send_page_view:false});
+gtag('event','page_view',{send_to:'GLA'});
+{% if track_product %}gtag('event','view_item',{send_to:'GLA',ecomm_pagetype:'product',value:{{ track_product.value }},items:[{id:'gla_{{ track_product.id }}',price:{{ track_product.value }},google_business_vertical:'retail',name:{{ track_product.name|tojson }},category:{{ track_product.category|tojson }}}]});{% endif %}
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','1950171045798068');fbq('track','PageView');
+{% if track_product %}fbq('track','ViewContent',{content_ids:[{{ track_product.fb_id|tojson }}],content_type:'product',content_name:{{ track_product.name|tojson }},value:{{ track_product.value }},currency:'USD'});{% endif %}
+</script>

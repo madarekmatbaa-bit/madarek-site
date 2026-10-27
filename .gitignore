@@ -1,0 +1,9 @@
+dist/
+cache/
+data/html
+data/store_*.json
+data/wp_*.json
+data/variations.json
+__pycache__/
+*.pyc
+tools/node/

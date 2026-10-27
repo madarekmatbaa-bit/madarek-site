@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ar" dir="rtl" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>document.documentElement.className=document.documentElement.className.replace('no-js','js');{% if search_redirect %}if(/[?&]s=/.test(location.search))location.replace('/search/'+location.search);{% endif %}</script>
+<title>{{ seo.title }}</title>
+{% for t in seo.tags %}{{ t|safe }}
+{% endfor -%}
+<meta name="google-site-verification" content="jYQnGjSEAE20RZPf6mieDOJAK5mUkaMQNPftnHOAaA4">
+<meta name="theme-color" content="#0D244C">
+<link rel="icon" href="/wp-content/uploads/2026/06/cropped-icon-01-scaled-1-32x32.png" sizes="32x32">
+<link rel="icon" href="/wp-content/uploads/2026/06/cropped-icon-01-scaled-1-192x192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="/wp-content/uploads/2026/06/cropped-icon-01-scaled-1-180x180.png">
+<meta name="msapplication-TileImage" content="/wp-content/uploads/2026/06/cropped-icon-01-scaled-1-270x270.png">
+<link rel="preload" href="/assets/fonts/plex-arabic-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/plex-arabic-bold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{ asset('site.css') }}">
+{% block head %}{% endblock %}
+{% for ld in seo.ld %}<script type="application/ld+json">{{ ld|safe }}</script>
+{% endfor -%}
+{% if tracking %}{% include "partials/tracking.html" %}{% endif %}
+</head>
+<body class="{{ body_class }}">
+<a class="skip-link" href="#main">تخطَّ إلى المحتوى</a>
+{% include "partials/header.html" %}
+<div class="wd-page-content main-page-wrapper">
+<main id="main" class="wd-content-layout{% if full %} is-full{% endif %}">
+{% block main %}{% endblock %}
+</main>
+</div>
+<div class="wd-prefooter"></div>
+{% include "partials/footer.html" %}
+{% include "partials/mnav.html" %}
+<div class="so" id="so" role="dialog" aria-modal="true" aria-label="البحث عن المنتجات">
+  <button class="so-x" type="button" aria-label="إغلاق البحث">×</button>
+  <form class="so-form" action="/search/" method="get" role="search">
+    <input type="search" name="s" placeholder="ابحث عن منتج، كود أو قسم…" aria-label="بحث" autocomplete="off">
+  </form>
+  <div class="so-res" aria-live="polite"></div>
+</div>
+<nav class="lbar-src" hidden>
+  <a data-k="shop" href="/shop/">المتجر</a>
+  <a data-k="home" href="/">الرئيسية</a>
+  <a data-k="quote" href="https://wa.me/905510059096?text=" target="_blank" rel="noopener">عرض سعر</a>
+</nav>
+<button class="to-top" type="button" aria-label="إلى الأعلى"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 10l5-5 5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
+{% block foot %}{% endblock %}
+<script src="{{ asset('site.js') }}" defer></script>
+</body>
+</html>
