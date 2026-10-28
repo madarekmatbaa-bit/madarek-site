@@ -215,7 +215,10 @@ def build_assets():
 # ---------------------------------------------------------------- home hero film (realistic box, see tools/reel_frames.py)
 REEL_DIR = 'reel-v3'
 _reel_manifest = os.path.join(ROOT, 'assets', REEL_DIR, 'manifest.json')
-REEL = json.load(open(_reel_manifest)) if os.path.exists(_reel_manifest) else None
+# off: Ammar 29 Oct «رجع القديم» — the home page keeps the original drawn box story.
+# Set REEL_ON = True to bring the realistic film back (frames stay in assets/reel-v3).
+REEL_ON = False
+REEL = json.load(open(_reel_manifest)) if REEL_ON and os.path.exists(_reel_manifest) else None
 # one continuous film (Ammar 28 Oct: the pieces only come out and spread, no return and no bag).
 # Clips (frame folders c0..c1): 0 lid lifts · 1 the pieces come out printed and lie around the box
 # segments [from, to, kind, a, b]: h = hold clip a (b: 0 first / 1 last frame), p = play clip a,
