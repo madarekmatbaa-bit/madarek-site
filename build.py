@@ -213,22 +213,18 @@ def build_assets():
 
 
 # ---------------------------------------------------------------- home hero film (realistic box, see tools/reel_frames.py)
-REEL_DIR = 'reel-v2'
+REEL_DIR = 'reel-v3'
 _reel_manifest = os.path.join(ROOT, 'assets', REEL_DIR, 'manifest.json')
 REEL = json.load(open(_reel_manifest)) if os.path.exists(_reel_manifest) else None
-# one continuous film. Every clip starts on the last frame of the one before. Clips (frame folders c0..c3):
-#   0 lid lifts · 1 the pieces come out printed and lie around the box (played backwards they go back in,
-#   and clip 0 backwards closes the lid) · 2 a paper bag slides in · 3 the box flies into the bag
+# one continuous film (Ammar 28 Oct: the pieces only come out and spread, no return and no bag).
+# Clips (frame folders c0..c1): 0 lid lifts · 1 the pieces come out printed and lie around the box
 # segments [from, to, kind, a, b]: h = hold clip a (b: 0 first / 1 last frame), p = play clip a,
-# r = play clip a backwards, w = "print" clip a's last frame over to clip b's first frame (not used now)
-REEL_TIMELINE = [
-    [0, .05, 'h', 0, 0], [.05, .16, 'p', 0], [.16, .32, 'p', 1], [.32, .44, 'h', 1, 1], [.44, .56, 'r', 1],
-    [.56, .64, 'r', 0], [.64, .75, 'p', 2], [.75, .92, 'p', 3], [.92, 1.01, 'h', 3, 1],
-]
+# r = play clip a backwards, w = "print" clip a's last frame over to clip b's first frame (r, w not used now)
+REEL_TIMELINE = [[0, .07, 'h', 0, 0], [.07, .25, 'p', 0], [.25, .5, 'p', 1], [.5, 1.01, 'h', 1, 1]]
 # words: hero, 01 box, 02 printing, 03 details, 04 delivery: [in-start, in-end, out-start, out-end]
-REEL_CHAPTERS = [[-1, -1, .04, .07], [.06, .09, .14, .17], [.17, .20, .29, .32], [.32, .35, .52, .55],
-                 [.66, .70, 2, 2]]
-REEL_LABEL_WINDOW = [.33, .43]
+REEL_CHAPTERS = [[-1, -1, .05, .09], [.08, .12, .21, .25], [.26, .30, .45, .50], [.50, .54, .70, .74],
+                 [.76, .80, 2, 2]]
+REEL_LABEL_WINDOW = [.51, .72]
 # label anchors on the last frame of clip 1 (pieces lying printed around the box), fractions of the 16:9 frame
 REEL_LABELS = [
     {'name': 'ملف بجيب', 'note': '300 غ', 'x': .163, 'y': .38},
