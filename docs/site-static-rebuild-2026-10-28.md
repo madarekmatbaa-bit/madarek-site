@@ -8,7 +8,8 @@
 
 - **الكود:** GitHub `madarekmatbaa-bit/madarek-site` (خاص).
 - **البناء:** `pip install -r requirements.txt && python3 build.py` ← يطلع مجلد `dist/`.
-- **الاستضافة المخططة:** Cloudflare Pages (مجاني) مربوط بالمستودع.
+- **الاستضافة:** Cloudflare Pages (مجاني)، مشروع `madarek-site`، مربوط بالمستودع (فرع `main`، مجلد الناتج `dist`). أي تعديل بينرفع على `main` بيعيد البناء والنشر لحاله بدقيقتين تقريباً.
+- **رابط المعاينة:** https://madarek-site.pages.dev (عليه `X-Robots-Tag: noindex` فما بينفهرس بجوجل).
 
 ## شو فيه
 | | العدد |
@@ -39,14 +40,20 @@
 
 ## الدومين (Cloudflare)
 - madarekmatbaa.net: مضاف (pending) بنفس سجلات Replit.
-- madarekmatbaa.com: مضاف (pending)، السجلات مستوردة من HostGator. **قيد الإنجاز:** تحويل كل السجلات لـ DNS only، حذف سجل localhost المستورد بالغلط، ودمج سجلّي SPF بسجل واحد:
-  `v=spf1 include:_spf.google.com include:websitewelcome.com ip4:50.6.160.74 ip4:50.6.160.77 ~all`
+- madarekmatbaa.com: مضاف (pending)، **جاهز** (28 ت1، 11:30):
+  - كل السجلات «DNS only» (الجذر، www، whm، cpanel، ftp، webmail)، يعني بعد تغيير الـ Nameservers كل شي بيضل رايح على HostGator متل اليوم بالضبط.
+  - SPF صار سجل واحد (كان في سجلين، وهاد بيخرّب فحص SPF ويودّي الإيميلات للسبام)، وصار فيه Google لأن الإيميل على Google Workspace:
+    `v=spf1 include:_spf.google.com include:websitewelcome.com ip4:50.6.160.74 ip4:50.6.160.77 ~all` (9 استعلامات DNS من أصل 10 مسموحة).
+  - تمت المقارنة مع سجلات HostGator الحية (NS/MX/A/CNAME/TXT/DMARC): ما في شي ناقص.
+  - سجل `localhost → 127.0.0.1` تركناه متل ما هو (موجود اليوم على HostGator كمان)؛ حذفه اختياري.
+  - DKIM تبع Google Workspace مش مفعّل (ما في `google._domainkey`)؛ تفعيله من Google Admin اختياري وبيحسّن وصول الإيميلات.
 - Nameservers الجديدة للدومينين: `austin.ns.cloudflare.com` و`paityn.ns.cloudflare.com` (عمار بيغيرها من HostGator وReplit لما نخلص).
+- تطبيق Cloudflare Pages على GitHub أخد صلاحية على كل مستودعات `madarekmatbaa-bit` (madarek-portal وDhikra كمان). الأنظف حصره بـ madarek-site من: GitHub ← Settings ← Applications ← Cloudflare Workers and Pages ← Configure ← Only select repositories.
 
 ## الخطوات الجاية
-1. إكمال سجلات .com على Cloudflare.
-2. ربط Cloudflare Pages بالمستودع (عمار بيوافق على صلاحية GitHub) ← رابط معاينة `*.pages.dev` (عليه noindex).
-3. مقارنة ومراجعة، ثم تغيير الـ Nameservers، ثم توجيه www.madarekmatbaa.com لـ Pages.
+1. ~~إكمال سجلات .com على Cloudflare.~~ ✅
+2. ~~ربط Cloudflare Pages بالمستودع ← رابط معاينة.~~ ✅ https://madarek-site.pages.dev
+3. عمار بيراجع المعاينة ويوافق، ثم تغيير الـ Nameservers، ثم توجيه www.madarekmatbaa.com والجذر لـ Pages.
 4. HostGator يضل شهر احتياط.
 5. ربط المنتجات والأسعار بالبوابة (مصدر واحد).
 
