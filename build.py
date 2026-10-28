@@ -216,14 +216,14 @@ def build_assets():
 REEL_DIR = 'reel-v2'
 _reel_manifest = os.path.join(ROOT, 'assets', REEL_DIR, 'manifest.json')
 REEL = json.load(open(_reel_manifest)) if os.path.exists(_reel_manifest) else None
-# one continuous film. Every clip starts on the last frame of the one before. Clips (frame folders c0..c5):
-#   0 lid lifts · 1 the pieces come out printed and lie around the box · 2 they go back in
-#   3 lid closes · 4 a paper bag slides in · 5 the box flies into the bag
+# one continuous film. Every clip starts on the last frame of the one before. Clips (frame folders c0..c3):
+#   0 lid lifts · 1 the pieces come out printed and lie around the box (played backwards they go back in,
+#   and clip 0 backwards closes the lid) · 2 a paper bag slides in · 3 the box flies into the bag
 # segments [from, to, kind, a, b]: h = hold clip a (b: 0 first / 1 last frame), p = play clip a,
-# w = "print" clip a's last frame over to clip b's first frame (not used now)
+# r = play clip a backwards, w = "print" clip a's last frame over to clip b's first frame (not used now)
 REEL_TIMELINE = [
-    [0, .05, 'h', 0, 0], [.05, .16, 'p', 0], [.16, .32, 'p', 1], [.32, .44, 'h', 1, 1], [.44, .56, 'p', 2],
-    [.56, .64, 'p', 3], [.64, .75, 'p', 4], [.75, .92, 'p', 5], [.92, 1.01, 'h', 5, 1],
+    [0, .05, 'h', 0, 0], [.05, .16, 'p', 0], [.16, .32, 'p', 1], [.32, .44, 'h', 1, 1], [.44, .56, 'r', 1],
+    [.56, .64, 'r', 0], [.64, .75, 'p', 2], [.75, .92, 'p', 3], [.92, 1.01, 'h', 3, 1],
 ]
 # words: hero, 01 box, 02 printing, 03 details, 04 delivery: [in-start, in-end, out-start, out-end]
 REEL_CHAPTERS = [[-1, -1, .04, .07], [.06, .09, .14, .17], [.17, .20, .29, .32], [.32, .35, .52, .55],
