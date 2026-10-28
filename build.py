@@ -213,17 +213,30 @@ def build_assets():
 
 
 # ---------------------------------------------------------------- home hero film (realistic box, see tools/reel_frames.py)
-REEL_DIR = 'reel-v1'
+REEL_DIR = 'reel-v2'
 _reel_manifest = os.path.join(ROOT, 'assets', REEL_DIR, 'manifest.json')
 REEL = json.load(open(_reel_manifest)) if os.path.exists(_reel_manifest) else None
-# label anchors on the last frame of clip 2 (the flat-lay), as fractions of the full 16:9 frame
+# one continuous film. Every clip starts on the last frame of the one before. Clips (frame folders c0..c5):
+#   0 lid lifts · 1 the pieces come out printed and lie around the box · 2 they go back in
+#   3 lid closes · 4 a paper bag slides in · 5 the box flies into the bag
+# segments [from, to, kind, a, b]: h = hold clip a (b: 0 first / 1 last frame), p = play clip a,
+# w = "print" clip a's last frame over to clip b's first frame (not used now)
+REEL_TIMELINE = [
+    [0, .05, 'h', 0, 0], [.05, .16, 'p', 0], [.16, .32, 'p', 1], [.32, .44, 'h', 1, 1], [.44, .56, 'p', 2],
+    [.56, .64, 'p', 3], [.64, .75, 'p', 4], [.75, .92, 'p', 5], [.92, 1.01, 'h', 5, 1],
+]
+# words: hero, 01 box, 02 printing, 03 details, 04 delivery: [in-start, in-end, out-start, out-end]
+REEL_CHAPTERS = [[-1, -1, .04, .07], [.06, .09, .14, .17], [.17, .20, .29, .32], [.32, .35, .52, .55],
+                 [.66, .70, 2, 2]]
+REEL_LABEL_WINDOW = [.33, .43]
+# label anchors on the last frame of clip 1 (pieces lying printed around the box), fractions of the 16:9 frame
 REEL_LABELS = [
-    {'name': 'ملف بجيب', 'note': '300 غ', 'x': .235, 'y': .47},
-    {'name': 'ورق رسمي', 'note': '80 غ', 'x': .33, 'y': .39},
-    {'name': 'دفتر سلك', 'note': '', 'x': .52, 'y': .39},
-    {'name': 'ظرف DL', 'note': '110 غ', 'x': .33, 'y': .70},
-    {'name': 'كرت شخصي', 'note': '350 غ', 'x': .535, 'y': .61},
-    {'name': 'كاسة ورقية', 'note': 'مطبوعة', 'x': .135, 'y': .53},
+    {'name': 'ملف بجيب', 'note': '300 غ', 'x': .163, 'y': .38},
+    {'name': 'ورق رسمي', 'note': '80 غ', 'x': .214, 'y': .605},
+    {'name': 'كاسة ورقية', 'note': 'مطبوعة', 'x': .467, 'y': .305},
+    {'name': 'دفتر سلك', 'note': '', 'x': .536, 'y': .45},
+    {'name': 'كرت شخصي', 'note': '350 غ', 'x': .44, 'y': .535},
+    {'name': 'ظرف DL', 'note': '110 غ', 'x': .488, 'y': .64},
 ]
 
 
@@ -232,7 +245,8 @@ def reel_html(story_html):
     s = BeautifulSoup(story_html, 'html.parser')
     copy = s.select_one('.ms-copy')
     model = {'base': f'/assets/{REEL_DIR}/', 'clips': [c['n'] for c in REEL['clips']], 'd': REEL['d'], 'm': REEL['m'], 'mcrop': REEL.get('mcrop', [0, 0, 1, 1]),
-             'labels': REEL_LABELS, 'words': Markup(str(copy))}
+             'labels': REEL_LABELS, 'words': Markup(str(copy)), 'timeline': REEL_TIMELINE,
+             'chapters': REEL_CHAPTERS, 'label_window': REEL_LABEL_WINDOW}
     return env.get_template('partials/reel.html').render(reel=model)
 
 
