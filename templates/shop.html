@@ -1,30 +1,41 @@
 {% extends "base.html" %}
 {% from "partials/card.html" import card %}
 {% block main %}
-<div class="e-con mdk-sh-hero sh-hero"><div class="e-con-inner">
-<div class="wd-el-breadcrumbs"><nav aria-label="Breadcrumb" class="wd-breadcrumbs woocommerce-breadcrumb">{% for c in crumbs %}{% if not loop.last %}<a href="{{ c[1] }}">{{ c[0] }}</a><span class="wd-delimiter"></span>{% else %}<span class="wd-last">{{ c[0] }}</span>{% endif %}{% endfor %}</nav></div>
-<div class="wd-woo-page-title"><h1 class="entry-title title">{{ h1 }}</h1></div>
-<div class="mdk-sh-row"><p class="mdk-sh-lead">منتجات قابلة للطباعة بشعارك، ولكل منتج سعر واضح وكود. أرسل الكود والكمية على واتساب ويصلك عرض السعر.</p><div class="mdk-sh-cta"><a class="md-btn md-btn-wa mdk-sh-wa" href="https://wa.me/905510059096?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%20%D9%85%D8%AF%D8%A7%D8%B1%D9%83%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%B9%D8%B1%D8%B6%20%D8%B3%D8%B9%D8%B1%20%D9%84%D9%85%D9%86%D8%AA%D8%AC%D8%A7%D8%AA%20%D9%85%D9%86%20%D8%A7%D9%84%D9%85%D8%AA%D8%AC%D8%B1" rel="noopener" target="_blank">اطلب عرض سعر</a><a class="md-btn mdk-sh-sy" href="https://wa.me/963980243748?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%20%D9%85%D8%AF%D8%A7%D8%B1%D9%83%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%B9%D8%B1%D8%B6%20%D8%B3%D8%B9%D8%B1%20%D9%84%D9%85%D9%86%D8%AA%D8%AC%D8%A7%D8%AA%20%D9%85%D9%86%20%D8%A7%D9%84%D9%85%D8%AA%D8%AC%D8%B1" rel="noopener" target="_blank">مبيعات سوريا</a></div></div>
-</div></div>
-<div class="e-con mdk-sh-nav sh-nav"><div class="e-con-inner"><div class="e-con-full">
-<div class="wd-nav-product-cat-wrap"><ul class="wd-nav-product-cat wd-nav">{% for t in topcats %}<li class="cat-item{% if t.cls %} {{ t.cls }}{% endif %}"><a class="category-nav-link" href="{{ t.path }}"{% if t.current %} aria-current="page"{% endif %}><span class="nav-link-summary"><span class="nav-link-text">{{ t.name }}</span><span class="nav-link-count">{{ t.count }} </span></span></a></li>{% endfor %}</ul></div>
-{% if subrows %}<nav class="mdk-subnav" aria-label="الأقسام الفرعية">{% for r in subrows %}<div class="mdk-subrow l{{ loop.index }}"><span class="lbl">أقسام {{ r.name }}</span>{% for k in r.chips %}<a{% if k.on %} class="on" aria-current="page"{% endif %} href="{{ k.path }}">{{ k.name }}<small>{{ k.count }}</small></a>{% endfor %}</div>{% endfor %}</nav>{% endif %}
-</div></div></div>
-<div class="e-con mdk-sh-bar is-row"><div class="e-con-inner">
-<div class="e-con-full mdk-sh-search"><div class="wd-search-form"><form class="searchform wd-with-cat" action="/search/" method="get" role="search"><input type="text" class="s" name="s" placeholder="البحث عن المنتجات" aria-label="بحث" autocomplete="off"><div class="wd-search-cat"><select name="cat" aria-label="اختر الفئة"><option value="">اختر الفئة</option>{% for c in search_cats %}<option value="{{ c.id }}">{{ c.label }}</option>{% endfor %}</select></div><button class="searchsubmit" type="submit" aria-label="بحث"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg></button></form></div></div>
-<div class="e-con-full mdk-sh-order"><form class="woocommerce-ordering" method="get"><select name="orderby" class="orderby" aria-label="طلب المتجر"><option value="menu_order" selected>الترتيب الافتراضي</option><option value="date">ترتيب حسب الأحدث</option><option value="price">ترتيب حسب: الأدنى سعراً للأعلى</option><option value="price-desc">ترتيب حسب: الأعلى سعراً للأدنى</option></select></form></div>
-<div class="e-con-full mdk-sh-count"><p class="woocommerce-result-count" role="status">{{ count_text|safe }}</p></div>
-</div></div>
-<div class="e-con mdk-sh-grid"><div class="e-con-inner">
-{% if items %}
-<div class="products wd-products wd-grid-g grid-columns-4 title-line-two" id="grid" data-cat="{{ cat_id or '' }}" data-total="{{ total }}" data-page="{{ page }}" data-per="{{ per_page }}">
-{% for p in items %}{{ card(p, eager=loop.index <= 4) }}
-{% endfor %}</div>
-{% if pages > 1 %}<div class="wd-loop-footer products-footer">{% if page < pages %}<a class="btn wd-load-more wd-products-load-more" id="more" href="{{ page_url(page+1) }}" rel="nofollow">تصفح المزيد من المنتجات</a>{% endif %}</div>
-<nav class="woocommerce-pagination js-hide" aria-label="صفحات المنتجات"><ul>{% for n in range(1, pages+1) %}<li>{% if n == page %}<span class="current" aria-current="page">{{ n }}</span>{% else %}<a href="{{ page_url(n) }}">{{ n }}</a>{% endif %}</li>{% endfor %}</ul></nav>{% endif %}
-{% else %}
-<div class="woocommerce-no-products-found"><div class="woocommerce-info" role="status">لا توجد منتجات تتوافق مع اختيارك.</div></div>
-{% endif %}
-</div></div>
-{% if about %}<div class="e-con mdk-sh-about"><div class="e-con-inner"><div class="e-con-full"><div class="wd-shop-desc"><div class="elementor-widget-container">{{ about|safe }}</div></div></div></div></div>{% endif %}
+<div class="m-wrap m-cat">
+  <nav class="m-crumbs" aria-label="مسار التنقل"><ol>{% for c in crumbs %}{% if not loop.last %}<li><a href="{{ c[1] }}">{{ c[0] }}</a></li>{% else %}<li aria-current="page">{{ c[0] }}</li>{% endif %}{% endfor %}</ol></nav>
+  <header class="m-cat-head sh-hero">
+    <div class="m-cat-title">
+      <h1>{{ h1 }}</h1>
+      <p class="m-lead">منتجات قابلة للطباعة بشعارك، ولكل منتج سعر واضح وكود. أرسل الكود والكمية على واتساب ويصلك عرض السعر.</p>
+    </div>
+    <div class="m-cat-cta">
+      <a class="m-btn m-btn-primary" href="https://wa.me/905510059096?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%20%D9%85%D8%AF%D8%A7%D8%B1%D9%83%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%B9%D8%B1%D8%B6%20%D8%B3%D8%B9%D8%B1%20%D9%84%D9%85%D9%86%D8%AA%D8%AC%D8%A7%D8%AA%20%D9%85%D9%86%20%D8%A7%D9%84%D9%85%D8%AA%D8%AC%D8%B1" target="_blank" rel="noopener">{{ ico('whatsapp-logo') }}اطلب عرض سعر</a>
+      <a class="m-btn m-btn-line" href="https://wa.me/963980243748?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%20%D9%85%D8%AF%D8%A7%D8%B1%D9%83%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%B9%D8%B1%D8%B6%20%D8%B3%D8%B9%D8%B1%20%D9%84%D9%85%D9%86%D8%AA%D8%AC%D8%A7%D8%AA%20%D9%85%D9%86%20%D8%A7%D9%84%D9%85%D8%AA%D8%AC%D8%B1" target="_blank" rel="noopener">مبيعات سوريا</a>
+    </div>
+  </header>
+  <nav class="m-rail sh-nav" aria-label="أقسام المنتجات"><ul>
+    <li><a href="/shop/"{% if not cat_id %} class="is-on" aria-current="page"{% endif %}>الكل<small>{{ total_products }}</small></a></li>
+    {% for t in topcats %}<li><a href="{{ t.path }}" class="{% if t.current or t.ancestor %}is-on{% endif %}"{% if t.current %} aria-current="page"{% endif %}>{{ t.name }}<small>{{ t.count }}</small></a></li>{% endfor %}
+  </ul></nav>
+  {% if subrows %}{% for r in subrows %}<nav class="m-subcats{% if not loop.first %} is-l2{% endif %}" aria-label="أقسام {{ r.name }}"><ul>
+    {% for k in r.chips %}<li><a href="{{ k.path }}" class="{% if k.on %}is-on{% endif %}"{% if k.current %} aria-current="page"{% endif %}>{% if k.img %}<span class="m-sub-img"><img src="{{ k.img }}" alt="" width="80" height="80" loading="lazy" decoding="async"></span>{% endif %}<span class="m-sub-txt">{{ k.name }}<small>{{ k.count }}</small></span></a></li>{% endfor %}
+  </ul></nav>{% endfor %}{% endif %}
+  <div class="m-toolbar">
+    <p class="m-count" role="status" data-total="{{ total }}">{{ count_text|safe }}</p>
+    <div class="m-tool-ctl">
+      <form class="m-cat-search" action="/search/" method="get" role="search">{{ ico('magnifying-glass') }}<input type="search" name="s" placeholder="{% if cat_id %}ابحث في {{ h1 }}{% else %}ابحث في المنتجات{% endif %}" aria-label="بحث"{% if cat_id %}><input type="hidden" name="cat" value="{{ cat_id }}"{% endif %}></form>
+      <label class="m-sort">{{ ico('arrows-down-up') }}<span class="sr-only">ترتيب المنتجات</span><select name="orderby" aria-label="ترتيب المنتجات"><option value="menu_order" selected>الترتيب الافتراضي</option><option value="date">الأحدث</option><option value="price">السعر: من الأقل</option><option value="price-desc">السعر: من الأعلى</option></select></label>
+    </div>
+  </div>
+  {% if items %}
+  <div class="m-grid" id="grid" data-cat="{{ cat_id or '' }}" data-total="{{ total }}" data-page="{{ page }}" data-per="{{ per_page }}">
+  {% for p in items %}{{ card(p, eager=loop.index <= 4) }}
+  {% endfor %}</div>
+  {% if pages > 1 %}<div class="m-more">{% if page < pages %}<a class="m-btn m-btn-line" id="more" href="{{ page_url(page+1) }}" rel="nofollow">تصفح المزيد من المنتجات</a>{% endif %}</div>
+  <nav class="m-pager js-hide" aria-label="صفحات المنتجات"><ul>{% for n in range(1, pages+1) %}<li>{% if n == page %}<span aria-current="page">{{ n }}</span>{% else %}<a href="{{ page_url(n) }}">{{ n }}</a>{% endif %}</li>{% endfor %}</ul></nav>{% endif %}
+  {% else %}
+  <div class="m-empty"><p>لا توجد منتجات في هذا القسم حالياً.</p><a class="m-btn m-btn-line" href="/shop/">تصفّح كل المنتجات</a></div>
+  {% endif %}
+  {% if about %}<section class="m-about" aria-label="عن {{ h1 }}"><div class="m-about-body">{{ about|safe }}</div></section>{% endif %}
+</div>
 {% endblock %}

@@ -1,25 +1,39 @@
-{%- macro caret() %}<svg class="caret" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>{% endmacro -%}
-{%- macro dmenu(items, depth=0) -%}
-<ul{% if depth==0 %} class="menu"{% endif %}>
-{%- for m in items %}
-<li{% if m.path == active_menu %} class="on"{% endif %}><a href="{{ m.path }}"{% if m.path == path %} aria-current="page"{% endif %}>{% if depth==0 %}<span class="t">{{ m.name }}</span>{% else %}{{ m.name }}{% endif %}{% if m.children %}{{ caret() }}{% endif %}</a>{% if m.children %}{{ dmenu(m.children, depth+1) }}{% endif %}</li>
-{%- endfor %}
-</ul>
-{%- endmacro -%}
-<div class="tb">
-  <div class="container">
-    <div class="tb-info">مبيعات سوريا:&nbsp;<a href="https://wa.me/963980243748" target="_blank" rel="noopener"><bdi>+963 980 243 748</bdi></a><i>·</i>الأسواق الخارجية:&nbsp;<a href="https://wa.me/905510059096" target="_blank" rel="noopener"><bdi>+90 551 005 90 96</bdi></a><i>·</i>إسطنبول:&nbsp;<a href="https://wa.me/905074886377" target="_blank" rel="noopener"><bdi>+90 507 488 63 77</bdi></a><i>·</i><a href="mailto:sales@madarekmatbaa.com">sales@madarekmatbaa.com</a><i>·</i><a class="portal-link" href="https://portal.madarekmatbaa.net/" target="_blank" rel="noopener">بوابة الموظفين</a></div>
-    <div class="tb-social">{% for s in social %}<a href="{{ s.url }}" target="_blank" rel="noopener noreferrer nofollow" aria-label="{{ s.label }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="{{ icons[s.icon] }}"/></svg></a>{% endfor %}</div>
-  </div>
-</div>
-<header class="hdr" id="hdr">
-  <div class="container">
-    <button class="burger" type="button" aria-label="القائمة" aria-controls="mnav" aria-expanded="false"><span></span><span></span><span></span></button>
-    <a class="hdr-logo" href="/" rel="home"><img src="/wp-content/uploads/2026/10/madarek-wordmark-navy.png" width="1144" height="606" alt="مدارك — MADAREK"></a>
-    <nav class="hdr-nav" aria-label="القائمة الرئيسية">{{ dmenu(nav.menu) }}</nav>
-    <div class="hdr-tools">
-      <button class="hdr-search" type="button" aria-label="بحث" aria-controls="so"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg></button>
-      <a class="btn-cta" href="https://wa.me/905510059096?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%20%D9%85%D8%AF%D8%A7%D8%B1%D9%83%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%B9%D8%B1%D8%B6%20%D8%B3%D8%B9%D8%B1" target="_blank" rel="noopener"><span class="full">اطلب عرض سعر</span><span class="short">عرض سعر</span></a>
+<header class="m-hdr" id="hdr">
+  <div class="m-hdr-in">
+    <a class="m-logo" href="/" rel="home"><img src="/assets/brand/madarek-wordmark-navy-compact.svg" width="112" height="60" alt="مطبعة مدارك"></a>
+    <nav class="m-nav" aria-label="القائمة الرئيسية">
+      <ul class="m-nav-list">
+        <li class="m-nav-mega" data-mega>
+          <a class="m-nav-link{% if active_menu == '/shop/' %} is-on{% endif %}" href="/shop/" aria-haspopup="true" aria-expanded="false" aria-controls="mega">المنتجات{{ ico('caret-down', 'm-caret') }}</a>
+          <div class="m-mega" id="mega">
+            <div class="m-mega-in">
+              <ul class="m-mega-cats" role="list">
+                {% for c in mega %}<li><a href="{{ c.path }}" data-i="{{ loop.index0 }}"{% if loop.first %} class="is-on"{% endif %}><span>{{ c.name }}</span><small>{{ c.count }}</small></a></li>
+                {% endfor %}<li class="m-mega-all"><a href="/shop/"><span>كل المنتجات</span><small>{{ total_products }}</small></a></li>
+              </ul>
+              {% for c in mega %}<div class="m-mega-panel" data-i="{{ loop.index0 }}"{% if not loop.first %} hidden{% endif %}>
+                <div class="m-mega-groups{% if c.children|length > 6 %} is-wide{% endif %}">
+                  {% for s in c.children %}<div class="m-mega-group"><a class="m-mega-h" href="{{ s.path }}">{{ s.name }}</a>{% if s.children %}<ul>{% for g in s.children %}<li><a href="{{ g.path }}">{{ g.name }}</a></li>{% endfor %}</ul>{% endif %}</div>
+                  {% endfor %}{% if not c.children %}<p class="m-mega-note">{{ c.blurb }}</p>{% endif %}
+                </div>
+                <a class="m-mega-feature" href="{{ c.path }}" tabindex="-1">{% if c.img %}<span class="m-mega-img"><img src="{{ c.img }}" alt="" width="430" height="430" loading="lazy" decoding="async"></span>{% endif %}<span class="m-mega-cap"><b>{{ c.name }}</b><span>تصفّح القسم {{ ico('arrow-left') }}</span></span></a>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </li>
+        {% for m in nav_pages %}<li><a class="m-nav-link{% if active_menu == m.path %} is-on{% endif %}" href="{{ m.path }}"{% if path == m.path %} aria-current="page"{% endif %}>{{ m.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </nav>
+    <div class="m-tools">
+      <form class="m-search" action="/search/" method="get" role="search">
+        {{ ico('magnifying-glass') }}<input type="search" name="s" placeholder="اسم المنتج أو الكود" aria-label="ابحث في المنتجات" autocomplete="off" enterkeyhint="search">
+        <div class="m-search-pop m-results" hidden></div>
+      </form>
+      <button class="m-icon-btn m-search-btn" type="button" aria-label="بحث" aria-controls="so">{{ ico('magnifying-glass') }}</button>
+      <a class="m-btn m-btn-primary m-hdr-cta" href="https://wa.me/905510059096?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%20%D9%85%D8%AF%D8%A7%D8%B1%D9%83%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%B9%D8%B1%D8%B6%20%D8%B3%D8%B9%D8%B1" target="_blank" rel="noopener">{{ ico('whatsapp-logo') }}<span>اطلب عرض سعر</span></a>
+      <button class="m-icon-btn m-burger" type="button" aria-label="القائمة" aria-controls="mnav" aria-expanded="false">{{ ico('list') }}</button>
     </div>
   </div>
 </header>

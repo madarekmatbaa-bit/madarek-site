@@ -8,7 +8,7 @@
 {% for t in seo.tags %}{{ t|safe }}
 {% endfor -%}
 <meta name="google-site-verification" content="jYQnGjSEAE20RZPf6mieDOJAK5mUkaMQNPftnHOAaA4">
-<meta name="theme-color" content="#0D244C">
+<meta name="theme-color" content="#ffffff">
 <link rel="icon" href="/wp-content/uploads/2026/06/cropped-icon-01-scaled-1-32x32.png" sizes="32x32">
 <link rel="icon" href="/wp-content/uploads/2026/06/cropped-icon-01-scaled-1-192x192.png" sizes="192x192">
 <link rel="apple-touch-icon" href="/wp-content/uploads/2026/06/cropped-icon-01-scaled-1-180x180.png">
@@ -24,27 +24,23 @@
 <body class="{{ body_class }}">
 <a class="skip-link" href="#main">تخطَّ إلى المحتوى</a>
 {% include "partials/header.html" %}
-<div class="wd-page-content main-page-wrapper">
-<main id="main" class="wd-content-layout{% if full %} is-full{% endif %}">
+<main id="main" class="m-main{% if full %} is-full{% endif %}">
 {% block main %}{% endblock %}
 </main>
-</div>
-<div class="wd-prefooter"></div>
 {% include "partials/footer.html" %}
 {% include "partials/mnav.html" %}
-<div class="so" id="so" role="dialog" aria-modal="true" aria-label="البحث عن المنتجات">
-  <button class="so-x" type="button" aria-label="إغلاق البحث">×</button>
-  <form class="so-form" action="/search/" method="get" role="search">
-    <input type="search" name="s" placeholder="ابحث عن منتج، كود أو قسم…" aria-label="بحث" autocomplete="off">
+<div class="m-sheet" id="so" role="dialog" aria-modal="true" aria-label="البحث في المنتجات" hidden>
+  <form class="m-sheet-form" action="/search/" method="get" role="search">
+    {{ ico('magnifying-glass') }}<input type="search" name="s" placeholder="اسم المنتج أو الكود" aria-label="ابحث في المنتجات" autocomplete="off" enterkeyhint="search">
+    <button class="m-icon-btn" type="button" data-close-sheet aria-label="إغلاق البحث">{{ ico('x') }}</button>
   </form>
-  <div class="so-res" aria-live="polite"></div>
+  <div class="m-results" aria-live="polite"></div>
 </div>
 <nav class="lbar-src" hidden>
-  <a data-k="shop" href="/shop/">المتجر</a>
+  <a data-k="shop" href="/shop/">المنتجات</a>
   <a data-k="home" href="/">الرئيسية</a>
-  <a data-k="quote" href="https://wa.me/905510059096?text=" target="_blank" rel="noopener">عرض سعر</a>
+  <a data-k="quote" href="https://wa.me/905510059096?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%20%D9%85%D8%AF%D8%A7%D8%B1%D9%83%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%B9%D8%B1%D8%B6%20%D8%B3%D8%B9%D8%B1" target="_blank" rel="noopener">عرض سعر</a>
 </nav>
-<button class="to-top" type="button" aria-label="إلى الأعلى"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 10l5-5 5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
 {% block foot %}{% endblock %}
 <script src="{{ asset('site.js') }}" defer></script>
 </body>

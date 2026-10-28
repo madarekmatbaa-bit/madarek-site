@@ -93,6 +93,48 @@ def price_html(pr, variable):
     return money(v)
 
 
+def money_short(x):
+    """$684 / $7.19 / $11,580 (Poppins renders the digits)."""
+    s = f'{x:,.0f}' if abs(x - round(x)) < 0.005 else f'{x:,.2f}'
+    return f'<bdi>${s}</bdi>'
+
+
+def price_short(p):
+    pr = p['price']
+    if p['type'] == 'variable' and pr.get('min') is not None and pr.get('max') is not None and pr['min'] != pr['max']:
+        return f'<span class="m-from">من</span> {money_short(pr["min"])}'
+    if pr.get('on_sale') and pr.get('regular') and pr.get('price') is not None and pr['regular'] > pr['price']:
+        return f'{money_short(pr["price"])} <del>{money_short(pr["regular"])}</del>'
+    v = pr.get('price') if pr.get('price') is not None else pr.get('min')
+    return money_short(v) if v is not None else ''
+
+
+def price_big(p):
+    pr = p['price']
+    if p['type'] == 'variable' and pr.get('min') is not None and pr.get('max') is not None and pr['min'] != pr['max']:
+        return f'<span class="m-from">يبدأ من</span> <b>{money_short(pr["min"])}</b>'
+    if pr.get('on_sale') and pr.get('regular') and pr.get('price') is not None and pr['regular'] > pr['price']:
+        return f'<b>{money_short(pr["price"])}</b> <del>{money_short(pr["regular"])}</del>'
+    v = pr.get('price') if pr.get('price') is not None else pr.get('min')
+    return f'<b>{money_short(v)}</b>' if v is not None else ''
+
+
+def ar_count(n, one='منتج واحد', two='منتجان', few='منتجات', many='منتجاً', other='منتج'):
+    """Arabic plural for product counts (0, 1, 2, 3-10, 11-99, 100+)."""
+    if n == 0:
+        return 'لا منتجات'
+    if n == 1:
+        return one
+    if n == 2:
+        return two
+    m = n % 100
+    if 3 <= m <= 10:
+        return f'{n} {few}'
+    if 11 <= m <= 99:
+        return f'{n} {many}'
+    return f'{n} {other}'
+
+
 def low_price(p):
     pr = p['price']
     return pr['min'] if p['type'] == 'variable' and pr.get('min') is not None else pr.get('price')
@@ -116,13 +158,13 @@ def plural_results(n):
 
 
 def count_text(total, page, per=PER_PAGE):
-    if total == 1:
-        return 'عرض النتيجة الوحيدة'
+    shown = min(page * per, total) - (page - 1) * per
     if total <= per:
-        return f'عرض ⁦{total}⁩ من كل النتائج'
+        return ar_count(total)
+    if page == 1:
+        return f'عرض {shown} من {ar_count(total)}'
     a = (page - 1) * per + 1
-    b = min(page * per, total)
-    return f'عرض {a}&ndash;{b} من أصل {total} {plural_results(total)}'
+    return f'عرض {a}-{a + shown - 1} من {ar_count(total)}'
 
 
 def seo_paged(seo, base_path, page, pages):
@@ -144,7 +186,7 @@ def seo_paged(seo, base_path, page, pages):
 
 # ---------------------------------------------------------------- assets
 def build_assets():
-    css_order = ['base.css', 'shim.css', 'legacy-theme.css', 'legacy-tidy.css', 'legacy-block.css', 'legacy-shop.css']
+    css_order = ['base.css', 'legacy-theme.css', 'legacy-tidy.css', 'legacy-block.css', 'legacy-shop.css', 'm.css']
     css = '\n'.join(open(os.path.join(ROOT, 'assets/css', f), encoding='utf-8').read() for f in css_order)
     # the shop shelf and its CSS anchored on Elementor ids; point them at our sections
     css = css.replace('.elementor-element-49de9f4', '.sh-nav').replace('.elementor-element-195c2fd1', '.sh-hero')
@@ -162,6 +204,7 @@ def build_assets():
         write(os.path.join(OUT, 'assets', out), body)
         names[name] = '/assets/' + out
     shutil.copytree(os.path.join(ROOT, 'assets/fonts'), os.path.join(OUT, 'assets/fonts'), dirs_exist_ok=True)
+    shutil.copytree(os.path.join(ROOT, 'assets/brand'), os.path.join(OUT, 'assets/brand'), dirs_exist_ok=True)
     return names
 
 
@@ -240,7 +283,8 @@ def card_model(p):
         'thumb2': thumb_of(imgs[1]['src']) if len(imgs) > 1 else '',
         'alt': (imgs[0]['alt'] or p['name']) if imgs else p['name'],
         'catlinks': catlinks(p), 'price_html': price_html(p['price'], p['type'] == 'variable'),
-        'badge': discount(p),
+        'price_short': price_short(p), 'badge': discount(p),
+        'catname': cats[primary_cat(p)]['name'] if primary_cat(p) else '',
     }
 
 
@@ -255,7 +299,7 @@ def search_index():
         rows.append({
             'i': p['id'], 'n': p['name'], 'u': p['path'], 't': cm['thumb'], 't2': cm['thumb2'], 'a': cm['alt'],
             'c': p['cats'], 'p': low_price(p), 'd': p.get('date') or '', 's': p.get('sku') or '',
-            'h': cm['price_html'], 'b': cm['badge'],
+            'h': cm['price_short'], 'b': cm['badge'], 'cn': cm['catname'],
         })
     cl = {c['id']: [c['name'], c['path']] for c in catalog['categories']}
     tree = {c['id']: sorted(descendants(c['id'])) for c in catalog['categories']}
@@ -267,9 +311,56 @@ env = Environment(loader=FileSystemLoader(os.path.join(ROOT, 'templates')), auto
                   trim_blocks=False, lstrip_blocks=False)
 
 
+PHOSPHOR = J('assets/phosphor.json')
+
+
+def ico(name, cls=''):
+    from markupsafe import Markup
+    return Markup(f'<svg class="ico{(" " + cls) if cls else ""}" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" focusable="false">{PHOSPHOR[name]}</svg>')
+
+
+env.globals['ico'] = ico
+
+CONTACTS = [
+    {'market': 'ليبيا والعراق والخليج', 'person': 'الآنسة هبة', 'phone': '+90 551 005 90 96', 'wa': '905510059096'},
+    {'market': 'سوريا', 'person': 'عمار رجب', 'phone': '+963 980 243 748', 'wa': '963980243748'},
+    {'market': 'إسطنبول', 'person': 'الأستاذ سامر', 'phone': '+90 507 488 63 77', 'wa': '905074886377'},
+]
+MEGA_BLURB = 'منتجات بشعار مؤسستك بأسعار واضحة وكود لكل منتج.'
+
+
+def mega_model():
+    out = []
+    for it in nav['cat_nav']:
+        c = cat_by_path.get(it['path'])
+        if not c or cat_count.get(c['id'], 0) == 0:
+            continue
+
+        def kids(items):
+            res = []
+            for k in items:
+                kc = cat_by_path.get(k['path'])
+                if not kc or cat_count.get(kc['id'], 0) == 0:
+                    continue
+                res.append({'name': kc['name'], 'path': kc['path'], 'children': kids(k.get('children', []))})
+            return res
+        img = c.get('image') or ''
+        if not img and cat_products.get(c['id']):
+            first = cat_products[c['id']][0]
+            img = first['images'][0]['src'] if first['images'] else ''
+        out.append({'name': c['name'], 'path': c['path'], 'count': cat_count[c['id']], 'children': kids(it.get('children', [])),
+                    'img': thumb_of(img) if img else '', 'blurb': MEGA_BLURB, 'id': c['id']})
+    return out
+
+
+NAV_PAGES = [m for m in nav['menu'] if m['path'] not in ('/', '/shop/')]
+MEGA = mega_model()
+
+
 def render(tpl, out_path, **ctx):
     base = dict(nav=nav, icons=icons, social=SOCIAL, asset=lambda n: ASSETS[n], tracking=True, body_class='',
-                full=False, search_redirect=False, path='', active_menu='')
+                full=False, search_redirect=False, path='', active_menu='', mega=MEGA, nav_pages=NAV_PAGES,
+                contacts=CONTACTS, total_products=len(products))
     base.update(ctx)
     html = env.get_template(tpl).render(**base)
     write(out_path, html)
@@ -417,7 +508,8 @@ def top_cats(current):
         elif current and c['id'] in chain:
             cls += ['current-cat-parent', 'current-cat-ancestor', 'wd-active']
         out.append({'name': c['name'], 'path': c['path'], 'count': cat_count[c['id']], 'cls': ' '.join(cls),
-                    'current': bool(current and c['id'] == current['id'])})
+                    'current': bool(current and c['id'] == current['id']),
+                    'ancestor': bool(current and c['id'] in chain and c['id'] != current['id'])})
     return out
 
 
@@ -447,13 +539,22 @@ def sub_rows(current):
         kids_nav = [k for k in (it or {}).get('children', []) if cat_by_path.get(k['path'])]
         if not kids_nav:
             continue
-        chips = [{'name': 'الكل', 'path': c['path'], 'count': cat_count.get(c['id'], 0), 'on': c['id'] == current['id']}]
+        chips = [{'name': 'الكل', 'path': c['path'], 'count': cat_count.get(c['id'], 0), 'on': c['id'] == current['id'],
+                  'current': c['id'] == current['id'], 'img': ''}]
         for k in kids_nav:
             kc = cat_by_path[k['path']]
             if cat_count.get(kc['id'], 0) == 0:
                 continue
-            chips.append({'name': kc['name'], 'path': kc['path'], 'count': cat_count[kc['id']], 'on': kc['id'] in chain_ids})
+            img = kc.get('image') or ''
+            if not img and cat_products.get(kc['id']):
+                f0 = cat_products[kc['id']][0]
+                img = f0['images'][0]['src'] if f0['images'] else ''
+            chips.append({'name': kc['name'], 'path': kc['path'], 'count': cat_count[kc['id']], 'on': kc['id'] in chain_ids,
+                          'current': kc['id'] == current['id'], 'img': images.variant(img, 80, 80) if img else ''})
         rows.append({'name': c['name'], 'chips': chips})
+    for r in rows[1:]:
+        for k in r['chips']:
+            k['img'] = ''
     return rows
 
 
@@ -540,11 +641,13 @@ def product_model(p, idx):
     m = {
         'id': p['id'], 'name': p['name'], 'path': p['path'], 'sku': p['sku'], 'crumbs': p['breadcrumbs'],
         'price_html': price_html(p['price'], p['type'] == 'variable'), 'short': relink(p['short']),
+        'price_big': price_big(p),
         'catlinks': catlinks(p), 'gallery': gallery_of(p), 'related': related,
         'prev': {'name': prev['name'], 'path': prev['path']} if prev else None,
         'next': {'name': nxt['name'], 'path': nxt['path']} if nxt else None,
         'back': cats[pc]['path'] if pc else '/shop/',
-        'tabs': [dict(t, html=relink(t['html'])) for t in p['tabs']],
+        'tabs': [dict(t, html=clean_specs(t['html']) if t['id'] == 'tab-additional_information' else relink(t['html']),
+                      title={'معلومات إضافية': 'المواصفات'}.get(t['title'], t['title'])) for t in p['tabs']],
         'form': None, 'sel': None,
     }
     url = SITE + p['path']
@@ -561,9 +664,8 @@ def product_model(p, idx):
             vimg = ''
             if v.get('image') and p['images'] and images.local_url(v['image']) != images.local_url(p['images'][0]['src']):
                 vimg = images.fit(v['image'], 700)['url']
-            vs.append({'a': vals, 'p': v['price'], 'r': v['regular'], 's': v.get('sku') or '', 'd': v.get('desc') or '', 'img': vimg,
-                       'ph': price_html({'price': v['price'], 'regular': v['regular'],
-                                         'on_sale': (v['regular'] or 0) > (v['price'] or 0)}, False) if v['price'] is not None else ''})
+            vs.append({'a': vals, 'p': v['price'], 's': v.get('sku') or '', 'd': v.get('desc') or '', 'img': vimg,
+                       'pb': money_short(v['price']) if v['price'] is not None else ''})
         defaults = [r['default'] for r in rows]
         sel = None
         if all(defaults):
@@ -584,7 +686,28 @@ def product_model(p, idx):
         m['quote_ready'] = True
         m['quote_label'] = 'اطلب عرض سعر عبر واتساب'
     m['quote_href'] = wa(lines + [url])
+    m['quote_sy'] = f'https://wa.me/963980243748?text=' + up.quote('\n'.join(lines + [url]), safe='')
+    m['show_quote'] = bool(variable) or 'md-quote' not in (p['short'] or '')
     return m
+
+
+def clean_specs(html):
+    """WooCommerce attribute table -> label + value chips."""
+    s = BeautifulSoup(html, 'html.parser')
+    rows = []
+    for tr in s.select('tr'):
+        th, td = tr.find('th'), tr.find('td')
+        if not th or not td:
+            continue
+        vals = [x.get_text(' ', strip=True) for x in td.select('.wd-attr-term')] or [v.strip() for v in td.get_text(' ', strip=True).split(',') if v.strip()]
+        rows.append((th.get_text(' ', strip=True), vals))
+    if not rows:
+        return html
+    out = ['<dl class="m-specs">']
+    for lab, vals in rows:
+        out.append(f'<div><dt>{H.escape(lab)}</dt><dd>' + ''.join(f'<span>{H.escape(v)}</span>' for v in vals) + '</dd></div>')
+    out.append('</dl>')
+    return ''.join(out)
 
 
 def fb_id(p):
@@ -767,7 +890,6 @@ def main():
             shutil.rmtree(p) if os.path.isdir(p) else os.remove(p)
     os.makedirs(OUT, exist_ok=True)
     ASSETS = build_assets()
-    build_footer()
     made_pages = build_pages()
     made_shop = build_shop()
     made_products = build_products()

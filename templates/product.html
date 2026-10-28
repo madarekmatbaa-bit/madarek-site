@@ -1,47 +1,44 @@
 {% extends "base.html" %}
 {% from "partials/card.html" import card %}
 {% block main %}
-<div class="single-product-page product type-product product-{{ p.id }}" data-id="{{ p.id }}">
-<div class="sp-top">
-  <nav aria-label="Breadcrumb" class="wd-breadcrumbs woocommerce-breadcrumb">{% for c in p.crumbs %}<a href="{{ c[1] }}">{{ c[0] }}</a><span class="wd-delimiter"></span>{% endfor %}<span class="wd-last">{{ p.name }}</span></nav>
-  <div class="wd-products-nav">{% if p.prev %}<a href="{{ p.prev.path }}" title="{{ p.prev.name }}" aria-label="المنتج السابق: {{ p.prev.name }}"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a>{% endif %}<a href="{{ p.back }}" aria-label="العودة إلى المنتجات"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg></a>{% if p.next %}<a href="{{ p.next.path }}" title="{{ p.next.name }}" aria-label="المنتج التالي: {{ p.next.name }}"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a>{% endif %}</div>
-</div>
-<div class="sp-main">
-  <div class="sp-gallery wd-single-gallery">
-    <div class="woocommerce-product-gallery images{% if p.gallery|length > 1 %} has-many{% endif %}">
-      <div class="wd-gallery-images">
-        <div class="gi-track">{% for g in p.gallery %}<figure class="woocommerce-product-gallery__image"><a href="{{ g.full }}" data-lb><img src="{{ g.main }}" width="{{ g.w }}" height="{{ g.h }}" alt="{{ g.alt }}"{% if not loop.first %} loading="lazy"{% else %} fetchpriority="high"{% endif %} decoding="async"></a></figure>{% endfor %}</div>
-        {% if p.gallery|length > 1 %}<button class="gi-nav gi-prev" type="button" aria-label="الصورة السابقة"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button><button class="gi-nav gi-next" type="button" aria-label="الصورة التالية"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>{% endif %}
+<div class="m-wrap m-pdp" data-id="{{ p.id }}">
+  <nav class="m-crumbs" aria-label="مسار التنقل"><ol>{% for c in p.crumbs %}<li><a href="{{ c[1] }}">{{ c[0] }}</a></li>{% endfor %}<li aria-current="page">{{ p.name }}</li></ol></nav>
+  <div class="m-pdp-grid">
+    <div class="m-gallery" aria-label="صور المنتج">
+      <div class="m-g-main">
+        <div class="m-g-track">{% for g in p.gallery %}<figure><a href="{{ g.full }}" data-lb><img src="{{ g.main }}" width="{{ g.w }}" height="{{ g.h }}" alt="{{ g.alt }}"{% if not loop.first %} loading="lazy"{% else %} fetchpriority="high"{% endif %} decoding="async"></a></figure>{% endfor %}</div>
+        {% if p.gallery|length > 1 %}<button class="m-g-nav m-g-prev" type="button" aria-label="الصورة السابقة">{{ ico('arrow-left') }}</button><button class="m-g-nav m-g-next" type="button" aria-label="الصورة التالية">{{ ico('arrow-left') }}</button><span class="m-g-count"><bdi>1 / {{ p.gallery|length }}</bdi></span>{% endif %}
       </div>
-      {% if p.gallery|length > 1 %}<div class="wd-gallery-thumb">{% for g in p.gallery %}<button type="button" data-i="{{ loop.index0 }}"{% if loop.first %} aria-current="true"{% endif %} aria-label="الصورة {{ loop.index }}"><img src="{{ g.thumb }}" width="{{ g.tw }}" height="{{ g.th }}" alt="" loading="lazy" decoding="async"></button>{% endfor %}</div>{% endif %}
+      {% if p.gallery|length > 1 %}<div class="m-g-thumbs">{% for g in p.gallery %}<button type="button" data-i="{{ loop.index0 }}"{% if loop.first %} aria-current="true"{% endif %} aria-label="الصورة {{ loop.index }}"><img src="{{ g.thumb }}" width="{{ g.tw }}" height="{{ g.th }}" alt="" loading="lazy" decoding="async"></button>{% endfor %}</div>{% endif %}
+    </div>
+    <div class="m-buy">
+      {% if p.catlinks %}<a class="m-buy-cat" href="{{ p.catlinks[0].path }}">{{ p.catlinks[0].name }}</a>{% endif %}
+      <h1>{{ p.name }}</h1>
+      {% if p.price_big %}<p class="m-buy-price">{{ p.price_big|safe }}</p>{% endif %}
+      {% if p.short %}<div class="m-buy-short">{{ p.short|safe }}</div>{% endif %}
+      {% if p.form %}
+      <form class="m-opts-form" action="{{ p.path }}" method="get" onsubmit="return false">
+        {% for r in p.form %}<div class="m-opt-row"><p id="lb{{ loop.index }}">{{ r.label }}</p><div class="mdk-opts" role="radiogroup" aria-labelledby="lb{{ loop.index }}" data-row="{{ loop.index0 }}">{% for o in r.options %}<button type="button" class="mdk-opt{% if o[0] == r.default %} is-on{% endif %}" role="radio" aria-checked="{{ 'true' if o[0] == r.default else 'false' }}" data-v="{{ o[0] }}">{{ o[1] }}</button>{% endfor %}</div></div>
+        {% endfor %}
+        <div class="m-sel{% if p.sel %} is-on{% endif %}" aria-live="polite"><div class="m-sel-d">{{ p.sel.d|safe if p.sel else '' }}</div><div class="m-sel-p">{{ p.sel.pb|safe if p.sel else '' }}</div></div>
+        <button class="m-reset" type="button"{% if not p.sel %} hidden{% endif %}>{{ ico('x') }}إلغاء الاختيار</button>
+      </form>
+      <script type="application/json" id="pv">{{ p.pv_json|safe }}</script>
+      {% endif %}
+      {% if p.show_quote %}<div class="m-quote"><p class="m-quote-note">{{ '' if p.quote_ready else 'اختر المواصفات والكمية لتشاهد السعر، ثم أرسل الطلب.' }}</p><a class="m-btn m-btn-primary" id="quote" href="{{ p.quote_href }}" target="_blank" rel="noopener">{{ ico('whatsapp-logo') }}<span>{{ p.quote_label }}</span></a><a class="m-quote-alt" href="{{ p.quote_sy }}" target="_blank" rel="noopener">أو تواصل مع مبيعات سوريا</a></div>{% endif %}
+      <ul class="m-assure">
+        {% if p.sku %}<li>{{ ico('stamp') }}<span>رمز المنتج: <b><bdi>{{ p.sku }}</bdi></b>. أرسله مع الكمية ليصلك عرض السعر.</span></li>{% endif %}
+        <li>{{ ico('seal-check') }}<span>نرسل بروفة التصميم للاعتماد قبل الطباعة.</span></li>
+        <li>{{ ico('truck') }}<span>الشحن إلى سوريا وليبيا والعراق والخليج.</span></li>
+      </ul>
     </div>
   </div>
-  <div class="sp-summary summary entry-summary">
-    <h1 class="product_title entry-title wd-entities-title">{{ p.name }}</h1>
-    <div class="wd-single-price"><p class="price">{{ p.price_html|safe }}</p></div>
-    {% if p.short %}<div class="woocommerce-product-details__short-description">{{ p.short|safe }}</div>{% endif %}
-    {% if p.form %}
-    <form class="variations_form cart" action="{{ p.path }}" method="get" data-product_id="{{ p.id }}" onsubmit="return false">
-      <table class="variations" role="presentation"><tbody>
-      {% for r in p.form %}<tr><th class="label cell"><label id="lb{{ loop.index }}">{{ r.label }}</label></th><td class="value cell"><div class="mdk-opts" role="radiogroup" aria-labelledby="lb{{ loop.index }}" data-row="{{ loop.index0 }}">{% for o in r.options %}<button type="button" class="mdk-opt{% if o[0] == r.default %} is-on{% endif %}" role="radio" aria-checked="{{ 'true' if o[0] == r.default else 'false' }}" data-v="{{ o[0] }}">{{ o[1] }}</button>{% endfor %}</div></td></tr>
-      {% endfor %}</tbody></table>
-      <div class="single_variation_wrap"><div class="woocommerce-variation single_variation{% if p.sel %} is-on{% endif %}" aria-live="polite"><div class="woocommerce-variation-description">{{ p.sel.d|safe if p.sel else '' }}</div><div class="woocommerce-variation-price"><span class="price">{{ p.sel.ph|safe if p.sel else '' }}</span></div></div></div>
-      <a class="reset_variations" href="#"{% if not p.sel %} hidden{% endif %}><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 2l8 8M10 2 2 10" stroke="currentColor" stroke-width="1.4"/></svg>إزالة</a>
-    </form>
-    <script type="application/json" id="pv">{{ p.pv_json|safe }}</script>
-    {% endif %}
-    <div class="mdk-quote"><div class="mdk-quote-note">{{ '' if p.quote_ready else 'اختر المواصفات والكمية لتشاهد السعر، ثم أرسل الطلب.' }}</div><a class="mdk-quote-btn" href="{{ p.quote_href }}" target="_blank" rel="noopener">{{ p.quote_label }}</a></div>
-    <hr class="sp-divider">
-    <div class="product_meta">{% if p.sku %}<span class="sku_wrapper"><span class="meta-label">رمز المنتج:</span> <span class="sku">{{ p.sku }}</span></span>{% endif %}{% if p.catlinks %}<span class="posted_in"><span class="meta-label">التصنيف:</span> {% for c in p.catlinks %}<a href="{{ c.path }}" rel="tag">{{ c.name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</span>{% endif %}</div>
-    <div class="wd-single-share">{% for s in social %}<a href="{{ s.url }}" target="_blank" rel="noopener noreferrer nofollow" aria-label="{{ s.label }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="{{ icons[s.icon] }}"/></svg></a>{% endfor %}</div>
-  </div>
+  {% if p.tabs %}<div class="m-pdp-secs">
+    {% if p.tabs|length > 1 %}<nav class="m-toc" aria-label="أقسام الصفحة">{% for t in p.tabs %}<a href="#{{ t.id }}"{% if loop.first %} class="is-on"{% endif %}>{{ t.title }}</a>{% endfor %}</nav>{% else %}<div></div>{% endif %}
+    <div class="m-secs">{% for t in p.tabs %}<section class="m-sec" id="{{ t.id }}" aria-labelledby="h-{{ t.id }}"><h2 id="h-{{ t.id }}">{{ t.title }}</h2><div class="m-prose">{{ t.html|safe }}</div></section>
+    {% endfor %}</div>
+  </div>{% endif %}
+  {% if p.related %}<section class="m-related" aria-labelledby="h-rel"><div class="m-sec-head"><h2 id="h-rel">منتجات ذات صلة</h2><a href="{{ p.back }}">كل منتجات القسم</a></div><div class="m-grid">{% for r in p.related[:4] %}{{ card(r) }}{% endfor %}</div></section>{% endif %}
 </div>
-{% if p.related %}<section class="sp-related related-products" aria-label="منتجات ذات صلة"><h2 class="title">منتجات ذات صلة</h2><div class="products wd-products cards-boxed">{% for r in p.related %}{{ card(r) }}{% endfor %}</div></section>{% endif %}
-<div class="sp-tabs"><div class="wc-tabs-wrapper woocommerce-tabs">
-  <ul class="wc-tabs tabs" role="tablist">{% for t in p.tabs %}<li class="{{ t.id[4:] }}_tab{% if loop.first %} active{% endif %}" role="presentation"><a href="#{{ t.id }}" role="tab" aria-controls="{{ t.id }}" aria-selected="{{ 'true' if loop.first else 'false' }}">{{ t.title }}</a></li>{% endfor %}</ul>
-  {% for t in p.tabs %}<div class="{{ t.cls }}{% if loop.first %} is-on{% endif %}" id="{{ t.id }}" role="tabpanel">{{ t.html|safe }}</div>
-  {% endfor %}
-</div></div>
-</div>
-<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="عرض الصورة"><button type="button" aria-label="إغلاق">×</button><img alt=""></div>
+<div class="m-lb" id="lb" role="dialog" aria-modal="true" aria-label="عرض الصورة" hidden><button class="m-icon-btn" type="button" aria-label="إغلاق">{{ ico('x') }}</button><img alt=""></div>
 {% endblock %}
