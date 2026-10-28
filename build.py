@@ -20,6 +20,7 @@ from datetime import datetime, timezone
 
 from bs4 import BeautifulSoup
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from markupsafe import Markup
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(ROOT, 'dist')
@@ -205,7 +206,34 @@ def build_assets():
         names[name] = '/assets/' + out
     shutil.copytree(os.path.join(ROOT, 'assets/fonts'), os.path.join(OUT, 'assets/fonts'), dirs_exist_ok=True)
     shutil.copytree(os.path.join(ROOT, 'assets/brand'), os.path.join(OUT, 'assets/brand'), dirs_exist_ok=True)
+    if REEL:
+        shutil.copytree(os.path.join(ROOT, 'assets', REEL_DIR), os.path.join(OUT, 'assets', REEL_DIR),
+                        dirs_exist_ok=True, ignore=shutil.ignore_patterns('*.mp4', '*.png'))
     return names
+
+
+# ---------------------------------------------------------------- home hero film (realistic box, see tools/reel_frames.py)
+REEL_DIR = 'reel-v1'
+_reel_manifest = os.path.join(ROOT, 'assets', REEL_DIR, 'manifest.json')
+REEL = json.load(open(_reel_manifest)) if os.path.exists(_reel_manifest) else None
+# label anchors on the last frame of clip 2 (the flat-lay), as fractions of the full 16:9 frame
+REEL_LABELS = [
+    {'name': 'ملف بجيب', 'note': '300 غ', 'x': .235, 'y': .47},
+    {'name': 'ورق رسمي', 'note': '80 غ', 'x': .33, 'y': .39},
+    {'name': 'دفتر سلك', 'note': '', 'x': .52, 'y': .39},
+    {'name': 'ظرف DL', 'note': '110 غ', 'x': .33, 'y': .70},
+    {'name': 'كرت شخصي', 'note': '350 غ', 'x': .535, 'y': .61},
+    {'name': 'كاسة ورقية', 'note': 'مطبوعة', 'x': .135, 'y': .53},
+]
+
+
+def reel_html(story_html):
+    """Replace the illustrated CSS box story with the realistic film, keeping the same words and links."""
+    s = BeautifulSoup(story_html, 'html.parser')
+    copy = s.select_one('.ms-copy')
+    model = {'base': f'/assets/{REEL_DIR}/', 'clips': [c['n'] for c in REEL['clips']], 'd': REEL['d'], 'm': REEL['m'], 'mcrop': REEL.get('mcrop', [0, 0, 1, 1]),
+             'labels': REEL_LABELS, 'words': Markup(str(copy))}
+    return env.get_template('partials/reel.html').render(reel=model)
 
 
 def minify_css(css):
@@ -436,7 +464,10 @@ def build_pages():
         parts = []
         designed = False
         for x in pg['parts']:
-            if x[0] == 'html':
+            if x[0] == 'html' and path == '/' and REEL and 'class="mdk-story"' in x[1]:
+                parts.append(reel_html(x[1]))
+                designed = True
+            elif x[0] == 'html':
                 parts.append(x[1])
                 designed = designed or 'mdk' in x[1]
             elif x[0] == 'content':

@@ -1,0 +1,237 @@
+{#- Home hero: a realistic box story played frame by frame while the visitor scrolls.
+    Frames come from AI-generated clips (tools/reel_frames.py); the words stay live HTML. -#}
+<style>
+.mdk-reel{--navy:#0D244C;--blue:#3263DB;--teal:#50C4C8;--ink:#3F4A5E;--top:0px;position:relative;direction:rtl;color:var(--navy);background:#EEEBE6}
+.mdk-reel *{box-sizing:border-box}
+.rl-pin{position:relative;height:calc(100vh - var(--top));height:calc(100svh - var(--top));min-height:520px;overflow:hidden;isolation:isolate}
+.rl-js{height:520vh}
+.rl-js .rl-pin{position:sticky;top:var(--top)}
+.rl-bg{position:absolute;inset:0;z-index:0;background:#EEEBE6}
+.rl-dark{background:#0D244C;opacity:0;will-change:opacity}
+.rl-poster,.rl-cv{position:absolute;inset:0;width:100%;height:100%;z-index:1;display:block}
+.rl-poster{object-fit:cover;object-position:50% 60%}
+.rl-cv{opacity:0}
+.rl-ready .rl-cv{opacity:1}
+.rl-ready .rl-poster{visibility:hidden}
+.rl-labels{position:absolute;inset:0;z-index:3;pointer-events:none}
+.rl-labels .ms-label{position:absolute;left:0;top:0;transform:translate(-50%,-100%);opacity:0;will-change:opacity,transform;white-space:nowrap;background:rgba(255,255,255,.94);color:var(--navy);font-size:13px;font-weight:600;padding:7px 12px 7px 14px;border-radius:999px;box-shadow:0 8px 22px rgba(13,36,76,.16);display:flex;align-items:center;gap:8px}
+.rl-labels .ms-label:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--blue);flex:none}
+.rl-labels .ms-label small{font-weight:500;color:#6B7487;font-size:12px}
+.mdk-reel .ms-copy{position:absolute;z-index:6;right:clamp(24px,6vw,96px);top:50%;height:0;width:min(460px,38vw)}
+.mdk-reel .ms-ch{position:absolute;right:0;top:0;width:100%;translate:0 -50%;opacity:0;transform:translateY(24px);pointer-events:none}
+.rl-js .ms-ch{will-change:opacity,transform}
+.mdk-reel .ms-ch-hero{opacity:1;transform:none;pointer-events:auto;display:flex;flex-direction:column}
+.mdk-reel .ms-ch.on{pointer-events:auto}
+.mdk-reel .ms-kick{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:var(--blue);margin-bottom:14px}
+.mdk-reel .ms-kick:before{content:"";width:28px;height:2px;background:currentColor}
+.mdk-reel .ms-ch-hero .ms-kick{order:-1;align-self:flex-start}
+.mdk-reel .ms-ch h1,.mdk-reel .ms-ch h2{margin:0;font-weight:700;color:var(--navy);line-height:1.12;letter-spacing:0;text-wrap:balance}
+.mdk-reel .ms-ch h1{font-size:clamp(38px,4.6vw,68px)}
+.mdk-reel .ms-ch h2{font-size:clamp(34px,4.1vw,60px)}
+.mdk-reel .ms-ch p{margin:16px 0 0;font-size:clamp(15px,1.2vw,17.5px);line-height:1.85;color:var(--ink);max-width:420px}
+.mdk-reel .ms-cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.mdk-reel .ms-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 26px;border-radius:999px;font-weight:600;font-size:15px;text-decoration:none!important;transition:transform .16s cubic-bezier(.23,1,.32,1),background .15s}
+.mdk-reel .ms-btn:hover{transform:translateY(-1px)}
+.mdk-reel .ms-btn:active{transform:scale(.97)}
+.mdk-reel .ms-btn-p{background:var(--navy);color:#fff!important}
+.mdk-reel .ms-btn-o{border:1.5px solid var(--navy);color:var(--navy)!important}
+.mdk-reel .ms-btn-t{background:var(--teal);color:var(--navy)!important}
+.mdk-reel .ms-btn-g{border:1.5px solid rgba(255,255,255,.5);color:#fff!important}
+.mdk-reel .ms-cats{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;max-width:440px}
+.mdk-reel .ms-cats a{display:inline-flex;align-items:center;padding:7px 14px;border-radius:999px;border:1px solid rgba(13,36,76,.16);background:rgba(255,255,255,.55);color:var(--navy)!important;font-size:13.5px;font-weight:500;line-height:1.4;text-decoration:none!important;white-space:nowrap;transition:background .15s ease-out,border-color .15s ease-out}
+.mdk-reel .ms-cats a:hover{background:#fff;border-color:rgba(13,36,76,.35)}
+.mdk-reel a:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.mdk-reel .ms-stats{display:flex;gap:28px;margin-top:22px;flex-wrap:wrap}
+.mdk-reel .ms-stats div{display:flex;flex-direction:column}
+.mdk-reel .ms-stats b{font-size:28px;font-weight:700;color:#fff;direction:ltr;text-align:right;font-variant-numeric:tabular-nums}
+.mdk-reel .ms-stats span{font-size:13px;color:rgba(255,255,255,.65)}
+.mdk-reel.is-dark .ms-ch h2{color:#fff}
+.mdk-reel.is-dark .ms-ch p{color:rgba(255,255,255,.78)}
+.mdk-reel.is-dark .ms-kick{color:var(--teal)}
+.rl-hint{position:absolute;z-index:6;left:50%;bottom:22px;transform:translateX(-50%);font-size:12px;color:rgba(13,36,76,.6);display:flex;flex-direction:column;align-items:center;gap:8px;transition:opacity .3s}
+.rl-hint:after{content:"";width:1.5px;height:34px;background:linear-gradient(var(--navy),rgba(13,36,76,0));animation:rlHint 1.6s ease-in-out infinite;transform-origin:top}
+@keyframes rlHint{0%{transform:scaleY(0)}50%{transform:scaleY(1)}100%{transform:scaleY(0);transform-origin:bottom}}
+.rl-bar{position:absolute;z-index:6;left:32px;right:32px;bottom:0;height:2px;background:rgba(13,36,76,.08)}
+.rl-bar i{display:block;height:100%;width:100%;background:var(--blue);transform:scaleX(0);transform-origin:right}
+.is-dark .rl-bar{background:rgba(255,255,255,.12)}
+.is-dark .rl-bar i{background:var(--teal)}
+@media (max-width:767px){
+.rl-poster{object-fit:contain;object-position:50% 100%;top:40%;bottom:64px;height:auto}
+.mdk-reel .ms-copy{right:20px;left:20px;width:auto;top:64px;height:auto}
+.mdk-reel .ms-ch{top:0;translate:none}
+.mdk-reel .ms-ch h1{font-size:clamp(28px,8.4vw,38px)}
+.mdk-reel .ms-ch h2{font-size:clamp(27px,8vw,36px)}
+.mdk-reel .ms-ch p{font-size:14.5px;line-height:1.75;margin-top:10px}
+.mdk-reel .ms-kick{margin-bottom:10px;font-size:12px}
+.mdk-reel .ms-cta{margin-top:16px}
+.mdk-reel .ms-btn{padding:12px 18px;font-size:14px;flex:1 1 0}
+.mdk-reel .ms-stats{gap:18px;margin-top:14px}.mdk-reel .ms-stats b{font-size:22px}
+.mdk-reel .ms-cats{flex-wrap:nowrap;overflow-x:auto;margin:14px -20px 0;padding:0 20px 4px;max-width:none;scrollbar-width:none}
+.mdk-reel .ms-cats::-webkit-scrollbar{display:none}
+.mdk-reel .ms-cats a{font-size:13px;padding:6px 12px}
+.rl-labels .ms-label{font-size:11.5px;padding:5px 10px 5px 11px}
+.rl-labels .ms-label small{font-size:10.5px}
+.rl-bar{left:16px;right:16px}
+.rl-hint{display:none}
+}
+@media (prefers-reduced-motion:reduce){.rl-hint:after{animation:none}}
+</style>
+<section class="mdk-reel" aria-label="مطبعة مدارك" data-base="{{ reel.base }}" data-clips="{{ reel.clips|join(',') }}" data-d="{{ reel.d|join('x') }}" data-m="{{ reel.m|join('x') }}" data-mc="{{ reel.mcrop|join(',') }}">
+  <div class="rl-pin">
+    <div class="rl-bg"></div>
+    <div class="rl-bg rl-dark"></div>
+    <picture>
+      <source media="(max-width:767px)" srcset="{{ reel.base }}m/c0_000.webp" width="{{ reel.m[0] }}" height="{{ reel.m[1] }}">
+      <img class="rl-poster" src="{{ reel.base }}d/c0_000.webp" width="{{ reel.d[0] }}" height="{{ reel.d[1] }}" alt="علبة هدايا كحلية من مطبعة مدارك عليها شعار مدارك" fetchpriority="high" decoding="async">
+    </picture>
+    <canvas class="rl-cv" aria-hidden="true"></canvas>
+    <div class="rl-labels" aria-hidden="true">
+      {%- for l in reel.labels %}<span class="ms-label" data-x="{{ l.x }}" data-y="{{ l.y }}">{{ l.name }}{% if l.note %} <small>{{ l.note }}</small>{% endif %}</span>{% endfor %}
+    </div>
+    {{ reel.words }}
+    <div class="rl-hint" aria-hidden="true">مرّر لتفتح العلبة</div>
+    <div class="rl-bar" aria-hidden="true"><i></i></div>
+  </div>
+</section>
+<script>
+(function () {
+  var S = document.querySelector('.mdk-reel'); if (!S || !window.requestAnimationFrame) return;
+  var BASE = S.getAttribute('data-base'), N = S.getAttribute('data-clips').split(',').map(Number);
+  var pin = S.querySelector('.rl-pin'), cv = S.querySelector('.rl-cv'), cx = cv.getContext('2d');
+  var dark = S.querySelector('.rl-dark'), bar = S.querySelector('.rl-bar i'), hint = S.querySelector('.rl-hint');
+  var chs = [].slice.call(S.querySelectorAll('.ms-ch')), labs = [].slice.call(S.querySelectorAll('.rl-labels .ms-label'));
+  var mq = matchMedia('(max-width:767px)'), RM = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var LITE = RM || (navigator.connection && navigator.connection.saveData);
+  var MOB = mq.matches, KIND = MOB ? 'm' : 'd', MC = S.getAttribute('data-mc').split(',').map(Number);
+  S.classList.add('rl-js');
+  // timeline: [from, to, kind, clip, extra]
+  var TL = [[0, .1, 'h', 0, 0], [.1, .32, 'p', 0], [.32, .37, 'h', 0, 1], [.37, .58, 'p', 1], [.58, .74, 'h', 1, 1], [.74, .8, 'x', 1, 2], [.8, .96, 'p', 2], [.96, 1.01, 'h', 2, 1]];
+  // chapter windows (hero, 01..04)
+  var CW = [[-1, -1, 0, .1], [.12, .16, .3, .34], [.37, .41, .54, .58], [.6, .63, .72, .75], [.8, .84, 2, 2]];
+  var F = N.map(function (n) { return new Array(n); }), OK = N.map(function (n) { return new Array(n); });
+  function url(c, i) { return BASE + KIND + '/c' + c + '_' + ('00' + i).slice(-3) + '.webp'; }
+  function load(c, i) {
+    if (F[c][i]) return; var im = new Image(); F[c][i] = im; im.decoding = 'async';
+    im.onload = function () { OK[c][i] = 1; need = 1; }; im.src = url(c, i);
+  }
+  function plan() {
+    var q = [];
+    for (var c = 0; c < N.length; c++) {
+      q.push([c, 0], [c, N[c] - 1]);
+      if (LITE) continue;
+      [8, 4, 2, 1].forEach(function (s) { for (var i = 0; i < N[c]; i += s) q.push([c, i]); });
+    }
+    var k = 0;
+    (function pump() {
+      var busy = 0;
+      while (k < q.length && busy < 6) { var it = q[k++]; if (!F[it[0]][it[1]]) { load(it[0], it[1]); busy++; } }
+      if (k < q.length) setTimeout(pump, 60);
+    })();
+  }
+  function near(c, i) {
+    i = Math.max(0, Math.min(N[c] - 1, Math.round(i)));
+    for (var d = 0; d < N[c]; d++) {
+      if (OK[c][i - d]) return F[c][i - d];
+      if (OK[c][i + d]) return F[c][i + d];
+    }
+    return null;
+  }
+  var W = 0, H = 0, R = 1, rect = { x: 0, y: 0, w: 0, h: 0 };
+  function size() {
+    MOB = mq.matches; var k = MOB ? 'm' : 'd';
+    if (k !== KIND) { KIND = k; F = N.map(function (n) { return new Array(n); }); OK = N.map(function (n) { return new Array(n); }); plan(); }
+    R = Math.min(window.devicePixelRatio || 1, 2); W = pin.clientWidth; H = pin.clientHeight;
+    cv.width = Math.round(W * R); cv.height = Math.round(H * R);
+    var dim = S.getAttribute(MOB ? 'data-m' : 'data-d').split('x'), fw = +dim[0], fh = +dim[1], s;
+    if (MOB) {
+      // mobile: the whole object area, full width, sitting above the bottom tab bar; words stay on top
+      var bottom = H - (document.documentElement.classList.contains('mdk-lbar-on') ? 64 : 12), room = bottom - H * .4;
+      s = Math.min(W / fw, room / fh);
+      rect = { x: (W - fw * s) / 2, y: bottom - fh * s, w: fw * s, h: fh * s };
+    } else {
+      // desktop: fill the screen, keep the lower part of the shot (the objects) in view
+      s = Math.max(W / fw, H / fh);
+      rect = { x: (W - fw * s) / 2, y: (H - fh * s) * .6, w: fw * s, h: fh * s };
+    }
+    need = 1;
+  }
+  // soft top edge on mobile so the shot melts into the page colour
+  function fade(dk) {
+    if (!MOB || rect.y <= 0) return;
+    var c = dk > 0 ? 'rgba(' + Math.round(238 - 225 * dk) + ',' + Math.round(235 - 199 * dk) + ',' + Math.round(230 - 154 * dk) + ',' : 'rgba(238,235,230,';
+    var g = cx.createLinearGradient(0, rect.y * R, 0, (rect.y + 70) * R);
+    g.addColorStop(0, c + '1)'); g.addColorStop(1, c + '0)');
+    cx.globalAlpha = 1; cx.fillStyle = g; cx.fillRect(0, rect.y * R - 1, cv.width, 71 * R);
+  }
+  // the light set gives way to the navy scene through a widening circle from the box
+  function reveal(a, b, e) {
+    draw(a, 1); if (!b) return;
+    var cxp = (rect.x + rect.w * .36) * R, cyp = (rect.y + rect.h * .6) * R;
+    var rad = e * Math.hypot(Math.max(cxp, cv.width - cxp), Math.max(cyp, cv.height - cyp));
+    cx.save(); cx.beginPath(); cx.arc(cxp, cyp, Math.max(rad, .1), 0, Math.PI * 2); cx.clip();
+    cx.fillStyle = '#0D244C'; cx.fillRect(0, 0, cv.width, cv.height); draw(b, 1); cx.restore();
+  }
+  function ease(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+  function cl(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+  // z > 1 = a slow camera move into a still shot, centred on the objects
+  function draw(im, a, z) {
+    if (!im) return; z = z || 1; cx.globalAlpha = a;
+    var ox = rect.x + rect.w * (MOB ? .5 : .36), oy = rect.y + rect.h * .6;
+    cx.drawImage(im, (ox + (rect.x - ox) * z) * R, (oy + (rect.y - oy) * z) * R, rect.w * z * R, rect.h * z * R);
+  }
+  var ZOOM = 0.07;
+  var P = -1, C = -1, need = 1, ready = 0;
+  function progress() {
+    var r = S.getBoundingClientRect(), span = S.offsetHeight - pin.clientHeight;
+    return span > 0 ? cl(-r.top / span) : 0;
+  }
+  function frame() {
+    requestAnimationFrame(frame);
+    // follow the scroll with a little weight so the film never jumps
+    var target = progress();
+    C = C < 0 || RM ? target : C + (target - C) * 0.16;
+    if (Math.abs(target - C) < 0.0004) C = target;
+    var p = C; if (p === P && !need) return; P = p; need = 0;
+    // pick frames
+    var seg = TL[0];
+    for (var i = 0; i < TL.length; i++) if (p >= TL[i][0] && p < TL[i][1]) { seg = TL[i]; break; }
+    var t = cl((p - seg[0]) / (seg[1] - seg[0]));
+    cx.setTransform(1, 0, 0, 1, 0, 0); cx.clearRect(0, 0, cv.width, cv.height);
+    var dk = 0;
+    if (seg[2] === 'h') { draw(near(seg[3], seg[4] ? N[seg[3]] - 1 : 0), 1, N[seg[3]] === 1 && seg[4] ? 1 + ZOOM : 1); dk = seg[3] === 2 ? 1 : 0; }
+    else if (seg[2] === 'p') {
+      if (N[seg[3]] === 1) draw(near(seg[3], 0), 1, 1 + ZOOM * (RM ? 0 : ease(t)));
+      else if (LITE) { draw(near(seg[3], 0), 1); draw(near(seg[3], N[seg[3]] - 1), ease(t)); }
+      else draw(near(seg[3], t * (N[seg[3]] - 1)), 1);
+      dk = seg[3] === 2 ? 1 : 0;
+    } else { var e = ease(t); reveal(near(seg[3], N[seg[3]] - 1), near(seg[4], 0), e); dk = e; }
+    fade(dk);
+    cx.globalAlpha = 1;
+    if (!ready && OK[0][0]) { ready = 1; S.classList.add('rl-ready'); }
+    dark.style.opacity = dk;
+    S.classList.toggle('is-dark', dk > .5);
+    bar.style.transform = 'scaleX(' + p + ')';
+    if (hint) hint.style.opacity = p > .02 ? 0 : 1;
+    // words
+    chs.forEach(function (ch, i) {
+      var w = CW[i], o;
+      if (i === 0) o = p < w[2] ? 1 : 1 - cl((p - w[2]) / (w[3] - w[2]));
+      else o = p < w[0] ? 0 : p < w[1] ? cl((p - w[0]) / (w[1] - w[0])) : p < w[2] ? 1 : 1 - cl((p - w[2]) / (w[3] - w[2]));
+      o = ease(o); ch.style.opacity = o; ch.style.transform = 'translateY(' + ((1 - o) * 24) + 'px)';
+      ch.classList.toggle('on', o > .5);
+    });
+    // labels on the flat-lay
+    labs.forEach(function (l, i) {
+      var a = cl((p - .6 - i * .012) / .03) * (1 - cl((p - .73) / .02));
+      var x = +l.getAttribute('data-x'), y = +l.getAttribute('data-y');
+      if (MOB) { x = (x - MC[0]) / (MC[2] - MC[0]); y = (y - MC[1]) / (MC[3] - MC[1]); }
+      l.style.left = (rect.x + x * rect.w) + 'px'; l.style.top = (rect.y + y * rect.h) + 'px';
+      l.style.opacity = a; l.style.transform = 'translate(-50%,' + (-100 - (1 - a) * 30) + '%)';
+    });
+  }
+  window.addEventListener('resize', function () { size(); }, { passive: true });
+  // the first frame is the poster (already downloading); the rest waits until the page itself has loaded
+  size(); load(0, 0); requestAnimationFrame(frame);
+  if (document.readyState === 'complete') plan(); else window.addEventListener('load', plan);
+})();
+</script>
