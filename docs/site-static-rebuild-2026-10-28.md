@@ -59,7 +59,7 @@
   - Always Use HTTPS: شغّال. SSL: Full.
   - `cpanel` و`ftp` و`webmail` صاروا CNAME لـ `mail.madarekmatbaa.com` (= `50.6.160.77`)، مشان يضلّوا رايحين على HostGator بعد ما الجذر راح لـ Pages.
 - **الفحص على الدومين الحقيقي (30 ت1):** 1,106 صفحة 200، و106 تحويل قديم شغّال، وكل روابط الـ sitemap (881) موجودة، و404 حقيقي، وما في `noindex`، والـ canonical على www. الجذر ← www (301)، وhttp ← https. الإيميل: MX وSPF وDMARC ما تغيّروا.
-- **على عمار:** Search Console ← Sitemaps ← نبعت `https://www.madarekmatbaa.com/sitemap_index.xml` من جديد، ونراقب تقرير الصفحات شهر.
+- **Search Console (30 ت1) ✅:** حساب `madarek.matbaa@gmail.com` صار مالك لـ Domain property `madarekmatbaa.com` (سجل TXT جديد `google-site-verification=jYQnGj…` على Cloudflare، **لا ينحذف**؛ والسجل القديم `7mbNVH…` تبع مالك تاني تركناه). انبعتت `https://www.madarekmatbaa.com/sitemap_index.xml` من جديد: Google قرأها بنفس اليوم «تم الإجراء بنجاح»، 886 صفحة. ومنراقب تقرير الصفحات شهر.
 
 ## الدومين (Cloudflare)
 - madarekmatbaa.net: مضاف (pending) بنفس سجلات Replit.
