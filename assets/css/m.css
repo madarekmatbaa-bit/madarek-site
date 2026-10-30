@@ -304,6 +304,8 @@ html[dir=ltr] .m-hs-next .ico{transform:scaleX(-1)}
 .m-reset:hover{color:var(--heading)}
 .m-quote{margin:22px 0 0}
 .m-quote .m-btn{width:100%;min-height:54px;font-size:16px}
+.m-quote .m-btn{height:auto;padding-block:10px;white-space:normal;text-align:center;line-height:1.35}
+.m-quote .m-btn span{white-space:normal}
 .m-quote-note{margin:0 0 10px;font-size:13.5px;color:var(--text-3)}
 .m-quote-note:empty{display:none}
 .m-quote-alt{display:block;margin-top:10px;text-align:center;font-size:14px;font-weight:600;color:var(--text-2)}
@@ -329,6 +331,15 @@ html[dir=ltr] .m-hs-next .ico{transform:scaleX(-1)}
 .m-prose a{color:var(--action);font-weight:600}
 .m-prose img{border-radius:14px}
 .m-prose .md-fig{float:left;margin:4px 0 12px 28px;max-width:240px}
+.m-prose .md-table{max-width:100%;table-layout:auto}
+.m-prose .md-table td,.m-prose .md-table th{overflow-wrap:anywhere}
+@media (max-width:767px){.m-prose .md-table th,.m-prose .md-table td{padding:9px 8px;font-size:13px}}
+/* wide option tables scroll inside their box instead of widening the page (Ammar, 30 Oct: «عم تشحط») */
+.m-secs,.m-prose{min-width:0}
+.m-prose .mdk-options,.m-prose .responsive-table{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.m-prose .mdk-options table,.m-prose .responsive-table table{width:max-content;min-width:100%;max-width:none}
+.m-prose .mdk-options td,.m-prose .mdk-options th{white-space:nowrap}
+.m-prose .mdk-options td:nth-child(2){white-space:normal;min-width:150px}
 .m-prose table,.m-prose .md-ptable{width:100%;max-width:760px;border-collapse:separate;border-spacing:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;font-size:14px;margin:0 0 16px}
 .m-prose th{background:var(--surface);color:var(--heading);font-weight:600;padding:10px 14px;text-align:start}
 .m-prose td{padding:10px 14px;border-top:1px solid var(--line-2)}
@@ -454,7 +465,7 @@ body .mdk-markets .mdk-eyebrow,body .mdk-cta-band .mdk-eyebrow{color:var(--md-te
   .m-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:32px 20px}
   .m-pdp-grid{grid-template-columns:1fr}
   .m-gallery{position:static}
-  .m-pdp-secs{grid-template-columns:1fr}
+  .m-pdp-secs{grid-template-columns:minmax(0,1fr)}
   .m-toc{position:sticky;top:64px;z-index:5;flex-direction:row;gap:22px;overflow-x:auto;scrollbar-width:none;border:0;border-bottom:1px solid var(--line);background:#fff;margin:0 calc(-1 * var(--gut));padding-inline:var(--gut)}
   .m-toc::-webkit-scrollbar{display:none}
   .m-toc a{flex:none;padding:12px 0;margin:0;border:0;border-bottom:2px solid transparent;margin-bottom:-1px}
