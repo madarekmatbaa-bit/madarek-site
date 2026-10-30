@@ -215,6 +215,10 @@
    ]
   },
   {
+   "name": "العروض",
+   "path": "/product-category/offers/"
+  },
+  {
    "name": "نصائح الطباعة",
    "path": "/print-tips/"
   },
@@ -236,6 +240,10 @@
   }
  ],
  "cat_nav": [
+  {
+   "name": "العروض والباقات",
+   "path": "/product-category/offers/"
+  },
   {
    "name": "الهدايا الدعائية",
    "path": "/product-category/promotional-ar/",

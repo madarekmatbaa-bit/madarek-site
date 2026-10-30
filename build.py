@@ -484,6 +484,9 @@ def widget_to_html(kind, html):
     return str(box.decode_contents()) if hasattr(box, 'decode_contents') else str(box)
 
 
+OFFERS_CAT = 380
+
+
 def home_products_tabs(raw, head=''):
     s = BeautifulSoup(raw, 'html.parser')
     tabs = []
@@ -496,6 +499,10 @@ def home_products_tabs(raw, head=''):
             plist = sorted(plist, key=lambda p: (p.get('date') or '', p['id']), reverse=True)
         tabs.append({'name': li.get_text(strip=True), 'cat': cats[cid], 'order': 'date' if by_date else 'menu_order',
                      'items': [cards[p['id']] for p in plist[:8]]})
+    # offers first on the home page (Ammar, 31 Oct: «نشر لها أماكن على الموقع»)
+    if cat_products.get(OFFERS_CAT):
+        tabs.insert(0, {'name': 'العروض', 'cat': cats[OFFERS_CAT], 'order': 'menu_order',
+                        'items': [cards[p['id']] for p in cat_products[OFFERS_CAT][:8]]})
     return env.get_template('partials/ptabs.html').render(tabs=tabs, head=head)
 
 

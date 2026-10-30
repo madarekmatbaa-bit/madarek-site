@@ -31,3 +31,9 @@ Category tabs, sub-category chips and the home tabs show a round arrow at each e
 fades at that edge (`data-hs` in `templates/shop.html`, `partials/ptabs.html`; `assets/js/site.js`, `m.css`).
 Arrows follow the reading direction (Arabic and English/Turkish). The current category is scrolled into view
 when it is off screen.
+
+## 31 Oct: new kinds
+- Car fragrances (MD-TR-1-0966) are their own kind with the portal demand for «فواحات» (orders from Syria and Libya).
+- Clothing now counts in full (the site has polos, T-shirts, hoodies, jackets, vests and caps).
+- Offers (category «العروض والباقات», MD-OF-0001…0006) have a high prior, so they show early in «الكل»; they also
+  open the home page tabs.

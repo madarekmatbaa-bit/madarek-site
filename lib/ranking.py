@@ -21,9 +21,8 @@ PORTAL_RULES = [
     ('restaurant', r'منيو|كاسة كرتون|مفرش', {'c369': 1}),
     ('food', r'بيتزا|شاورما|همبرغر|فاهيتا|كنتاكي|صندوق وجبة|زكزاك', {}),
     ('phone', r'حامل موبايل|حامل هاتف|ستاند موبايل', {'c335': 1}),
-    # the site has little clothing yet (a raincoat): clothing demand counts a little
-    ('apparel', r'تي?شي?رت|جاكيت|قبعة|طاقية|طواقي|بولو|كنزة|هودي|فيست|قميص|جيليه|شال|مريول|سوت|الكراج', {'apparel': 0.3}),
-    ('fragrance', r'فواح', {}),          # car air fresheners: not on the site
+    ('apparel', r'تي?شي?رت|جاكيت|قبعة|طاقية|طواقي|بولو|كنزة|هودي|فيست|قميص|جيليه|شال|مريول|سوت|الكراج', {'apparel': 1}),
+    ('fragrance', r'فواح', {'fragrance': 1}),
     ('giftset', r'علب(ة|) دعا|سيت|\+|ضمن بوكس|دفتر.*قلم.*ميدالية', {'giftset': 1}),
     ('agenda', r'أجندة|اجندة|مذكرات', {'agenda': 1}),
     ('notecube', r'مكعب', {'notecube': 1}),
@@ -63,6 +62,7 @@ PORTAL_RULES = [
 
 # site product -> kind: by name first, then by its category
 NAMED = [
+    ('fragrance', r'فواحات|فواحة|معطر سيارة'),
     ('bcard', r'كرت شخصي|بطاقات? (عمل|شخصية)'),
     ('paperbag', r'أكياس ورقية|الأكياس الورقية'),
     ('envelope', r'ظروف|أظرف'),
@@ -77,13 +77,13 @@ NAMED = [
     ('rollup', r'رول أب'),
     ('flag_big', r'علم سارية|قواعد الأعلام'),
 ]
-BY_CAT = {296: 'notebook', 368: 'notebook', 345: 'deskflag', 302: 'giftbox', 332: 'giftset', 340: 'car',
+BY_CAT = {380: 'offers', 296: 'notebook', 368: 'notebook', 345: 'deskflag', 302: 'giftbox', 332: 'giftset', 340: 'car',
           79: 'apparel', 370: 'paperbag'}
 NOTEBOOK = re.compile(r'دفتر|مذكرة|دفاتر')
 
 # what each kind is expected to sell before any portal data (relative); kinds not listed get 1
 PRIOR = {
-    'bcard': 3, 'agenda': 3, 'notebook': 2.5, 'c224': 2.5, 'c80': 2.5, 'paperbag': 2.5, 'giftbox': 2.5,
+    'offers': 6, 'fragrance': 2, 'bcard': 3, 'agenda': 3, 'notebook': 2.5, 'c224': 2.5, 'c80': 2.5, 'paperbag': 2.5, 'giftbox': 2.5,
     'giftset': 2.5, 'brochure': 2, 'envelope': 2, 'letterhead': 2, 'folder': 2, 'sticker': 1.5, 'notecube': 1.5,
     'deskflag': 2, 'flag_maqam': 2, 'flag_feather': 1.5, 'rollup': 1.5, 'flag_big': 1.2, 'c346': 0.8,
     'c276': 2, 'c354': 2, 'c355': 2, 'c356': 1.5, 'c341': 1.5, 'car': 1.5, 'apparel': 1.2,
