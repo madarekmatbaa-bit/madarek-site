@@ -34,8 +34,22 @@ def load(path, default=None):
     return json.load(open(path, encoding='utf-8')) if os.path.exists(path) else (default if default is not None else {})
 
 
+CONCISE = '--concise' in sys.argv
+
+
 def problems(src, out):
     errs = []
+    if CONCISE:
+        if not isinstance(out, str) or not out.strip():
+            return ['empty']
+        if i18n.AR_LETTER.search(out):
+            errs.append('Arabic letters left')
+        if not i18n.marks_ok(src, out):
+            errs.append('⟦⟧ markers: only ones from the source, each once, properly closed')
+        v = i18n.VMARK.findall(out)
+        if len(set(v)) != len(v) or not set(v) <= set(i18n.VMARK.findall(src)):
+            errs.append('⟨⟩ values: only ones from the source, each once')
+        return errs
     if not isinstance(out, str) or not out.strip():
         return ['empty']
     if i18n.AR_LETTER.search(out):
@@ -81,6 +95,7 @@ def source_for(lang):
 
 def cmd_check(a, merge=False):
     src = load(a.src) if getattr(a, 'src', None) else source_for(a.lang)
+    src = {k: (v['ar'] if isinstance(v, dict) else v) for k, v in src.items()}
     extra = {}
     for f in a.files:
         if f.endswith('.src.json'):
@@ -178,6 +193,7 @@ def main():
         if name in ('check', 'import'):
             p.add_argument('files', nargs='+')
             p.add_argument('--src', help='the chunk file that was translated (source texts)')
+            p.add_argument('--concise', action='store_true', help='short versions: markers and values may be dropped')
         if name == 'api':
             p.add_argument('--model', default='claude-sonnet-5-5')
     a = ap.parse_args()

@@ -213,7 +213,7 @@ def build_assets():
     shelf = open(os.path.join(ROOT, 'assets/js/legacy-shop.js'), encoding='utf-8').read()
     shelf = shelf.replace('.elementor-element-49de9f4', '.sh-nav').replace('.elementor-element-195c2fd1', '.sh-hero')
     shelf = shelf.replace('"https://www.madarekmatbaa.com/wp-content/', '"/wp-content/')
-    js = js + '\n;' + shelf
+    js = js + '\n;/*@shelf*/' + shelf
     names = {}
     for name, body in (('site.css', css), ('site.js', js)):
         h = hashlib.sha1(body.encode()).hexdigest()[:10]
@@ -1079,12 +1079,49 @@ def build_i18n(ar_paths):
             done[l].append((ar, alts[l]))
     for l in langs:
         tr = trs[l]
+        js_l = build_i18n_js(l, tr)
+        for ar, lp in done[l]:
+            fp = file_for(lp)
+            h = open(fp, encoding='utf-8').read()
+            write(fp, h.replace(ASSETS['site.js'], js_l))
         html404 = open(os.path.join(OUT, '404.html'), encoding='utf-8').read()
         write(os.path.join(OUT, l, '404.html'), tr.page(html404, '/404', {}))
+        h404 = os.path.join(OUT, l, '404.html')
+        write(h404, open(h404, encoding='utf-8').read().replace(ASSETS['site.js'], js_l))
         build_i18n_index(l, tr, pm)
         build_i18n_sitemap(l, pm, done[l])
         stats[l] = {'pages': len(done[l]), 'missing': mems[l].save_missing(ROOT), 'bad_marks': len(mems[l].bad)}
     return stats
+
+
+def build_i18n_js(lang, tr):
+    """The shop shelf script carries its own Arabic words, category links and WhatsApp number."""
+    src = os.path.join(OUT, ASSETS['site.js'].lstrip('/'))
+    js = open(src, encoding='utf-8').read()
+    head, sep, shelf = js.partition('/*@shelf*/')
+    rep = i18n.LANGS[lang]['contact']['wa']
+
+    def lit(m):
+        q, body = m.group(1), m.group(2)
+        if body.startswith('/') and not body.startswith('//'):
+            return q + tr.url(body) + q
+        if not i18n.has_ar(body):
+            return m.group(0)
+        if '<' in body:
+            body = body.replace('dir="rtl" lang="ar"', f'dir="ltr" lang="{lang}"')
+            body = re.sub(r'>([^<]*[\u0621-\u064A][^<]*)<', lambda t: '>' + (tr.text(t.group(1)) or t.group(1)) + '<', body)
+            return q + body + q
+        t = tr.text(body)
+        if t is None:
+            return m.group(0)
+        return q + t.replace('\\', '\\\\').replace(q, '\\' + q) + q
+    shelf = re.sub(r'(["\'])((?:(?!\1)[^\\\n]|\\.)*)\1', lit, shelf)
+    shelf = shelf.replace('G="905510059096"', f'G="{rep}"')
+    body = head + sep + shelf
+    h = hashlib.sha1(body.encode()).hexdigest()[:10]
+    out = f'/assets/site.{lang}.{h}.js'
+    write(os.path.join(OUT, out.lstrip('/')), body)
+    return out
 
 
 def build_i18n_index(lang, tr, pm):

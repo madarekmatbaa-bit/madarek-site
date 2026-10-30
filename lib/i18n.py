@@ -31,7 +31,7 @@ LANGS = {
         'name': 'English', 'short': 'EN', 'locale': 'en_US', 'dir': 'ltr', 'root': '/en/',
         'seg': {'product': 'product', 'category': 'category', 'shop': 'shop', 'search': 'search', 'page': 'page'},
         'contact': {'wa': '905510059096', 'tel': '+905510059096', 'phone': '+90 551 005 90 96',
-                    'person': 'Ms. Heba', 'label': 'Sales', 'note': 'WhatsApp · Gulf, Iraq, Libya & worldwide'},
+                    'person': 'Ms Heba', 'label': 'Sales', 'note': 'WhatsApp · Gulf, Iraq, Libya & worldwide'},
         'logo': '/assets/brand/madarek-logo-en-navy.svg', 'logo_white': '/assets/brand/madarek-logo-en-white.svg',
         'brand': 'Madarek Matbaa', 'and': 'and',
     },
@@ -39,7 +39,7 @@ LANGS = {
         'name': 'Türkçe', 'short': 'TR', 'locale': 'tr_TR', 'dir': 'ltr', 'root': '/tr/',
         'seg': {'product': 'urun', 'category': 'kategori', 'shop': 'urunler', 'search': 'arama', 'page': 'sayfa'},
         'contact': {'wa': '905071146377', 'tel': '+905071146377', 'phone': '+90 507 114 63 77',
-                    'person': 'Ali', 'label': 'Satış', 'note': 'WhatsApp · İstanbul'},
+                    'person': 'Ali Bey', 'label': 'Satış', 'note': 'WhatsApp · İstanbul'},
         'logo': '/assets/brand/madarek-logo-en-navy.svg', 'logo_white': '/assets/brand/madarek-logo-en-white.svg',
         'brand': 'Madarek Matbaa', 'and': 've',
     },
@@ -74,9 +74,9 @@ def mask(s):
 
 
 def unmask(t, vals):
-    found = sorted(int(i) for i in VMARK.findall(t))
-    if found != list(range(len(vals))):
-        return None
+    found = [int(i) for i in VMARK.findall(t)]
+    if len(set(found)) != len(found) or any(i >= len(vals) for i in found):
+        return None  # a hand-localised text may leave a value out (e.g. a second rep's number)
     return VMARK.sub(lambda m: vals[int(m.group(1))], t)
 
 INLINE = {'a', 'abbr', 'b', 'bdi', 'bdo', 'cite', 'data', 'del', 'dfn', 'em', 'i', 'ins', 'kbd', 'mark', 'q',
@@ -148,6 +148,7 @@ class Memory:
         return None
 
     def save_missing(self, root):
+        json.dump(sorted(self.used), open(os.path.join(root, 'data/i18n', f'used-{self.lang}.json'), 'w'))
         p = os.path.join(root, 'data/i18n', f'missing-{self.lang}.json')
         os.makedirs(os.path.dirname(p), exist_ok=True)
         json.dump(dict(sorted(self.missing.items())), open(p, 'w', encoding='utf-8'), ensure_ascii=False, indent=0)
@@ -265,6 +266,29 @@ def renum(s):
     return MARK.sub(lambda m: f'⟦{m.group(1)}{fwd[m.group(2)]}{m.group(3)}⟧', s), back
 
 
+def marks_ok(src, out):
+    """A translation may drop a marked phrase (short versions), but may not invent, repeat or tangle markers."""
+    have = set(MARK.findall(src))
+    got = MARK.findall(out)
+    if len(set(got)) != len(got) or any(g not in have for g in got):
+        return False
+    pairs = {i for c, i, v in got if not v}
+    for i in pairs:
+        if (('', i, '') in got) != (('/', i, '') in got):
+            return False
+    stack = []
+    for close, i, void in got:
+        if void:
+            continue
+        if close:
+            if not stack or stack[-1] != i:
+                return False
+            stack.pop()
+        else:
+            stack.append(i)
+    return not stack
+
+
 def valid_marks(src, out):
     a = sorted(MARK.findall(src))
     b = sorted(MARK.findall(out))
@@ -351,7 +375,7 @@ class Translator:
             t = self.mem.get(inner) if has_ar(MARK.sub('', inner)) else inner
             if t is None:
                 return False
-            if not valid_marks(inner, t):
+            if not marks_ok(inner, t):
                 m_inner = mask(inner)[0]
                 self.mem.bad[key(m_inner)] = [m_inner, t]
                 self.mem.data.pop(key(m_inner), None)
@@ -486,6 +510,43 @@ class Translator:
                         n['description'] = desc
             sc.string = json.dumps(data, ensure_ascii=False).replace('</', '<\\/')
 
+    # ---- short pages (Ammar, 30 Oct: «اختصر النصوص… نصوص قصيرة ومختصرة ومعبرة»)
+    def trim_product(self, soup):
+        """Product description: intro, picture, the options table and the price note. The sections after it
+        (printing, uses, how to order, shipping, why us, FAQ) repeat what the buy box already says."""
+        pr = soup.select_one('#tab-description .m-prose')
+        if not pr:
+            return
+        kids = [k for k in pr.children if isinstance(k, Tag)]
+        heads = [k for k in kids if k.name in ('h2', 'h3')]
+        if len(heads) >= 2:
+            cut = False
+            for k in kids:
+                if k is heads[1]:
+                    cut = True
+                if cut:
+                    k.decompose()
+        first = pr.find(['h2', 'h3'])
+        if first is not None:
+            nxt = first.find_next_sibling()
+            if nxt is not None and nxt.name == 'p' and nxt.find_next_sibling() is not None and nxt.find_next_sibling().name in ('table', 'ul'):
+                nxt.decompose()  # «available in the following specifications…» above the table says nothing new
+
+    def trim_category(self, soup):
+        """Category text under the grid: keep the opening paragraph and the first section only."""
+        box = soup.select_one('.m-about-body .term-description') or soup.select_one('.m-about-body')
+        if not box:
+            return
+        kids = [k for k in box.children if isinstance(k, Tag)]
+        heads = [k for k in kids if k.name in ('h2', 'h3')]
+        if len(heads) >= 2:
+            cut = False
+            for k in kids:
+                if k is heads[1]:
+                    cut = True
+                if cut:
+                    k.decompose()
+
     # ---- contacts: one sales rep per language
     PRIMARY = '905510059096'  # the general quote number on the Arabic site (Ms. Heba)
     CARD = ('mdk-box', 'mdk-contact')
@@ -540,6 +601,11 @@ class Translator:
             el['href'] = f'https://wa.me/{c["wa"]}'
             for b in el.select('b'):
                 b.string = c['label']
+            for mk in el.select('.m-ftr-mk'):
+                for t in list(mk.children):
+                    if isinstance(t, NavigableString) and t.strip():
+                        t.replace_with(c['label'])
+                        break
             for sm in el.select('small'):
                 sm.string = c['person']
             for bd in el.select('bdi'):
@@ -589,8 +655,19 @@ class Translator:
         if ov:
             self.apply_override(soup, ov)
 
+        for m in head.find_all('meta', attrs={'name': re.compile(r'^twitter:(label|data)\d$')}):
+            m.decompose()  # Yoast «estimated reading time» labels
+        if ar_path.startswith('/product/'):
+            self.trim_product(soup)
+        elif ar_path.startswith('/product-category/') or ar_path.startswith('/shop/'):
+            self.trim_category(soup)
         self.attrs(soup)
         self.walk(soup, body)
+        for t in body.select('svg text, svg tspan, svg title'):
+            if t.string and has_ar(t.string):
+                tt = self.text(t.string)
+                if tt is not None:
+                    t.string = tt
 
         for a in soup.find_all(['a', 'link', 'area'], href=True):
             h = a['href']

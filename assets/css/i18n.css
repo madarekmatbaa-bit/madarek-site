@@ -51,3 +51,4 @@ html[dir=ltr] .ms-ch,html[dir=ltr] .ms-copy{text-align:left}
 html[dir=ltr] .ms-stats b{text-align:left}
 html[dir=ltr] .mdk,html[dir=ltr] .mdk-story,html[dir=ltr] .mdk-story *,html[dir=ltr] .mdk *{font-family:var(--font)}
 .m-tools>.m-lang{padding-inline-start:10px;margin-inline-start:4px;border-inline-start:1px solid var(--line)}
+@media (min-width:1401px) and (max-width:1480px){html[dir=ltr] .m-search{width:180px}}
