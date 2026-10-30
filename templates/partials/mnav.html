@@ -9,8 +9,9 @@
   <ul class="mnav-list" data-list="pages" hidden><li{% if path == '/' %} class="on"{% endif %}><a href="/">الرئيسية</a></li>{{ mlist(nav_pages) }}</ul>
   <div class="mnav-foot">
     <p class="mnav-lbl">اطلب عرض سعر عبر واتساب</p>
-    {% for c in contacts %}<a class="mnav-line" href="https://wa.me/{{ c.wa }}?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%20%D9%85%D8%AF%D8%A7%D8%B1%D9%83%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%B9%D8%B1%D8%B6%20%D8%B3%D8%B9%D8%B1" target="_blank" rel="noopener"><span><b>{{ c.market }}</b><small>{{ c.person }}</small></span><bdi>{{ c.phone }}</bdi></a>
-    {% endfor %}
+    {% for c in contacts %}<a class="mnav-line" data-only="ar" href="https://wa.me/{{ c.wa }}?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%20%D9%85%D8%AF%D8%A7%D8%B1%D9%83%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%B9%D8%B1%D8%B6%20%D8%B3%D8%B9%D8%B1" target="_blank" rel="noopener"><span><b>{{ c.market }}</b><small>{{ c.person }}</small></span><bdi>{{ c.phone }}</bdi></a>
+    {% endfor %}<a class="mnav-line" data-only="intl" data-contact-line hidden href="https://wa.me/905510059096" target="_blank" rel="noopener"><span><b>المبيعات</b><small>الآنسة هبة</small></span><bdi>+90 551 005 90 96</bdi></a>
+    <nav class="m-lang m-lang-mob" aria-label="اللغة"></nav>
     <a class="mnav-portal" href="https://portal.madarekmatbaa.net/" target="_blank" rel="noopener">{{ ico('lock-simple') }}بوابة الموظفين</a>
   </div>
 </aside>

@@ -1,0 +1,54 @@
+/* Language switch + the left-to-right copies (/en/, /tr/). The Arabic site is unchanged by this file
+   except for the small language switch in the header and the mobile menu. */
+@font-face{font-family:"MdkLatinX";font-weight:400;font-style:normal;font-display:swap;src:url(/assets/fonts/poppins-latin-regular.woff2) format("woff2")}
+@font-face{font-family:"MdkLatinX";font-weight:500;font-style:normal;font-display:swap;src:url(/assets/fonts/poppins-latin-medium.woff2) format("woff2")}
+@font-face{font-family:"MdkLatinX";font-weight:600;font-style:normal;font-display:swap;src:url(/assets/fonts/poppins-latin-semibold.woff2) format("woff2")}
+@font-face{font-family:"MdkLatinX";font-weight:700;font-style:normal;font-display:swap;src:url(/assets/fonts/poppins-latin-bold.woff2) format("woff2")}
+
+/* language switch */
+.m-lang{display:flex;align-items:center;gap:2px;font-size:13px;font-weight:600;line-height:1}
+.m-lang:empty{display:none}
+.m-lang a{display:inline-flex;align-items:center;justify-content:center;min-width:40px;min-height:40px;padding:0 8px;border-radius:999px;color:var(--heading);text-decoration:none;transition:background-color .16s ease,color .16s ease}
+.m-lang a:hover{background:var(--surface)}
+.m-lang a:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.m-lang a[lang=ar]{font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;font-size:14px}
+.m-lang a[lang=en],.m-lang a[lang=tr]{font-family:"MdkLatinX","MdkLatin",system-ui,sans-serif;letter-spacing:.02em}
+.m-lang-mob{gap:8px;margin:14px 0 4px}
+.m-lang-mob a{border:1px solid var(--line);min-width:56px}
+@media (max-width:1024px){.m-tools>.m-lang{display:none}}
+
+/* left-to-right sites */
+html[dir=ltr]{--font:"MdkLatinX","MdkLatin","IBM Plex Sans Arabic",system-ui,-apple-system,"Segoe UI",sans-serif;
+  /* a slightly deeper blue sets the international sites apart (Ammar, 30 Oct) */
+  --action:#2449A8;--action-hover:#1B3B8C;--focus:#2449A8;--md-blue:#2449A8}
+html[dir=ltr] body{direction:ltr}
+html[dir=ltr] .m-logo img{height:34px;width:auto}
+html[dir=ltr] .mnav-top img{height:28px;width:auto}
+html[dir=ltr] .mdk-subnav,html[dir=ltr] .mdk-lbar,html[dir=ltr] .mdk-dl-btn small{direction:ltr}
+html[dir=ltr] .mdks-root,html[dir=ltr] .mdks-focus{direction:ltr;text-align:left;font-family:var(--font)}
+html[dir=ltr] .md-table th,html[dir=ltr] .md-ptable th,html[dir=ltr] .mdk-step .n,
+html[dir=ltr] .variations_form table.variations th.label,html[dir=ltr] .variations_form table.variations td.value,
+html[dir=ltr] .woocommerce-product-attributes th,html[dir=ltr] .woocommerce-product-attributes td,
+html[dir=ltr] .mdk-mnav-foot .mail{text-align:left}
+html[dir=ltr] .mdk-tl b{text-align:left}
+html[dir=ltr] .md-prod .md-specs li strong{margin-left:0;margin-right:6px}
+/* arrows point the reading way */
+html[dir=ltr] .ico-dir,html[dir=ltr] .m-mega-cap svg,html[dir=ltr] .m-g-nav svg,html[dir=ltr] .ptabs-arrows svg,
+html[dir=ltr] .mdks-btn .arw{transform:scaleX(-1)}
+html[dir=ltr] .mdks-focus .mdk-tag{transform-origin:14px 50%}
+/* Arabic left untranslated for a moment (new text waiting for its translation) */
+html[dir=ltr] [lang=ar]{direction:rtl;font-family:"IBM Plex Sans Arabic",system-ui,sans-serif}
+/* header: longer English/Turkish menu words + the language switch */
+html[dir=ltr] .m-nav-list{gap:22px}
+@media (min-width:1025px) and (max-width:1400px){
+  html[dir=ltr] .m-search{display:none}
+  html[dir=ltr] .m-search-btn{display:inline-flex}
+}
+@media (min-width:1025px) and (max-width:1240px){html[dir=rtl] .m-search{width:170px}}
+/* home story: same picture, left-to-right words */
+html[dir=ltr] .mdk-story{direction:ltr}
+html[dir=ltr] .ms-ch,html[dir=ltr] .ms-copy{text-align:left}
+html[dir=ltr] .ms-stats b{text-align:left}
+html[dir=ltr] .mdk,html[dir=ltr] .mdk-story,html[dir=ltr] .mdk-story *,html[dir=ltr] .mdk *{font-family:var(--font)}
+.m-tools>.m-lang{padding-inline-start:10px;margin-inline-start:4px;border-inline-start:1px solid var(--line)}
+@media (min-width:1401px) and (max-width:1480px){html[dir=ltr] .m-search{width:180px}}

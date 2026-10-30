@@ -7,12 +7,45 @@
   function on(el, ev, fn, o) { if (el) el.addEventListener(ev, fn, o || false); }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   var reduce = W.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* language: the /en/ and /tr/ copies are built from the Arabic pages (lib/i18n.py) */
+  var LANG = de.lang || 'ar', ROOT = de.getAttribute('data-root') || '/', SEARCH = de.getAttribute('data-search') || '/search/';
+  var TX = {
+    en: {
+      'لا توجد نتائج لـ «{q}». جرّب كلمة أقصر أو كود المنتج.': 'No results for “{q}”. Try a shorter word or the product code.',
+      'كل النتائج ({n})': 'All results ({n})', 'اكتب اسم المنتج أو الكود.': 'Type a product name or code.',
+      'نتائج البحث عن «{q}» | مطبعة مدارك': 'Search results for “{q}” | Madarek Matbaa', 'جارٍ البحث…': 'Searching…',
+      '{c} لـ «{q}»': '{c} for “{q}”', 'مرحباً مدارك، أريد عرض سعر:': 'Hello Madarek, I would like a quote:',
+      'رقم الخيار': 'Option code', 'السعر المعروض': 'Listed price',
+      'اطلب عرض سعر لهذا الخيار عبر واتساب': 'Request a quote for this option on WhatsApp',
+      'اطلب عرض سعر عبر واتساب': 'Request a quote on WhatsApp',
+      'اختر المواصفات والكمية لتشاهد السعر، ثم أرسل الطلب.': 'Choose the specifications and quantity to see the price, then send your request.',
+      'إخفاء': 'Show less', 'اقرأ الوصف كاملاً': 'Read the full description', 'اقرأ المزيد': 'Read more',
+      'عرض {s} من {c}': 'Showing {s} of {c}', 'التنقل السريع': 'Quick navigation'
+    },
+    tr: {
+      'لا توجد نتائج لـ «{q}». جرّب كلمة أقصر أو كود المنتج.': '“{q}” için sonuç bulunamadı. Daha kısa bir kelime veya ürün kodunu deneyin.',
+      'كل النتائج ({n})': 'Tüm sonuçlar ({n})', 'اكتب اسم المنتج أو الكود.': 'Ürün adını veya kodunu yazın.',
+      'نتائج البحث عن «{q}» | مطبعة مدارك': '“{q}” arama sonuçları | Madarek Matbaa', 'جارٍ البحث…': 'Aranıyor…',
+      '{c} لـ «{q}»': '“{q}” için {c}', 'مرحباً مدارك، أريد عرض سعر:': 'Merhaba Madarek, fiyat teklifi almak istiyorum:',
+      'رقم الخيار': 'Seçenek kodu', 'السعر المعروض': 'Listelenen fiyat',
+      'اطلب عرض سعر لهذا الخيار عبر واتساب': 'Bu seçenek için WhatsApp üzerinden teklif isteyin',
+      'اطلب عرض سعر عبر واتساب': 'WhatsApp üzerinden teklif isteyin',
+      'اختر المواصفات والكمية لتشاهد السعر، ثم أرسل الطلب.': 'Fiyatı görmek için özellikleri ve adedi seçin, ardından talebinizi gönderin.',
+      'إخفاء': 'Daha az göster', 'اقرأ الوصف كاملاً': 'Açıklamanın tamamını okuyun', 'اقرأ المزيد': 'Devamını okuyun',
+      'عرض {s} من {c}': '{c} içinden {s} gösteriliyor', 'التنقل السريع': 'Hızlı gezinme'
+    }
+  };
+  function T(s, v) {
+    var t = (TX[LANG] && TX[LANG][s]) || s;
+    if (v) for (var k in v) t = t.split('{' + k + '}').join(v[k]);
+    return t;
+  }
   var finePointer = W.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches;
 
   /* ---------- shared catalog (load more, sorting, search) ---------- */
   var catalogP = null;
   function catalog() {
-    if (!catalogP) catalogP = fetch('/data/catalog.json', { credentials: 'same-origin' }).then(function (r) { return r.json(); });
+    if (!catalogP) catalogP = fetch(ROOT + 'data/catalog.json', { credentials: 'same-origin' }).then(function (r) { return r.json(); });
     return catalogP;
   }
   function card(p) {
@@ -40,6 +73,8 @@
     return r;
   }
   function arCount(n) {
+    if (LANG === 'en') return n + ' product' + (n === 1 ? '' : 's');
+    if (LANG === 'tr') return n + ' ürün';
     if (n === 0) return 'لا منتجات';
     if (n === 1) return 'منتج واحد';
     if (n === 2) return 'منتجان';
@@ -48,11 +83,13 @@
     if (m >= 11) return n + ' منتجاً';
     return n + ' منتج';
   }
-  function countText(total, shown) { return total <= shown ? arCount(total) : 'عرض ' + shown + ' من ' + arCount(total); }
+  function countText(total, shown) { return total <= shown ? arCount(total) : T('عرض {s} من {c}', { s: shown, c: arCount(total) }); }
 
   /* ---------- Arabic-aware search ---------- */
   function norm(s) {
-    return String(s || '').toLowerCase()
+    s = String(s || '');
+    if (LANG !== 'ar') s = s.replace(/İ/g, 'i').replace(/ı/g, 'i').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    return s.toLowerCase()
       .replace(/[ً-ْـ]/g, '')
       .replace(/[أإآٱ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه').replace(/ؤ/g, 'و').replace(/ئ/g, 'ي')
       .replace(/[٠-٩]/g, function (x) { return String(x.charCodeAt(0) - 0x0660); })
@@ -84,10 +121,10 @@
     return out.map(function (x) { return x.p; });
   }
   function resultsHTML(r, q) {
-    if (!r.length) return '<p class="m-res-empty">لا توجد نتائج لـ «' + esc(q) + '». جرّب كلمة أقصر أو كود المنتج.</p>';
+    if (!r.length) return '<p class="m-res-empty">' + T('لا توجد نتائج لـ «{q}». جرّب كلمة أقصر أو كود المنتج.', { q: esc(q) }) + '</p>';
     return r.slice(0, 8).map(function (p) {
       return '<a class="m-res" href="' + esc(p.u) + '"><img src="' + esc(p.t) + '" alt="" loading="lazy"><span class="m-res-t"><b>' + esc(p.n) + '</b><small>' + esc(p.cn) + '</small></span><span class="m-res-p">' + (p.h || '') + '</span></a>';
-    }).join('') + (r.length > 8 ? '<a class="m-res-all" href="/search/?s=' + encodeURIComponent(q) + '">كل النتائج (' + r.length + ')</a>' : '');
+    }).join('') + (r.length > 8 ? '<a class="m-res-all" href="' + SEARCH + '?s=' + encodeURIComponent(q) + '">' + T('كل النتائج ({n})', { n: r.length }) + '</a>' : '');
   }
   function liveSearch(input, box, onShow) {
     var t = 0, idx = -1;
@@ -236,13 +273,13 @@
     var qs = new URLSearchParams(location.search), q = (qs.get('s') || '').trim(), cat = qs.get('cat') || qs.get('product_cat') || '';
     var input = $('#sq'), count = $('#sc'), more = $('#sm'), per = 24, shown = 0, rows = [];
     if (input) input.value = q;
-    if (!q) { count.textContent = 'اكتب اسم المنتج أو الكود.'; if (input) input.focus(); return; }
-    d.title = 'نتائج البحث عن «' + q + '» | مطبعة مدارك';
-    count.textContent = 'جارٍ البحث…';
+    if (!q) { count.textContent = T('اكتب اسم المنتج أو الكود.'); if (input) input.focus(); return; }
+    d.title = T('نتائج البحث عن «{q}» | مطبعة مدارك', { q: q });
+    count.textContent = T('جارٍ البحث…');
     catalog().then(function (data) {
       if (cat && !/^\d+$/.test(cat)) { for (var id in data.c) if (data.c[id][1].indexOf('/' + cat + '/') >= 0) { cat = id; break; } }
       rows = search(data, q, cat);
-      count.textContent = rows.length ? (arCount(rows.length) + ' لـ «' + q + '»') : ('لا توجد نتائج لـ «' + q + '». جرّب كلمة أقصر أو كود المنتج.');
+      count.textContent = rows.length ? T('{c} لـ «{q}»', { c: arCount(rows.length), q: q }) : T('لا توجد نتائج لـ «{q}». جرّب كلمة أقصر أو كود المنتج.', { q: q });
       page();
     });
     function page() {
@@ -271,7 +308,7 @@
     tabs.forEach(function (t, i) {
       on(t, 'click', function () { show(i); });
       on(t, 'keydown', function (e) {
-        var k = e.key === 'ArrowLeft' ? 1 : e.key === 'ArrowRight' ? -1 : 0;
+        var k = (e.key === 'ArrowLeft' ? 1 : e.key === 'ArrowRight' ? -1 : 0) * (de.dir === 'ltr' ? -1 : 1);
         if (k) { e.preventDefault(); var n = (i + k + tabs.length) % tabs.length; tabs[n].focus(); show(n); }
       });
     });
@@ -371,20 +408,20 @@
       dsc.innerHTML = v ? v.d : ''; prc.innerHTML = v ? v.pb : '';
       reset.hidden = !sel.some(Boolean);
       if (mainImg) mainImg.src = v && v.img ? v.img : mainSrc;
-      var lines = ['مرحباً مدارك، أريد عرض سعر:', pv.title];
+      var lines = [T('مرحباً مدارك، أريد عرض سعر:'), pv.title];
       sel.forEach(function (x, j) { if (x) lines.push(pv.rows[j] + ': ' + x); });
       if (v) {
         var tmp = d.createElement('div'); tmp.innerHTML = v.d || '';
         var m = (tmp.textContent || '').match(/MD-[A-Z]{2}-\d{4}-\d{2}/), code = m ? m[0] : (v.s || '');
-        if (code) lines.push('رقم الخيار: ' + code);
-        if (v.p != null) lines.push('السعر المعروض: ' + money(v.p));
+        if (code) lines.push(T('رقم الخيار') + ': ' + code);
+        if (v.p != null) lines.push(T('السعر المعروض') + ': ' + money(v.p));
       }
       lines.push(pv.url);
       var text = encodeURIComponent(lines.join('\n'));
-      quote.href = 'https://wa.me/' + pv.phone + '?text=' + text;
+      quote.href = 'https://wa.me/' + (W.MDK_WA || pv.phone) + '?text=' + text;
       var alt = $('.m-quote-alt'); if (alt) alt.href = 'https://wa.me/963980243748?text=' + text;
-      label.textContent = v ? 'اطلب عرض سعر لهذا الخيار عبر واتساب' : 'اطلب عرض سعر عبر واتساب';
-      note.textContent = v ? '' : 'اختر المواصفات والكمية لتشاهد السعر، ثم أرسل الطلب.';
+      label.textContent = v ? T('اطلب عرض سعر لهذا الخيار عبر واتساب') : T('اطلب عرض سعر عبر واتساب');
+      note.textContent = v ? '' : T('اختر المواصفات والكمية لتشاهد السعر، ثم أرسل الطلب.');
     }
     rows.forEach(function (r, j) {
       on(r, 'click', function (e) {
@@ -401,11 +438,11 @@
   })();
 
   /* ---------- bottom bar (mobile): the old mdk-lbar, reading its items from .lbar-src ---------- */
-  (function(){ var NS='http://www.w3.org/2000/svg', R0=31, F0=11, BY=2, DUR=460; var ICONS={shop:['M5 8.5h14l-1.1 11.5H6.1z','M9 8.5V7.2a3 3 0 0 1 6 0v1.3'],home:['M3.5 11.2 12 4l8.5 7.2','M6 9.6V20h12V9.6','M10.2 20v-5.2h3.6V20'],quote:['M12 3.6a8.3 8.3 0 0 0-7.2 12.4l-1.2 4.4 4.5-1.2A8.3 8.3 0 1 0 12 3.6z','M8.6 10.4h6.8','M8.6 13.4h4.4']}; function sv(t,a){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);return e} function icon(n){var s=sv('svg',{viewBox:'0 0 24 24','aria-hidden':'true',focusable:'false'});ICONS[n].forEach(function(dd){s.appendChild(sv('path',{d:dd}))});return s} function clamp(v){return Math.max(0,Math.min(1,v))} function eio(t){return t>=.5?1-Math.pow(-2*t+2,3)/2:4*t*t*t} function eout(t){return 1-Math.pow(1-t,3)} function ein(t){return t*t*t} function sock(cx,t){if(.02>=t)return '';var R=R0*t,f=F0*t,dd=Math.sqrt((R+f)*(R+f)-f*f),k=R/(R+f);return ' L'+(cx-dd).toFixed(2)+',0 A'+f.toFixed(2)+','+f.toFixed(2)+' 0 0 1 '+(cx-dd*k).toFixed(2)+','+(f*k).toFixed(2)+' A'+R.toFixed(2)+','+R.toFixed(2)+' 0 0 0 '+(cx+dd*k).toFixed(2)+','+(f*k).toFixed(2)+' A'+f.toFixed(2)+','+f.toFixed(2)+' 0 0 1 '+(cx+dd).toFixed(2)+',0'} function activeFor(items){var p=location.pathname;for(var i=0;items.length>i;i++){var it=items[i];if(it.ext)continue;if(it.k==='home'&&(p==='/'||p===''))return i;if(it.k==='shop'&&/^\/(shop|product-category|product)(\/|$)/.test(p))return i}return -1} function init(){ var src=document.querySelector('.lbar-src');if(!src||document.querySelector('.mdk-lbar'))return; var items=[];[].forEach.call(src.querySelectorAll('a[data-k]'),function(a){var href=a.getAttribute('href')||'#';var ext=/^https?:/.test(href)&&href.indexOf(location.host)===-1;items.push({k:a.getAttribute('data-k'),label:a.textContent.trim(),href:href,ext:ext,target:a.getAttribute('target')})}); if(!items.length)return; var bar=document.createElement('nav');bar.className='mdk-lbar';bar.setAttribute('aria-label','التنقل السريع'); var bg=sv('svg',{'class':'bg',preserveAspectRatio:'none','aria-hidden':'true'});var path=sv('path',{});bg.appendChild(path);bar.appendChild(bg); var safe=document.createElement('div');safe.className='safe';bar.appendChild(safe); var row=document.createElement('div');row.className='row';bar.appendChild(row); var bub=document.createElement('div');bub.className='bub';bar.appendChild(bub); items.forEach(function(it,i){var a=document.createElement('a');a.href=it.href;if(it.target)a.target=it.target;if(it.ext)a.rel='noopener';a.appendChild(icon(it.k));var s=document.createElement('span');s.textContent=it.label;a.appendChild(s);row.appendChild(a);it.a=a;var bi=icon(it.k);bub.appendChild(bi);it.bi=bi; a.addEventListener('click',function(e){ if(it.ext){a.classList.remove('tap');void a.offsetWidth;a.classList.add('tap');return} if(i===cur||e.metaKey||e.ctrlKey||e.shiftKey)return; e.preventDefault();var went=false,go=function(){if(went)return;went=true;location.href=it.href}; if(reduce){setActive(i);go();return} animate(cur,i,go);setTimeout(go,DUR+260); }); }); document.body.appendChild(bar);document.documentElement.classList.add('mdk-lbar-on'); var Wd=0,X=[],cur=-1,raf=0; function measure(){Wd=bar.clientWidth;bg.setAttribute('viewBox','0 0 '+Wd+' 62');var r0=bar.getBoundingClientRect().left;X=items.map(function(it){var r=it.a.getBoundingClientRect();return r.left-r0+r.width/2})} function draw(socks,bx,by,sx,sy,showBub){var list=socks.filter(function(s){return s[1]>.02}).sort(function(a,b){return a[0]-b[0]});var dd='M0,62 L0,0';list.forEach(function(s){dd+=sock(s[0],s[1])});dd+=' L'+Wd+',0 L'+Wd+',62 Z';path.setAttribute('d',dd); bub.style.transform='translate3d('+bx.toFixed(2)+'px,'+by.toFixed(2)+'px,0) scale('+sx.toFixed(3)+','+sy.toFixed(3)+')';bub.classList.toggle('vis',!!showBub)} function setIcon(i){items.forEach(function(it,j){it.bi.classList.toggle('on',j===i);it.a.classList.toggle('on',j===i);if(j===i)it.a.setAttribute('aria-current','page');else it.a.removeAttribute('aria-current')})} function setActive(i){cur=i;setIcon(i);if(0>i){draw([],Wd/2,BY,1,1,false);return}draw([[X[i],1]],X[i],BY,1,1,true)} function frame(a,b,t){ var oT=0>a?0:1-ein(clamp(t/.62)),nT=eout(clamp((t-.3)/.7)),e=eio(t); var bx,by,sx=1,sy=1; if(0>a){bx=X[b];by=BY+(1-eout(clamp(t/.8)))*40;var sc=.35+.65*eout(clamp(t/.8));sx=sy=sc} else{bx=X[a]+(X[b]-X[a])*e;var arc=Math.sin(Math.PI*e);by=BY-16*arc;sx=1+.16*arc;sy=1-.12*arc} draw([[X[b],nT]].concat(0>a?[]:[[X[a],oT]]),bx,by,sx,sy,true); } function animate(a,b,done){cancelAnimationFrame(raf);var t0=performance.now();items.forEach(function(it,j){it.a.classList.toggle('on',j===b)});var swapped=false; function step(now){var t=clamp((now-t0)/DUR);if(!swapped&&t>=.45){swapped=true;items.forEach(function(it,j){it.bi.classList.toggle('on',j===b)})}frame(a,b,t);if(1>t)raf=requestAnimationFrame(step);else{cur=b;setIcon(b);if(done)setTimeout(done,40)}} if(0>a){items.forEach(function(it,j){it.bi.classList.toggle('on',j===b)});swapped=true} raf=requestAnimationFrame(step)} bar.classList.add('init');measure();setActive(activeFor(items));requestAnimationFrame(function(){requestAnimationFrame(function(){bar.classList.remove('init')})}); var lw=window.innerWidth;window.addEventListener('resize',function(){if(window.innerWidth===lw)return;lw=window.innerWidth;measure();setActive(cur)}); window.addEventListener('pageshow',function(ev){if(ev.persisted){measure();setActive(activeFor(items))}}); } if(document.readyState!=='loading')init();else document.addEventListener('DOMContentLoaded',init); })();
+  (function(){ var NS='http://www.w3.org/2000/svg', R0=31, F0=11, BY=2, DUR=460; var ICONS={shop:['M5 8.5h14l-1.1 11.5H6.1z','M9 8.5V7.2a3 3 0 0 1 6 0v1.3'],home:['M3.5 11.2 12 4l8.5 7.2','M6 9.6V20h12V9.6','M10.2 20v-5.2h3.6V20'],quote:['M12 3.6a8.3 8.3 0 0 0-7.2 12.4l-1.2 4.4 4.5-1.2A8.3 8.3 0 1 0 12 3.6z','M8.6 10.4h6.8','M8.6 13.4h4.4']}; function sv(t,a){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);return e} function icon(n){var s=sv('svg',{viewBox:'0 0 24 24','aria-hidden':'true',focusable:'false'});ICONS[n].forEach(function(dd){s.appendChild(sv('path',{d:dd}))});return s} function clamp(v){return Math.max(0,Math.min(1,v))} function eio(t){return t>=.5?1-Math.pow(-2*t+2,3)/2:4*t*t*t} function eout(t){return 1-Math.pow(1-t,3)} function ein(t){return t*t*t} function sock(cx,t){if(.02>=t)return '';var R=R0*t,f=F0*t,dd=Math.sqrt((R+f)*(R+f)-f*f),k=R/(R+f);return ' L'+(cx-dd).toFixed(2)+',0 A'+f.toFixed(2)+','+f.toFixed(2)+' 0 0 1 '+(cx-dd*k).toFixed(2)+','+(f*k).toFixed(2)+' A'+R.toFixed(2)+','+R.toFixed(2)+' 0 0 0 '+(cx+dd*k).toFixed(2)+','+(f*k).toFixed(2)+' A'+f.toFixed(2)+','+f.toFixed(2)+' 0 0 1 '+(cx+dd).toFixed(2)+',0'} function activeFor(items){var p=location.pathname;for(var i=0;items.length>i;i++){var it=items[i];if(it.ext)continue;if(it.k==='home'&&(p==='/'||p===''||p===ROOT))return i;if(it.k==='shop'&&/^\/(?:(?:en|tr)\/)?(shop|product-category|product|category|urunler|urun|kategori)(\/|$)/.test(p))return i}return -1} function init(){ var src=document.querySelector('.lbar-src');if(!src||document.querySelector('.mdk-lbar'))return; var items=[];[].forEach.call(src.querySelectorAll('a[data-k]'),function(a){var href=a.getAttribute('href')||'#';var ext=/^https?:/.test(href)&&href.indexOf(location.host)===-1;items.push({k:a.getAttribute('data-k'),label:a.textContent.trim(),href:href,ext:ext,target:a.getAttribute('target')})}); if(!items.length)return; var bar=document.createElement('nav');bar.className='mdk-lbar';bar.setAttribute('aria-label',T('التنقل السريع')); var bg=sv('svg',{'class':'bg',preserveAspectRatio:'none','aria-hidden':'true'});var path=sv('path',{});bg.appendChild(path);bar.appendChild(bg); var safe=document.createElement('div');safe.className='safe';bar.appendChild(safe); var row=document.createElement('div');row.className='row';bar.appendChild(row); var bub=document.createElement('div');bub.className='bub';bar.appendChild(bub); items.forEach(function(it,i){var a=document.createElement('a');a.href=it.href;if(it.target)a.target=it.target;if(it.ext)a.rel='noopener';a.appendChild(icon(it.k));var s=document.createElement('span');s.textContent=it.label;a.appendChild(s);row.appendChild(a);it.a=a;var bi=icon(it.k);bub.appendChild(bi);it.bi=bi; a.addEventListener('click',function(e){ if(it.ext){a.classList.remove('tap');void a.offsetWidth;a.classList.add('tap');return} if(i===cur||e.metaKey||e.ctrlKey||e.shiftKey)return; e.preventDefault();var went=false,go=function(){if(went)return;went=true;location.href=it.href}; if(reduce){setActive(i);go();return} animate(cur,i,go);setTimeout(go,DUR+260); }); }); document.body.appendChild(bar);document.documentElement.classList.add('mdk-lbar-on'); var Wd=0,X=[],cur=-1,raf=0; function measure(){Wd=bar.clientWidth;bg.setAttribute('viewBox','0 0 '+Wd+' 62');var r0=bar.getBoundingClientRect().left;X=items.map(function(it){var r=it.a.getBoundingClientRect();return r.left-r0+r.width/2})} function draw(socks,bx,by,sx,sy,showBub){var list=socks.filter(function(s){return s[1]>.02}).sort(function(a,b){return a[0]-b[0]});var dd='M0,62 L0,0';list.forEach(function(s){dd+=sock(s[0],s[1])});dd+=' L'+Wd+',0 L'+Wd+',62 Z';path.setAttribute('d',dd); bub.style.transform='translate3d('+bx.toFixed(2)+'px,'+by.toFixed(2)+'px,0) scale('+sx.toFixed(3)+','+sy.toFixed(3)+')';bub.classList.toggle('vis',!!showBub)} function setIcon(i){items.forEach(function(it,j){it.bi.classList.toggle('on',j===i);it.a.classList.toggle('on',j===i);if(j===i)it.a.setAttribute('aria-current','page');else it.a.removeAttribute('aria-current')})} function setActive(i){cur=i;setIcon(i);if(0>i){draw([],Wd/2,BY,1,1,false);return}draw([[X[i],1]],X[i],BY,1,1,true)} function frame(a,b,t){ var oT=0>a?0:1-ein(clamp(t/.62)),nT=eout(clamp((t-.3)/.7)),e=eio(t); var bx,by,sx=1,sy=1; if(0>a){bx=X[b];by=BY+(1-eout(clamp(t/.8)))*40;var sc=.35+.65*eout(clamp(t/.8));sx=sy=sc} else{bx=X[a]+(X[b]-X[a])*e;var arc=Math.sin(Math.PI*e);by=BY-16*arc;sx=1+.16*arc;sy=1-.12*arc} draw([[X[b],nT]].concat(0>a?[]:[[X[a],oT]]),bx,by,sx,sy,true); } function animate(a,b,done){cancelAnimationFrame(raf);var t0=performance.now();items.forEach(function(it,j){it.a.classList.toggle('on',j===b)});var swapped=false; function step(now){var t=clamp((now-t0)/DUR);if(!swapped&&t>=.45){swapped=true;items.forEach(function(it,j){it.bi.classList.toggle('on',j===b)})}frame(a,b,t);if(1>t)raf=requestAnimationFrame(step);else{cur=b;setIcon(b);if(done)setTimeout(done,40)}} if(0>a){items.forEach(function(it,j){it.bi.classList.toggle('on',j===b)});swapped=true} raf=requestAnimationFrame(step)} bar.classList.add('init');measure();setActive(activeFor(items));requestAnimationFrame(function(){requestAnimationFrame(function(){bar.classList.remove('init')})}); var lw=window.innerWidth;window.addEventListener('resize',function(){if(window.innerWidth===lw)return;lw=window.innerWidth;measure();setActive(cur)}); window.addEventListener('pageshow',function(ev){if(ev.persisted){measure();setActive(activeFor(items))}}); } if(document.readyState!=='loading')init();else document.addEventListener('DOMContentLoaded',init); })();
 
   /* ---------- fold long text + FAQ accordions ---------- */
   (function(){
-    var LESS='إخفاء';
+    var LESS=T('إخفاء');
     function bgOf(el){
       for(var n=el;n&&n.nodeType===1;n=n.parentElement){
         var c=getComputedStyle(n).backgroundColor;
@@ -453,10 +490,41 @@
     }
     function run(){
       var mob=window.innerWidth<768;
-      fold(document.querySelector('#tab-description .m-prose'),mob?520:560,'اقرأ الوصف كاملاً');
-      fold(document.querySelector('.m-about-body'),mob?320:360,'اقرأ المزيد');
+      fold(document.querySelector('#tab-description .m-prose'),mob?520:560,T('اقرأ الوصف كاملاً'));
+      fold(document.querySelector('.m-about-body'),mob?320:360,T('اقرأ المزيد'));
       [].forEach.call(document.querySelectorAll('.g-faq,.mdk-split>div'),faq);
     }
     if(document.readyState!=='loading')run(); else document.addEventListener('DOMContentLoaded',run);
   })();
+
+  /* ---------- Arabic site: the quote button goes to the rep of the visitor's country ---------- */
+  (function () {
+    if (LANG !== 'ar') return;
+    var REP = { SY: '963980243748', TR: '905071146377' }, MAIN = '905510059096';
+    function apply(cc) {
+      var n = REP[cc]; if (!n) return;
+      W.MDK_WA = n;
+      $$('a[href*="wa.me/' + MAIN + '"]').forEach(function (a) { a.href = a.href.replace('wa.me/' + MAIN, 'wa.me/' + n); });
+    }
+    var cc = null;
+    try { cc = sessionStorage.getItem('mdk-cc'); } catch (e) {}
+    if (cc) { apply(cc); return; }
+    fetch('/cdn-cgi/trace').then(function (r) { return r.ok ? r.text() : ''; }).then(function (t) {
+      var m = /\bloc=([A-Z]{2})/.exec(t || ''); if (!m) return;
+      try { sessionStorage.setItem('mdk-cc', m[1]); } catch (e) {}
+      apply(m[1]);
+    }).catch(function () {});
+  })();
+
+  /* ---------- leads: every WhatsApp, phone or e-mail tap is a lead (GA4 + Meta) ---------- */
+  on(d, 'click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href]'); if (!a) return;
+    var h = a.getAttribute('href') || '', method = /wa\.me\/|api\.whatsapp\.com/.test(h) ? 'whatsapp' : /^tel:/.test(h) ? 'phone' : /^mailto:/.test(h) ? 'email' : '';
+    if (!method) return;
+    var pdp = $('.m-pdp'), code = pdp ? ($('.m-assure bdi') || {}).textContent || '' : '';
+    var num = (/wa\.me\/(\d+)/.exec(h) || /^tel:\+?(\d+)/.exec(h) || [])[1] || '';
+    var params = { method: method, lang: LANG, rep: num, item_id: code, page_type: pdp ? 'product' : (de.querySelector('.m-cat') ? 'category' : 'page') };
+    try { if (W.gtag) W.gtag('event', 'generate_lead', params); } catch (x) {}
+    try { if (W.fbq) W.fbq('track', 'Contact', { content_ids: code ? [code] : [], content_type: 'product', method: method }); } catch (x) {}
+  }, true);
 })();

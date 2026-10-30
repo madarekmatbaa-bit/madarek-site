@@ -33,6 +33,7 @@ NO_MEDIA = '--no-media' in sys.argv
 
 sys.path.insert(0, os.path.join(ROOT, 'lib'))
 import images  # noqa: E402
+import i18n  # noqa: E402
 
 images.setup(MEDIA, CACHE)
 
@@ -42,7 +43,16 @@ def J(path):
 
 
 catalog = J('content/catalog.json')
-pages_raw = J('content/pages-raw.json')
+# Samer left (19 Oct 2026); Ali takes the Istanbul line (Ammar, 30 Oct: «حط علي محله حاليا»)
+SOURCE_FIX = [
+    ('<div class="mdk-person"><div class="who"><b>سامر بويضاني</b><span>مسؤول التصدير</span></div></div>', ''),
+    ('wa.me/905074886377', 'wa.me/905071146377'), ('+90 507 488 63 77', '+90 507 114 63 77'),
+    ('الأستاذ سامر', 'الأستاذ علي'),
+]
+_raw = open(os.path.join(ROOT, 'content/pages-raw.json'), encoding='utf-8').read()
+for _a, _b in SOURCE_FIX:
+    _raw = _raw.replace(json.dumps(_a, ensure_ascii=False)[1:-1], json.dumps(_b, ensure_ascii=False)[1:-1])
+pages_raw = json.loads(_raw)
 nav = J('content/nav.json')
 order = {pid: i for i, pid in enumerate(J('data/order_menu.json'))}
 icons = J('assets/icons.json')
@@ -194,7 +204,7 @@ def seo_paged(seo, base_path, page, pages):
 
 # ---------------------------------------------------------------- assets
 def build_assets():
-    css_order = ['base.css', 'legacy-theme.css', 'legacy-tidy.css', 'legacy-block.css', 'legacy-shop.css', 'm.css']
+    css_order = ['base.css', 'legacy-theme.css', 'legacy-tidy.css', 'legacy-block.css', 'legacy-shop.css', 'm.css', 'i18n.css']
     css = '\n'.join(open(os.path.join(ROOT, 'assets/css', f), encoding='utf-8').read() for f in css_order)
     # the shop shelf and its CSS anchored on Elementor ids; point them at our sections
     css = css.replace('.elementor-element-49de9f4', '.sh-nav').replace('.elementor-element-195c2fd1', '.sh-hero')
@@ -203,7 +213,7 @@ def build_assets():
     shelf = open(os.path.join(ROOT, 'assets/js/legacy-shop.js'), encoding='utf-8').read()
     shelf = shelf.replace('.elementor-element-49de9f4', '.sh-nav').replace('.elementor-element-195c2fd1', '.sh-hero')
     shelf = shelf.replace('"https://www.madarekmatbaa.com/wp-content/', '"/wp-content/')
-    js = js + '\n;' + shelf
+    js = js + '\n;/*@shelf*/' + shelf
     names = {}
     for name, body in (('site.css', css), ('site.js', js)):
         h = hashlib.sha1(body.encode()).hexdigest()[:10]
@@ -372,7 +382,7 @@ env.globals['ico'] = ico
 CONTACTS = [
     {'market': 'ليبيا والعراق والخليج', 'person': 'الآنسة هبة', 'phone': '+90 551 005 90 96', 'wa': '905510059096'},
     {'market': 'سوريا', 'person': 'عمار رجب', 'phone': '+963 980 243 748', 'wa': '963980243748'},
-    {'market': 'إسطنبول', 'person': 'الأستاذ سامر', 'phone': '+90 507 488 63 77', 'wa': '905074886377'},
+    {'market': 'إسطنبول', 'person': 'الأستاذ علي', 'phone': '+90 507 114 63 77', 'wa': '905071146377'},
 ]
 MEGA_BLURB = 'منتجات بشعار مؤسستك بأسعار واضحة وكود لكل منتج.'
 
@@ -405,7 +415,18 @@ NAV_PAGES = [m for m in nav['menu'] if m['path'] not in ('/', '/shop/')]
 MEGA = mega_model()
 
 
+LD_FIX = [('Madarek Mtabaa', 'Madarek Matbaa'),
+          ('"https://www.madarekmatbaa.com/?s={search_term_string}"', '"https://www.madarekmatbaa.com/search/?s={search_term_string}"')]
+
+
 def render(tpl, out_path, **ctx):
+    if ctx.get('seo') and ctx['seo'].get('ld'):
+        lds = []
+        for x in ctx['seo']['ld']:
+            for a, b in LD_FIX:
+                x = x.replace(a, b)
+            lds.append(x)
+        ctx['seo'] = dict(ctx['seo'], ld=lds)
     base = dict(nav=nav, icons=icons, social=SOCIAL, asset=lambda n: ASSETS[n], tracking=True, body_class='',
                 full=False, search_redirect=False, path='', active_menu='', mega=MEGA, nav_pages=NAV_PAGES,
                 contacts=CONTACTS, total_products=len(products))
@@ -475,6 +496,36 @@ def home_products_tabs(raw, head=''):
     return env.get_template('partials/ptabs.html').render(tabs=tabs, head=head)
 
 
+IMG_TAG = re.compile(r'<img\b[^>]*>', re.I)
+
+
+def optimize_imgs(html, first_eager=False):
+    """Big PNG/JPG artwork in the designed pages -> WebP at the size it is shown, with a srcset."""
+    n = [0]
+
+    def sub(m):
+        tag = m.group(0)
+        sm = re.search(r'\ssrc="(/wp-content/uploads/[^"]+\.(?:png|jpe?g))"', tag, re.I)
+        if not sm:
+            return tag
+        src = sm.group(1)
+        if not os.path.exists(images._file(src)):
+            src = re.sub(r'-\d+x\d+(\.\w+)$', r'\1', src)
+            if not os.path.exists(images._file(src)):
+                return tag
+        big, small = images.fit(src, 1100), images.fit(src, 620)
+        t = re.sub(r'\s(src|srcset|sizes|width|height)="[^"]*"', '', tag)
+        n[0] += 1
+        eager = first_eager and n[0] == 1
+        if eager:
+            t = re.sub(r'\sloading="[^"]*"', '', t)
+        attrs = (f' src="{big["url"]}" srcset="{small["url"]} {small["w"]}w, {big["url"]} {big["w"]}w"'
+                 f' sizes="(max-width: 900px) 92vw, 560px" width="{big["w"]}" height="{big["h"]}"'
+                 + (' fetchpriority="high"' if eager else ''))
+        return t[:4] + attrs + t[4:]
+    return IMG_TAG.sub(sub, html)
+
+
 def build_pages():
     out = []
     for pg in pages_raw:
@@ -504,11 +555,11 @@ def build_pages():
                     if img:
                         for k in ('srcset', 'sizes', 'class'):
                             img.attrs.pop(k, None)
-                        img['loading'] = 'lazy'
+                        img.attrs.pop('loading', None)  # the page's first picture: no lazy loading (LCP)
                         parts.insert(0, f'<figure class="doc-fig">{img}</figure>')
                 else:
                     parts.append(widget_to_html(x[1], x[2]))
-        body = relink('\n'.join(parts))
+        body = optimize_imgs(relink('\n'.join(parts)), first_eager=(path != '/'))
         h1 = pg['title'].replace('​', '').strip()
         common = dict(seo=pg['seo'], path=path, active_menu=active_menu_for(path), body=body,
                       search_redirect=(path == '/'))
@@ -720,6 +771,14 @@ def product_model(p, idx):
             vs.append({'a': vals, 'p': v['price'], 's': v.get('sku') or '', 'd': v.get('desc') or '', 'img': vimg,
                        'pb': money_short(v['price']) if v['price'] is not None else ''})
         defaults = [r['default'] for r in rows]
+        # open on the cheapest complete option, so the first price a buyer sees matches «from $x»
+        full = [v for v in vs if v['p'] is not None and all(v['a'])]
+        if full:
+            cheapest = min(full, key=lambda v: v['p'])
+            valid = all(any(o[0] == x for o in r['options']) for r, x in zip(rows, cheapest['a']))
+            if valid:
+                defaults = list(cheapest['a'])
+                rows = [dict(r, default=d) for r, d in zip(rows, defaults)]
         sel = None
         if all(defaults):
             for v in vs:
@@ -767,6 +826,30 @@ def fb_id(p):
     return f"{p['sku']}_{p['id']}" if p.get('sku') else f"wc_post_id_{p['id']}"
 
 
+def product_seo(p):
+    """The WooCommerce Product schema carried the whole short description glued together (buttons included);
+    use the page's meta description instead."""
+    lds = []
+    page_desc = None
+    for t in p['seo']['tags']:
+        m = re.search(r'<meta content="([^"]*)" name="description"', t) or re.search(r'name="description" content="([^"]*)"', t)
+        if m:
+            page_desc = H.unescape(m.group(1))
+    for raw in p['seo']['ld']:
+        try:
+            d = json.loads(raw)
+        except ValueError:
+            lds.append(raw)
+            continue
+        graph = d.get('@graph') if isinstance(d, dict) else None
+        nodes = graph if isinstance(graph, list) else [d]
+        for n in nodes:
+            if isinstance(n, dict) and n.get('@type') == 'Product' and page_desc:
+                n['description'] = page_desc
+        lds.append(json.dumps(d, ensure_ascii=False))
+    return dict(p['seo'], ld=lds)
+
+
 def build_products():
     made = []
     for i, p in enumerate(products):
@@ -774,7 +857,7 @@ def build_products():
         pc = primary_cat(p)
         track = {'id': p['id'], 'name': p['name'], 'value': low_price(p) or 0, 'fb_id': fb_id(p),
                  'category': cats[pc]['name'] if pc else ''}
-        render('product.html', file_for(p['path']), seo=p['seo'], p=m, path=p['path'], active_menu='/shop/',
+        render('product.html', file_for(p['path']), seo=product_seo(p), p=m, path=p['path'], active_menu='/shop/',
                body_class='single-product product-template-default woocommerce', track_product=track)
         made.append(p['path'])
     return made
@@ -849,7 +932,7 @@ def build_sitemaps(page_paths):
 
 def build_robots():
     write(os.path.join(OUT, 'robots.txt'),
-          'User-agent: *\nDisallow: /search/\nDisallow: /*?add-to-cart=\n\nSitemap: ' + SITE + '/sitemap_index.xml\n')
+          'User-agent: *\nDisallow: /search/\nDisallow: /en/search/\nDisallow: /tr/arama/\nDisallow: /*?add-to-cart=\n\nSitemap: ' + SITE + '/sitemap_index.xml\n')
 
 
 def build_redirects():
@@ -936,6 +1019,156 @@ def build_feeds():
         write(os.path.join(OUT, 'feeds', f'{name}.xml'), xml)
 
 
+# ---------------------------------------------------------------- translated sites (/en/, /tr/)
+def i18n_items():
+    """Everything that gets its own URL, parents first."""
+    items = [{'path': '/', 'kind': 'home'}, {'path': '/shop/', 'kind': 'shop'}, {'path': '/search/', 'kind': 'search'}]
+    page_paths = {p['path'] for p in pages_raw}
+    for pg in sorted(pages_raw, key=lambda p: p['path'].count('/')):
+        path = pg['path']
+        if path in DROP_PAGES or path in ('/', '/shop/'):
+            continue
+        parts = path.strip('/').split('/')
+        parent = '/' + '/'.join(parts[:-1]) + '/' if len(parts) > 1 else None
+        items.append({'path': path, 'kind': 'page', 'name': pg['title'].replace('\u200b', '').strip(),
+                      'parent': parent if parent in page_paths else None})
+    depth = {}
+    for c in catalog['categories']:
+        d, x = 0, c
+        while x['parent'] and x['parent'] in cats:
+            d += 1
+            x = cats[x['parent']]
+        depth[c['id']] = d
+    for c in sorted(catalog['categories'], key=lambda c: depth[c['id']]):
+        if cat_count.get(c['id'], 0) == 0:
+            continue
+        parent = cats[c['parent']]['path'] if c['parent'] in cats else None
+        items.append({'path': c['path'], 'kind': 'cat', 'name': c['name'], 'parent': parent})
+    for p in products:
+        items.append({'path': p['path'], 'kind': 'product', 'name': p['name'], 'sku': p.get('sku') or ''})
+    return items
+
+
+def build_i18n(ar_paths):
+    langs = list(i18n.LANGS)
+    mems = {l: i18n.Memory(ROOT, l) for l in langs}
+    pm = i18n.PathMap(ROOT)
+    items = i18n_items()
+    for l in langs:
+        pm.assign(l, items, mems)
+    pm.save()
+    stats = {}
+    over = i18n.load_overrides(ROOT)
+    trs = {l: i18n.Translator(l, mems[l], pm, over) for l in langs}
+    done = {l: [] for l in langs}
+    for ar in ar_paths:
+        src = file_for(ar)
+        if not os.path.exists(src):
+            continue
+        alts = {'ar': ar}
+        for l in langs:
+            lp = pm.lang_path(ar, l)
+            if lp:
+                alts[l] = lp
+        html = open(src, encoding='utf-8').read()
+        write(src, i18n.add_alternates(html, alts) if len(alts) > 1 else html)
+        for l in langs:
+            if l not in alts:
+                continue
+            write(file_for(alts[l]), trs[l].page(html, ar, alts))
+            done[l].append((ar, alts[l]))
+    for l in langs:
+        tr = trs[l]
+        js_l = build_i18n_js(l, tr)
+        for ar, lp in done[l]:
+            fp = file_for(lp)
+            h = open(fp, encoding='utf-8').read()
+            write(fp, h.replace(ASSETS['site.js'], js_l))
+        html404 = open(os.path.join(OUT, '404.html'), encoding='utf-8').read()
+        write(os.path.join(OUT, l, '404.html'), tr.page(html404, '/404', {}))
+        h404 = os.path.join(OUT, l, '404.html')
+        write(h404, open(h404, encoding='utf-8').read().replace(ASSETS['site.js'], js_l))
+        build_i18n_index(l, tr, pm)
+        build_i18n_sitemap(l, pm, done[l])
+        stats[l] = {'pages': len(done[l]), 'missing': mems[l].save_missing(ROOT), 'bad_marks': len(mems[l].bad)}
+    return stats
+
+
+def build_i18n_js(lang, tr):
+    """The shop shelf script carries its own Arabic words, category links and WhatsApp number."""
+    src = os.path.join(OUT, ASSETS['site.js'].lstrip('/'))
+    js = open(src, encoding='utf-8').read()
+    head, sep, shelf = js.partition('/*@shelf*/')
+    rep = i18n.LANGS[lang]['contact']['wa']
+
+    def lit(m):
+        q, body = m.group(1), m.group(2)
+        if body.startswith('/') and not body.startswith('//'):
+            return q + tr.url(body) + q
+        if not i18n.has_ar(body):
+            return m.group(0)
+        if '<' in body:
+            body = body.replace('dir="rtl" lang="ar"', f'dir="ltr" lang="{lang}"')
+            body = re.sub(r'>([^<]*[\u0621-\u064A][^<]*)<', lambda t: '>' + (tr.text(t.group(1)) or t.group(1)) + '<', body)
+            return q + body + q
+        t = tr.text(body)
+        if t is None:
+            return m.group(0)
+        return q + t.replace('\\', '\\\\').replace(q, '\\' + q) + q
+    shelf = re.sub(r'(["\'])((?:(?!\1)[^\\\n]|\\.)*)\1', lit, shelf)
+    shelf = shelf.replace('G="905510059096"', f'G="{rep}"')
+    body = head + sep + shelf
+    h = hashlib.sha1(body.encode()).hexdigest()[:10]
+    out = f'/assets/site.{lang}.{h}.js'
+    write(os.path.join(OUT, out.lstrip('/')), body)
+    return out
+
+
+def build_i18n_index(lang, tr, pm):
+    idx = search_index()
+    rows = []
+    for r in idx['p']:
+        u = pm.lang_path(r['u'], lang)
+        if not u:
+            continue
+        r = dict(r, u=u)
+        for k in ('n', 'a', 'cn'):
+            t = tr.text(r[k])
+            r[k] = r[k] if t is None else t
+        r['h'] = tr.html_fragment(r['h'])
+        rows.append(r)
+    cl = {}
+    for cid, (name, path) in idx['c'].items():
+        lp = pm.lang_path(path, lang)
+        if lp:
+            t = tr.text(name)
+            cl[cid] = [t if t is not None else name, lp]
+    write(os.path.join(OUT, lang, 'data/catalog.json'),
+          json.dumps({'p': rows, 'c': cl, 'd': idx['d']}, ensure_ascii=False, separators=(',', ':')))
+
+
+def build_i18n_sitemap(lang, pm, done):
+    now = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S+00:00')
+    noindex = {'/search/'}
+    body = ''
+    for ar, lp in done:
+        if ar in noindex or re.search(r'/page/\d+/$', up.unquote(ar)):
+            continue
+        p = by_path.get(ar)
+        imgs = [SITE + images.local_url(i['src']) for i in p['images']] if p else []
+        body += f'\t<url>\n\t\t<loc>{SITE}{up.quote(lp, safe="/")}</loc>\n\t\t<lastmod>{now}</lastmod>\n'
+        for i in imgs:
+            body += f'\t\t<image:image>\n\t\t\t<image:loc>{H.escape(i)}</image:loc>\n\t\t</image:image>\n'
+        body += '\t</url>\n'
+    xml = ('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
+           'xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n' + body + '</urlset>\n')
+    write(os.path.join(OUT, f'{lang}-sitemap.xml'), xml)
+    idx_path = os.path.join(OUT, 'sitemap_index.xml')
+    idx = open(idx_path, encoding='utf-8').read()
+    idx = idx.replace('</sitemapindex>', f'\t<sitemap>\n\t\t<loc>{SITE}/{lang}-sitemap.xml</loc>\n\t\t<lastmod>{now}</lastmod>\n\t</sitemap>\n</sitemapindex>')
+    write(idx_path, idx)
+
+
 # ---------------------------------------------------------------- main
 def main():
     global ASSETS
@@ -958,13 +1191,14 @@ def main():
            path='/404', body_class='error404')
     write(os.path.join(OUT, 'data/catalog.json'), json.dumps(search_index(), ensure_ascii=False, separators=(',', ':')))
     sm = build_sitemaps(made_pages)
+    langs = build_i18n(made_pages + made_shop + made_products + ['/search/'])
     build_robots()
     nred = build_redirects()
     build_headers()
     build_feeds()
     nimg = images.export(OUT, copy_media=not NO_MEDIA)
     print(f'pages {len(made_pages)} · listing pages {len(made_shop)} · products {len(made_products)} · '
-          f'sitemaps {sm} · redirects {nred} · images {nimg}')
+          f'sitemaps {sm} · redirects {nred} · images {nimg} · languages {langs}')
 
 
 ASSETS = {}

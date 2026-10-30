@@ -10,8 +10,9 @@
       <div class="m-ftr-contact">
         <h2 class="m-ftr-h">تواصل حسب السوق</h2>
         <ul>
-          {% for c in contacts %}<li><a href="https://wa.me/{{ c.wa }}" target="_blank" rel="noopener"><span class="m-ftr-mk">{{ c.market }}<small>{{ c.person }}</small></span><bdi>{{ c.phone }}</bdi></a></li>
-          {% endfor %}<li><a href="mailto:sales@madarekmatbaa.com"><span class="m-ftr-mk">البريد<small>للعروض والطلبات</small></span><bdi>sales@madarekmatbaa.com</bdi></a></li>
+          {% for c in contacts %}<li data-only="ar"><a href="https://wa.me/{{ c.wa }}" target="_blank" rel="noopener"><span class="m-ftr-mk">{{ c.market }}<small>{{ c.person }}</small></span><bdi>{{ c.phone }}</bdi></a></li>
+          {% endfor %}<li data-only="intl" hidden><a data-contact-line href="https://wa.me/905510059096" rel="noopener" target="_blank"><span class="m-ftr-mk">المبيعات<small>الآنسة هبة</small></span><bdi>+90 551 005 90 96</bdi></a></li>
+          <li><a href="mailto:sales@madarekmatbaa.com"><span class="m-ftr-mk">البريد<small>للعروض والطلبات</small></span><bdi>sales@madarekmatbaa.com</bdi></a></li>
         </ul>
       </div>
     </div>

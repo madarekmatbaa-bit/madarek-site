@@ -1,0 +1,87 @@
+{
+  "_about": "Hand-written SEO titles and descriptions for the translated sites, keyed by the Arabic page path. The English site targets companies in the Gulf (Ammar, 30 Oct 2026).",
+  "en": {
+    "/": {
+      "title": "Corporate Gifts & Printing for Gulf Companies | Madarek",
+      "description": "Promotional gifts, stationery, packaging and flags printed with your logo for companies in the UAE, Saudi Arabia, Qatar, Kuwait, Bahrain and Oman. USD prices."
+    },
+    "/shop/": {
+      "title": "Promotional Products with Your Logo | Madarek Matbaa",
+      "description": "Browse 800+ promotional products for GCC companies: pens, notebooks, flasks, power banks, gift sets and packaging. Clear USD prices and a code for every item."
+    },
+    "/about-us/": {
+      "title": "About Madarek Matbaa | Printing House Since 2020",
+      "description": "Madarek Matbaa prints corporate gifts, stationery and packaging from Istanbul, Damascus and China for companies in the Gulf, Iraq, Libya and Syria."
+    },
+    "/contact-us/": {
+      "title": "Contact Madarek Matbaa | Request a Quote on WhatsApp",
+      "description": "Send the product code, quantity and delivery country on WhatsApp and get a quote with a design proof. Serving companies across the UAE, Saudi Arabia and the GCC."
+    },
+    "/markets/": {
+      "title": "Markets We Serve: GCC, Iraq, Libya & Syria | Madarek",
+      "description": "Madarek Matbaa delivers printed corporate gifts and stationery to the UAE, Saudi Arabia, Qatar, Kuwait, Bahrain, Oman, Iraq, Libya and Syria."
+    },
+    "/markets/مطبعة-في-الخليج/": {
+      "title": "Corporate Gifts & Printing in the GCC | Madarek Matbaa",
+      "description": "Promotional gifts, planners and printed stationery with your logo, delivered to companies in the UAE, Saudi Arabia, Qatar, Kuwait, Bahrain and Oman."
+    },
+    "/markets/مطبعة-في-الخليج/مطبعة-دبي/": {
+      "title": "Corporate Gifts & Printing in Dubai | Madarek Matbaa",
+      "description": "Branded corporate gifts, exhibition giveaways and printed stationery for companies in Dubai and the UAE. USD prices, quotes on WhatsApp."
+    },
+    "/markets/مطبعة-في-الخليج/مطبعة-الرياض/": {
+      "title": "Corporate Gifts & Printing in Riyadh | Madarek Matbaa",
+      "description": "Corporate gifts, planners and printed stationery with your logo for companies in Riyadh and Saudi Arabia. USD prices, quotes on WhatsApp."
+    },
+    "/markets/مطبعة-في-الخليج/مطبعة-جدة/": {
+      "title": "Promotional Gifts & Packaging in Jeddah | Madarek Matbaa",
+      "description": "Promotional gifts, packaging and printed stationery with your logo for companies in Jeddah and Saudi Arabia. USD prices, quotes on WhatsApp."
+    },
+    "/product-category/promotional-ar/": {
+      "title": "Promotional Gifts with Logo for GCC Companies | Madarek",
+      "description": "Pens, flasks, power banks, desk sets, clocks and gift sets printed with your logo for companies in the UAE, Saudi Arabia and the Gulf. USD prices."
+    },
+    "/product-category/notebooks/": {
+      "title": "Custom Notebooks & Planners with Logo | Madarek Matbaa",
+      "description": "Branded notebooks, dated planners and diaries printed with your logo for corporate gifting in the Gulf. Clear USD prices and a code for every item."
+    },
+    "/product-category/packaging/": {
+      "title": "Custom Gift Boxes & Branded Packaging | Madarek Matbaa",
+      "description": "Gift boxes and branded packaging printed in your colours for corporate gifts and product launches in the UAE, Saudi Arabia and the GCC."
+    },
+    "/product-category/flag-ar/": {
+      "title": "Custom Flags, Desk Flags & Flagpoles | Madarek Matbaa",
+      "description": "Printed flags, desk flags, feather flags and flagpoles for companies, events and government bodies in the Gulf. USD prices, quotes on WhatsApp."
+    },
+    "/product-category/offset-ar/": {
+      "title": "Business Printing: Letterheads, Folders & Forms | Madarek",
+      "description": "Offset printing for companies: letterheads, envelopes, folders, carbonless forms and restaurant printing, delivered across the Gulf, Iraq and Libya."
+    },
+    "/product-category/promotional-ar/pens/": {
+      "title": "Custom Printed Pens with Logo | Madarek Matbaa",
+      "description": "Metal, plastic and eco pens printed or laser-engraved with your logo for companies in the Gulf. Clear USD prices and minimum quantities per pen."
+    },
+    "/product-category/promotional-ar/drinkware/": {
+      "title": "Branded Flasks, Mugs & Bottles with Logo | Madarek Matbaa",
+      "description": "Vacuum flasks, mugs and water bottles printed or engraved with your logo, a favourite corporate gift in the UAE and Saudi Arabia. USD prices."
+    },
+    "/product-category/promotional-ar/electronics/": {
+      "title": "Branded Power Banks, USB & Tech Gifts | Madarek Matbaa",
+      "description": "Power banks, USB flash drives, chargers and speakers with your logo for VIP clients and staff gifts in the GCC. Clear USD prices."
+    },
+    "/product-category/promotional-ar/gift-sets/": {
+      "title": "Corporate Gift Sets with Logo | Madarek Matbaa",
+      "description": "Ready corporate gift sets with your logo for clients and employees in the Gulf: pens, notebooks, flasks and more in branded boxes."
+    }
+  },
+  "tr": {
+    "/": {
+      "title": "Logolu Promosyon Ürünleri ve Baskı | Madarek Matbaa",
+      "description": "Firmanızın logosuyla promosyon ürünleri, kırtasiye, ambalaj ve bayrak. İstanbul merkezli Madarek Matbaa; dolar fiyatlar, WhatsApp üzerinden teklif."
+    },
+    "/shop/": {
+      "title": "Logolu Promosyon Ürünleri | Madarek Matbaa",
+      "description": "800'den fazla promosyon ürünü: kalem, defter, termos, powerbank, hediye setleri ve ambalaj. Her ürün için net fiyat ve ürün kodu."
+    }
+  }
+}
