@@ -1102,6 +1102,8 @@ def build_i18n_js(lang, tr):
     rep = i18n.LANGS[lang]['contact']['wa']
     shelf = i18n.js_translate(shelf, tr, lang)
     shelf = shelf.replace('G="905510059096"', f'G="{rep}"')
+    shop_seg = i18n.LANGS[lang]['seg']['shop']
+    shelf = shelf.replace('/\\/shop\\/?$/', '/\\/' + shop_seg + '\\/?$/')  # the shelf shows on the shop page
     body = head + sep + shelf
     h = hashlib.sha1(body.encode()).hexdigest()[:10]
     out = f'/assets/site.{lang}.{h}.js'

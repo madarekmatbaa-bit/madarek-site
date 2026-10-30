@@ -55,10 +55,36 @@ html[dir=ltr] .m-nav-list{gap:22px}
   html[dir=ltr] .m-search{display:none}
   html[dir=ltr] .m-search-btn{display:inline-flex}
 }
-@media (min-width:1025px) and (max-width:1240px){html[dir=rtl] .m-search{width:170px}}
 /* home story: same picture, left-to-right words */
 html[dir=ltr] .mdk-story{direction:ltr}
 html[dir=ltr] .ms-ch,html[dir=ltr] .ms-copy{text-align:left}
 html[dir=ltr] .ms-stats b{text-align:left}
 html[dir=ltr] .mdk,html[dir=ltr] .mdk-story,html[dir=ltr] .mdk-story *,html[dir=ltr] .mdk *{font-family:var(--font)}
-@media (min-width:1401px) and (max-width:1480px){html[dir=ltr] .m-search{width:180px}}
+/* header on desktop: the menu keeps its width, the search box takes what is left (Ammar, 30 Oct: «مخربطين») */
+@media (min-width:1025px){
+  .m-nav{flex:0 1 auto}
+  .m-tools{flex:1 1 auto;justify-content:flex-end;min-width:0}
+  .m-search{flex:0 1 300px;width:auto;min-width:170px}
+}
+/* narrow desktops: the search box becomes its icon */
+@media (min-width:1025px) and (max-width:1279px){
+  .m-search{display:none}
+  .m-search-btn{display:inline-flex}
+  .m-hdr-in{gap:18px}
+  .m-nav-list{gap:16px}
+  .m-lang-cur{display:none}
+}
+/* English/Turkish menu words are longer */
+@media (min-width:1025px) and (max-width:1300px){
+  html[dir=ltr] .m-hdr-in{gap:18px}
+  html[dir=ltr] .m-nav-list{gap:16px}
+  html[dir=ltr] .m-nav-link{font-size:14.5px}
+  html[dir=ltr] .m-lang-cur{display:none}
+}
+@media (min-width:1025px) and (max-width:1199px){
+  html[dir=ltr] .m-hdr-cta{width:44px;min-width:44px;padding:0}
+  html[dir=ltr] .m-hdr-cta span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  html[dir=ltr] .m-logo img{height:30px}
+}
+/* language lists line up with the page, whatever the item's own language */
+html[dir] .m-lang-pop a[lang],html[dir] .m-lang-mob a[lang]{direction:inherit}
