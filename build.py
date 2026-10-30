@@ -74,7 +74,14 @@ def relink(html):
         pos = m.end()
     out.append(ABS.sub('', html[pos:]))
     s = ''.join(out)
+    for old, new in LINK_FIX:
+        s = s.replace(f'href="{old}', f'href="{new}')
     return s.replace('href=""', 'href="/"')
+
+
+# old category paths still written inside descriptions
+LINK_FIX = [('/product-category/offset-ar/notebooks/', '/product-category/notebooks/'),
+            ('/product-category/offset-ar/stationery/', '/product-category/stationery/')]
 
 
 def money(x):
@@ -631,6 +638,8 @@ def build_shop():
     made += build_listing('/shop/', 'كل المنتجات', shop['seo'], [('الرئيسية', '/'), ('كل المنتجات', '/shop/')],
                           products, None, about)
     for c in catalog['categories']:
+        if cat_count.get(c['id'], 0) == 0:
+            continue  # empty categories are 301'd (data/redirects_gsc.json)
         crumbs = [(t, p) for t, p in c['breadcrumbs']] + [(c['name'], c['path'])]
         about = f'<div class="term-description">{relink(c["description"])}</div>' if c['description'].strip() else ''
         made += build_listing(c['path'], c['name'], c['seo'], crumbs, cat_products[c['id']], c, about)
@@ -846,7 +855,7 @@ def build_robots():
 def build_redirects():
     lines = []
     seen = set()
-    for src, dst in J('data/redirects_wp.json'):
+    for src, dst in J('data/redirects_wp.json') + J('data/redirects_gsc.json'):
         # match both the raw UTF-8 path and the percent-encoded form browsers send
         for s in (src, up.quote(up.unquote(src), safe='/').lower(), up.quote(up.unquote(src), safe='/')):
             if s in seen or ' ' in s:
@@ -858,8 +867,12 @@ def build_redirects():
                      ('/wishlist/', '/shop/'), ('/woodmart_slider/*', '/'), ('/wp-admin/*', '/'), ('/wp-login.php', '/'),
                      ('/feed/', '/'), ('/comments/feed/', '/'), ('/sitemap.xml', '/sitemap_index.xml'),
                      ('/wp-sitemap.xml', '/sitemap_index.xml'), ('/product_tag/*', '/shop/'), ('/category/*', '/'),
-                     ('/mailpoet_page-sitemap.xml', '/sitemap_index.xml'), ('/woodmart_slider-sitemap.xml', '/sitemap_index.xml')]:
+                     ('/mailpoet_page-sitemap.xml', '/sitemap_index.xml'), ('/woodmart_slider-sitemap.xml', '/sitemap_index.xml'),
+                     ('/shop/page/1/', '/shop/')]:
         lines.append(f'{src} {dst} 301')
+    for c in catalog['categories']:  # /page/1/ is the listing itself
+        if cat_count.get(c['id'], 0):
+            lines.append(f"{c['path']}page/1/ {c['path']} 301")
     write(os.path.join(OUT, '_redirects'), '\n'.join(lines) + '\n')
     return len(lines)
 
