@@ -25,10 +25,11 @@
       </form>
       <script type="application/json" id="pv">{{ p.pv_json|safe }}</script>
       {% endif %}
-      {% if p.show_quote %}<div class="m-quote"><p class="m-quote-note">{{ '' if p.quote_ready else 'اختر المواصفات والكمية لتشاهد السعر، ثم أرسل الطلب.' }}</p><a class="m-btn m-btn-primary" id="quote" href="{{ p.quote_href }}" target="_blank" rel="noopener">{{ ico('whatsapp-logo') }}<span>{{ p.quote_label }}</span></a><a class="m-quote-alt" href="{{ p.quote_sy }}" target="_blank" rel="noopener">أو تواصل مع مبيعات سوريا</a></div>{% endif %}
+      {% if p.show_quote %}<div class="m-quote"><p class="m-quote-note">{{ '' if p.quote_ready else 'اختر المواصفات والكمية لتشاهد السعر، ثم أرسل الطلب.' }}</p><a class="m-btn m-btn-primary" id="quote" href="{{ p.quote_href }}" target="_blank" rel="noopener">{{ ico('whatsapp-logo') }}<span>{{ p.quote_label }}</span></a><a class="m-quote-alt" data-only="ar" href="{{ p.quote_sy }}" target="_blank" rel="noopener">أو تواصل مع مبيعات سوريا</a></div>{% endif %}
       <ul class="m-assure">
         {% if p.sku %}<li>{{ ico('stamp') }}<span>رمز المنتج: <b><bdi>{{ p.sku }}</bdi></b>. أرسله مع الكمية ليصلك عرض السعر.</span></li>{% endif %}
         <li>{{ ico('seal-check') }}<span>نرسل بروفة التصميم للاعتماد قبل الطباعة.</span></li>
+        <li>{{ ico('clock') }}<span>التنفيذ من 7 إلى 10 أيام بعد اعتماد التصميم، والدفع 50% للبدء و50% عند التجهيز.</span></li>
         <li>{{ ico('truck') }}<span>الشحن إلى سوريا وليبيا والعراق والخليج.</span></li>
       </ul>
     </div>

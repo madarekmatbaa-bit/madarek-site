@@ -7,3 +7,4 @@ data/variations.json
 __pycache__/
 *.pyc
 tools/node/
+data/i18n/missing-*.json

@@ -1,0 +1,43 @@
+# Keeps the English and Turkish sites in step with the Arabic one.
+# On every push that changes content, the build lists the Arabic texts that have no translation yet
+# (data/i18n/missing-<lang>.json); tools/translate.py translates them with the Claude API and the
+# translation memory is committed back. Cloudflare Pages then rebuilds with the new translations.
+# Needs the repository secret ANTHROPIC_API_KEY (Settings > Secrets and variables > Actions).
+name: translate
+on:
+  push:
+    branches: [main]
+    paths: ['content/**', 'templates/**', 'build.py', 'lib/**', 'data/order_menu.json', 'data/i18n/overrides.json']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: translate
+  cancel-in-progress: false
+jobs:
+  translate:
+    if: "!contains(github.event.head_commit.message, '[translations]')"
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install -r requirements.txt
+      - name: List untranslated texts
+        run: python3 build.py --no-media
+      - name: Translate
+        env: { ANTHROPIC_API_KEY: '${{ secrets.ANTHROPIC_API_KEY }}' }
+        run: |
+          python3 tools/translate.py api --lang en
+          python3 tools/translate.py api --lang tr
+      - name: Give new pages their URLs
+        run: python3 build.py --no-media
+      - name: Commit
+        run: |
+          git config user.name "madarek-translate"
+          git config user.email "translate@madarekmatbaa.com"
+          git add data/i18n/en.json data/i18n/tr.json data/i18n/slugs.json
+          if git diff --cached --quiet; then echo "nothing new"; exit 0; fi
+          git commit -m "Translations: new texts for /en/ and /tr/ [translations]"
+          git push
