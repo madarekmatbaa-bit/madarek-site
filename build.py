@@ -34,6 +34,7 @@ NO_MEDIA = '--no-media' in sys.argv
 sys.path.insert(0, os.path.join(ROOT, 'lib'))
 import images  # noqa: E402
 import i18n  # noqa: E402
+import ranking  # noqa: E402
 
 images.setup(MEDIA, CACHE)
 
@@ -288,7 +289,9 @@ def descendants(cid):
     return out
 
 
-products = sorted(catalog['products'], key=lambda p: order.get(p['id'], 10 ** 6))
+# listings show what is most likely to sell first, kinds mixed (Ammar, 30 Oct 2026; lib/ranking.py,
+# data/sales_rank.json); data/order_menu.json only breaks ties inside a kind
+products = ranking.order(sorted(catalog['products'], key=lambda p: order.get(p['id'], 10 ** 6)), catalog['categories'])
 by_path = {p['path']: p for p in products}
 cat_by_path = {c['path']: c for c in catalog['categories']}
 cat_products = {}

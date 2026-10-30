@@ -292,6 +292,35 @@
   })();
 
   /* ---------- home: product tabs ---------- */
+  /* rows wider than the screen (category rails, chips, home tabs): arrows + soft edges, current item in view
+     (Ammar, 30 Oct: «ما في لا سهم ولا قرار أروح للطرف الثاني») */
+  $$('[data-hs]').forEach(function (box) {
+    var list = $('.m-hs-list', box), prev = $('.m-hs-prev', box), next = $('.m-hs-next', box), raf = 0;
+    if (!list || !prev || !next) return;
+    box.classList.add('m-hs');
+    var rtl = getComputedStyle(list).direction === 'rtl';
+    function update() {
+      raf = 0;
+      var max = list.scrollWidth - list.clientWidth, p = Math.abs(list.scrollLeft);
+      box.classList.toggle('can-prev', max > 4 && p > 4);
+      box.classList.toggle('can-next', max > 4 && p < max - 4);
+    }
+    function queue() { if (!raf) raf = requestAnimationFrame(update); }
+    function go(dir) {
+      var step = Math.max(160, Math.round(list.clientWidth * 0.75)) * dir * (rtl ? -1 : 1);
+      list.scrollBy({ left: step, behavior: reduce ? 'auto' : 'smooth' });
+    }
+    on(prev, 'click', function () { go(-1); });
+    on(next, 'click', function () { go(1); });
+    on(list, 'scroll', queue, { passive: true });
+    if (W.ResizeObserver) new ResizeObserver(queue).observe(list); else on(W, 'resize', queue);
+    var cur = $('.is-on, [aria-selected=true]', list);
+    if (cur && list.scrollWidth > list.clientWidth + 4) {
+      var lr = list.getBoundingClientRect(), cr = cur.getBoundingClientRect();
+      if (cr.left < lr.left - 1 || cr.right > lr.right + 1) list.scrollLeft += (cr.left + cr.width / 2) - (lr.left + lr.width / 2);
+    }
+    update();
+  });
   $$('[data-ptabs]').forEach(function (box) {
     var tabs = $$('.ptabs-nav button', box), panels = $$('.ptabs-panel', box);
     var prev = $('.ptabs-prev', box), next = $('.ptabs-next', box), state = panels.map(function () { return 0; }), cur = 0;

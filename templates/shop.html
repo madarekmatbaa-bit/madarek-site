@@ -13,13 +13,13 @@
       <a class="m-btn m-btn-line" data-only="ar" href="https://wa.me/963980243748?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%20%D9%85%D8%AF%D8%A7%D8%B1%D9%83%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%B9%D8%B1%D8%B6%20%D8%B3%D8%B9%D8%B1%20%D9%84%D9%85%D9%86%D8%AA%D8%AC%D8%A7%D8%AA%20%D9%85%D9%86%20%D8%A7%D9%84%D9%85%D8%AA%D8%AC%D8%B1" target="_blank" rel="noopener">مبيعات سوريا</a>
     </div>
   </header>
-  <nav class="m-rail sh-nav" aria-label="أقسام المنتجات"><ul>
+  <nav class="m-rail sh-nav" aria-label="أقسام المنتجات" data-hs><ul class="m-hs-list">
     <li><a href="/shop/"{% if not cat_id %} class="is-on" aria-current="page"{% endif %}>الكل<small>{{ total_products }}</small></a></li>
     {% for t in topcats %}<li><a href="{{ t.path }}" class="{% if t.current or t.ancestor %}is-on{% endif %}"{% if t.current %} aria-current="page"{% endif %}>{{ t.name }}<small>{{ t.count }}</small></a></li>{% endfor %}
-  </ul></nav>
-  {% if subrows %}{% for r in subrows %}<nav class="m-subcats{% if not loop.first %} is-l2{% endif %}" aria-label="أقسام {{ r.name }}"><ul>
+  </ul><button type="button" class="m-hs-btn m-hs-prev" tabindex="-1" aria-hidden="true">{{ ico('caret-left') }}</button><button type="button" class="m-hs-btn m-hs-next" tabindex="-1" aria-hidden="true">{{ ico('caret-left') }}</button></nav>
+  {% if subrows %}{% for r in subrows %}<nav class="m-subcats{% if not loop.first %} is-l2{% endif %}" aria-label="أقسام {{ r.name }}" data-hs><ul class="m-hs-list">
     {% for k in r.chips %}<li><a href="{{ k.path }}" class="{% if k.on %}is-on{% endif %}"{% if k.current %} aria-current="page"{% endif %}>{% if k.img %}<span class="m-sub-img"><img src="{{ k.img }}" alt="" width="80" height="80" loading="lazy" decoding="async"></span>{% endif %}<span class="m-sub-txt">{{ k.name }}<small>{{ k.count }}</small></span></a></li>{% endfor %}
-  </ul></nav>{% endfor %}{% endif %}
+  </ul><button type="button" class="m-hs-btn m-hs-prev" tabindex="-1" aria-hidden="true">{{ ico('caret-left') }}</button><button type="button" class="m-hs-btn m-hs-next" tabindex="-1" aria-hidden="true">{{ ico('caret-left') }}</button></nav>{% endfor %}{% endif %}
   <div class="m-toolbar">
     <p class="m-count" role="status" data-total="{{ total }}">{{ count_text|safe }}</p>
     <div class="m-tool-ctl">

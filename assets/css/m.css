@@ -167,6 +167,28 @@ html.mnav-open,html.sheet-open{overflow:hidden}
 .m-sub-txt small{font-size:11.5px;font-weight:500;color:var(--text-3)}
 .m-subcats.is-l2 a{height:40px;padding-inline:16px;background:#fff;border-color:var(--line)}
 .m-subcats.is-l2 a.is-on{background:var(--action);border-color:var(--action);color:#fff}
+/* rows wider than the screen: arrows and soft edges show there is more (Ammar, 30 Oct: «ما في لا سهم») */
+html[dir=rtl]{--hs-end:left}
+html[dir=ltr]{--hs-end:right}
+[data-hs]{position:relative}
+.ptabs-navwrap{flex:1 1 auto;min-width:0}
+.m-hs .m-hs-list{--fs:0px;--fe:0px;-webkit-mask-image:linear-gradient(to var(--hs-end),transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%);mask-image:linear-gradient(to var(--hs-end),transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%)}
+.m-hs.can-prev .m-hs-list{--fs:64px}
+.m-hs.can-next .m-hs-list{--fe:64px}
+.m-hs-btn{display:none}
+.m-hs .m-hs-btn{position:absolute;z-index:2;top:50%;width:36px;height:36px;margin-top:-18px;padding:0;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--heading);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(13,36,76,.12);cursor:pointer;opacity:0;visibility:hidden;transform:scale(.9);transition:opacity .16s ease,transform .16s var(--ease-out),visibility 0s .16s,border-color .15s ease}
+.m-hs .m-hs-btn .ico{width:16px;height:16px}
+.m-hs .m-hs-prev{inset-inline-start:0}
+.m-hs .m-hs-next{inset-inline-end:0}
+html[dir=rtl] .m-hs-prev .ico{transform:scaleX(-1)}
+html[dir=ltr] .m-hs-next .ico{transform:scaleX(-1)}
+.m-hs.can-prev .m-hs-prev,.m-hs.can-next .m-hs-next{opacity:1;visibility:visible;transform:none;transition:opacity .16s ease,transform .16s var(--ease-out),visibility 0s,border-color .15s ease}
+.m-hs .m-hs-btn:hover{border-color:var(--heading)}
+.m-hs .m-hs-btn:active{transform:scale(.94)}
+.m-rail.m-hs .m-hs-btn{margin-top:-19px}
+.m-subcats.m-hs .m-hs-btn{margin-top:-20px}
+.m-subcats.is-l2.m-hs .m-hs-btn{width:32px;height:32px;margin-top:-18px}
+@media (prefers-reduced-motion:reduce){.m-hs .m-hs-btn{transition:none}}
 .m-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:8px 0 24px}
 .m-count{margin:0;font-size:14px;color:var(--text-3)}
 .m-tool-ctl{display:flex;align-items:center;gap:10px}
@@ -453,7 +475,12 @@ body .mdk-markets .mdk-eyebrow,body .mdk-cta-band .mdk-eyebrow{color:var(--md-te
   .m-rail{margin-inline:calc(-1 * var(--gut));padding-inline:var(--gut)}
   .m-rail ul{gap:22px}
   .m-subcats{margin-inline:calc(-1 * var(--gut))}
-  .m-subcats ul{padding-inline:var(--gut)}
+  .m-subcats ul{padding-inline:var(--gut);scroll-padding-inline:var(--gut)}
+  .m-rail.m-hs .m-hs-prev,.m-subcats.m-hs .m-hs-prev{inset-inline-start:6px}
+  .m-rail.m-hs .m-hs-next,.m-subcats.m-hs .m-hs-next{inset-inline-end:6px}
+  .m-hs .m-hs-btn{width:32px;height:32px;margin-top:-16px}
+  .m-rail.m-hs .m-hs-btn{margin-top:-17px}
+  .m-subcats.m-hs .m-hs-btn{margin-top:-18px}
   .m-toolbar{flex-direction:column;align-items:stretch;gap:10px;margin-bottom:18px}
   .m-tool-ctl{gap:8px}
   .m-cat-search{flex:1 1 auto;width:auto;min-width:0;height:44px}
