@@ -1100,27 +1100,19 @@ def build_i18n_js(lang, tr):
     js = open(src, encoding='utf-8').read()
     head, sep, shelf = js.partition('/*@shelf*/')
     rep = i18n.LANGS[lang]['contact']['wa']
-
-    def lit(m):
-        q, body = m.group(1), m.group(2)
-        if body.startswith('/') and not body.startswith('//'):
-            return q + tr.url(body) + q
-        if not i18n.has_ar(body):
-            return m.group(0)
-        if '<' in body:
-            body = body.replace('dir="rtl" lang="ar"', f'dir="ltr" lang="{lang}"')
-            body = re.sub(r'>([^<]*[\u0621-\u064A][^<]*)<', lambda t: '>' + (tr.text(t.group(1)) or t.group(1)) + '<', body)
-            return q + body + q
-        t = tr.text(body)
-        if t is None:
-            return m.group(0)
-        return q + t.replace('\\', '\\\\').replace(q, '\\' + q) + q
-    shelf = re.sub(r'(["\'])((?:(?!\1)[^\\\n]|\\.)*)\1', lit, shelf)
+    shelf = i18n.js_translate(shelf, tr, lang)
     shelf = shelf.replace('G="905510059096"', f'G="{rep}"')
     body = head + sep + shelf
     h = hashlib.sha1(body.encode()).hexdigest()[:10]
     out = f'/assets/site.{lang}.{h}.js'
     write(os.path.join(OUT, out.lstrip('/')), body)
+    if shutil.which('node'):  # a broken script would break the whole page: keep the Arabic one instead
+        import subprocess
+        r = subprocess.run(['node', '--check', os.path.join(OUT, out.lstrip('/'))], capture_output=True, text=True)
+        if r.returncode:
+            print(f'WARNING: {out} does not parse, using the Arabic script on /{lang}/:', r.stderr[:300])
+            os.remove(os.path.join(OUT, out.lstrip('/')))
+            return ASSETS['site.js']
     return out
 
 

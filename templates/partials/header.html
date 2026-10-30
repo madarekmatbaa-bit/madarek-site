@@ -27,13 +27,16 @@
       </ul>
     </nav>
     <div class="m-tools">
-      <nav class="m-lang" aria-label="اللغة"></nav>
       <form class="m-search" action="/search/" method="get" role="search">
         {{ ico('magnifying-glass') }}<input type="search" name="s" placeholder="اسم المنتج أو الكود" aria-label="ابحث في المنتجات" autocomplete="off" enterkeyhint="search">
         <div class="m-search-pop m-results" hidden></div>
       </form>
       <button class="m-icon-btn m-search-btn" type="button" aria-label="بحث" aria-controls="so">{{ ico('magnifying-glass') }}</button>
       <a class="m-btn m-btn-primary m-hdr-cta" href="https://wa.me/905510059096?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%20%D9%85%D8%AF%D8%A7%D8%B1%D9%83%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%B9%D8%B1%D8%B6%20%D8%B3%D8%B9%D8%B1" target="_blank" rel="noopener">{{ ico('whatsapp-logo') }}<span>اطلب عرض سعر</span></a>
+      <div class="m-lang" data-lang>
+        <button class="m-icon-btn m-lang-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="langpop" aria-label="اللغة">{{ ico('globe') }}<span class="m-lang-cur" translate="no">ع</span></button>
+        <nav class="m-lang-pop" id="langpop" aria-label="اللغة" hidden></nav>
+      </div>
       <button class="m-icon-btn m-burger" type="button" aria-label="القائمة" aria-controls="mnav" aria-expanded="false">{{ ico('list') }}</button>
     </div>
   </div>

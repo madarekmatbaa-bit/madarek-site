@@ -5,17 +5,28 @@
 @font-face{font-family:"MdkLatinX";font-weight:600;font-style:normal;font-display:swap;src:url(/assets/fonts/poppins-latin-semibold.woff2) format("woff2")}
 @font-face{font-family:"MdkLatinX";font-weight:700;font-style:normal;font-display:swap;src:url(/assets/fonts/poppins-latin-bold.woff2) format("woff2")}
 
-/* language switch */
-.m-lang{display:flex;align-items:center;gap:2px;font-size:13px;font-weight:600;line-height:1}
-.m-lang:empty{display:none}
-.m-lang a{display:inline-flex;align-items:center;justify-content:center;min-width:40px;min-height:40px;padding:0 8px;border-radius:999px;color:var(--heading);text-decoration:none;transition:background-color .16s ease,color .16s ease}
-.m-lang a:hover{background:var(--surface)}
-.m-lang a:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-.m-lang a[lang=ar]{font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;font-size:14px}
-.m-lang a[lang=en],.m-lang a[lang=tr]{font-family:"MdkLatinX","MdkLatin",system-ui,sans-serif;letter-spacing:.02em}
-.m-lang-mob{gap:8px;margin:14px 0 4px}
-.m-lang-mob a{border:1px solid var(--line);min-width:56px}
-@media (max-width:1024px){.m-tools>.m-lang{display:none}}
+/* language menu: a globe button, the languages open under it (Ammar, 30 Oct) */
+.m-lang{position:relative;flex:none}
+.m-lang:has(.m-lang-pop:empty){display:none}
+.m-lang-btn{gap:5px;width:auto;min-width:44px;padding-inline:10px;border-radius:999px}
+.m-lang-btn .ico{width:20px;height:20px}
+.m-lang-cur{font-size:12.5px;font-weight:600;line-height:1;color:var(--heading)}
+.m-lang-cur:lang(ar),.m-lang-cur{font-family:"MdkLatinX","MdkLatin","IBM Plex Sans Arabic",system-ui,sans-serif}
+.m-lang-pop{position:absolute;z-index:320;top:calc(100% + 8px);inset-inline-end:0;min-width:168px;padding:6px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-2);display:grid;gap:2px;transform-origin:top var(--lang-origin,left);transition:opacity .16s var(--ease-out),transform .16s var(--ease-out)}
+html[dir=rtl] .m-lang-pop{--lang-origin:left}
+html[dir=ltr] .m-lang-pop{--lang-origin:right}
+.m-lang-pop[hidden]{display:none}
+@starting-style{.m-lang-pop{opacity:0;transform:scale(.96) translateY(-4px)}}
+.m-lang-pop a,.m-lang-mob a{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;padding:0 12px;border-radius:10px;color:var(--text);font-size:14.5px;font-weight:500;text-decoration:none;transition:background-color .14s ease}
+.m-lang-pop a:hover,.m-lang-pop a:focus-visible{background:var(--surface);outline:none}
+.m-lang-pop a[aria-current],.m-lang-mob a[aria-current]{color:var(--heading);font-weight:700}
+.m-lang-pop .ico,.m-lang-mob .ico{width:16px;height:16px;color:var(--action)}
+.m-lang-pop a[lang=ar],.m-lang-mob a[lang=ar]{font-family:"IBM Plex Sans Arabic",system-ui,sans-serif}
+.m-lang-pop a[lang=en],.m-lang-pop a[lang=tr],.m-lang-mob a[lang=en],.m-lang-mob a[lang=tr]{font-family:"MdkLatinX","MdkLatin",system-ui,sans-serif}
+.m-lang-mob{display:grid;gap:4px;margin:14px 0 4px;padding-top:12px;border-top:1px solid var(--line)}
+.m-lang-mob:empty{display:none}
+@media (max-width:1024px){.m-lang-btn{min-width:40px;padding-inline:8px}.m-lang-cur{display:none}}
+@media (prefers-reduced-motion:reduce){.m-lang-pop{transition:none}}
 
 /* left-to-right sites */
 html[dir=ltr]{--font:"MdkLatinX","MdkLatin","IBM Plex Sans Arabic",system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -50,5 +61,4 @@ html[dir=ltr] .mdk-story{direction:ltr}
 html[dir=ltr] .ms-ch,html[dir=ltr] .ms-copy{text-align:left}
 html[dir=ltr] .ms-stats b{text-align:left}
 html[dir=ltr] .mdk,html[dir=ltr] .mdk-story,html[dir=ltr] .mdk-story *,html[dir=ltr] .mdk *{font-family:var(--font)}
-.m-tools>.m-lang{padding-inline-start:10px;margin-inline-start:4px;border-inline-start:1px solid var(--line)}
 @media (min-width:1401px) and (max-width:1480px){html[dir=ltr] .m-search{width:180px}}

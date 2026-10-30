@@ -332,6 +332,58 @@ def rebuild(soup, text, slots):
     return out
 
 
+# ---------------------------------------------------------------- strings inside scripts
+def js_strings(code):
+    """(start, end, quote, body) for each string literal in JavaScript source (comments skipped)."""
+    i, n, out = 0, len(code), []
+    while i < n:
+        c = code[i]
+        if c == '/' and i + 1 < n and code[i + 1] == '/':
+            j = code.find('\n', i)
+            i = n if j < 0 else j
+            continue
+        if c == '/' and i + 1 < n and code[i + 1] == '*':
+            j = code.find('*/', i + 2)
+            i = n if j < 0 else j + 2
+            continue
+        if c in '"\'`':
+            j = i + 1
+            while j < n and code[j] != c:
+                j += 2 if code[j] == '\\' else 1
+            out.append((i, j + 1, c, code[i + 1:j]))
+            i = j + 1
+            continue
+        i += 1
+    return out
+
+
+def js_translate(code, tr, lang):
+    """Translate the Arabic string literals of a script (plain text, or small HTML snippets)."""
+    parts, last = [], 0
+    for a, b, q, body in js_strings(code):
+        new = None
+        if q != '`' and body.startswith('/') and not body.startswith('//') and ' ' not in body:
+            u = tr.url(body)
+            new = u if u != body else None
+        elif has_ar(body):
+            if '<' in body:
+                t = body.replace('dir="rtl" lang="ar"', f'dir="ltr" lang="{lang}"')
+                esc = lambda x: x.replace('\\', '\\\\').replace(q, '\\' + q)
+                t = re.sub(r'>([^<]*[\u0621-\u064A][^<]*)<',
+                           lambda m: '>' + (esc(tr.text(m.group(1))) if tr.text(m.group(1)) is not None else m.group(1)) + '<',
+                           '>' + t + '<')[1:-1]
+                new = t
+            else:
+                t = tr.text(body)
+                if t is not None:
+                    new = t.replace('\\', '\\\\').replace(q, '\\' + q)
+        if new is not None:
+            parts.append(code[last:a + 1] + new)
+            last = b - 1
+    parts.append(code[last:])
+    return ''.join(parts)
+
+
 # ---------------------------------------------------------------- page translator
 def load_overrides(root):
     """data/i18n/overrides.json: hand-written SEO title/description per language and Arabic path
@@ -647,6 +699,8 @@ class Translator:
                 s.string = json.dumps(data, ensure_ascii=False).replace('</', '<\\/')
             elif s.string and "location.replace('/search/'" in s.string:
                 s.string = s.string.replace("location.replace('/search/'", f"location.replace('{root['data-search']}'")
+            elif s.string and not s.get('src') and has_ar(s.string):
+                s.string = js_translate(s.string, self, lang)
         if soup.title and soup.title.string:
             t = self.text(soup.title.string)
             if t is not None:
@@ -717,14 +771,24 @@ def add_alternates(html, alternates):
     html = html.replace('</head>', links + '</head>', 1)
     m = re.search(r'<html[^>]*\blang="([a-z]+)"', html)
     cur = m.group(1) if m else 'ar'
+    names = {'ar': ('العربية', 'ع'), 'en': ('English', 'EN'), 'tr': ('Türkçe', 'TR')}
     items = []
     for l in ('ar', 'en', 'tr'):
-        if l == cur or l not in alternates:
+        if l not in alternates:
             continue
-        meta = AR_LANG if l == 'ar' else LANGS[l]
-        items.append(f'<a href="{alternates[l]}" hreflang="{l}" lang="{l}" title="{meta["name"]}">{meta["short"] if l != "ar" else "عربي"}</a>')
-    sw = ''.join(items)
-    return re.sub(r'(<nav(?=[^>]*\bclass="m-lang[" ])[^>]*>)(.*?)(</nav>)', lambda m: m.group(1) + sw + m.group(3), html, flags=re.S)
+        name = names[l][0]
+        on = ' aria-current="true"' if l == cur else ''
+        tick = _CHECK if l == cur else ''
+        items.append(f'<a href="{alternates[l]}" hreflang="{l}" lang="{l}"{on}><span>{name}</span>{tick}</a>')
+    menu = ''.join(items)
+    html = re.sub(r'(<nav(?=[^>]*\bclass="m-lang-pop")[^>]*>)(.*?)(</nav>)', lambda x: x.group(1) + menu + x.group(3), html, flags=re.S)
+    html = re.sub(r'(<nav(?=[^>]*\bclass="m-lang m-lang-mob")[^>]*>)(.*?)(</nav>)', lambda x: x.group(1) + menu + x.group(3), html, flags=re.S)
+    return re.sub(r'(<span class="m-lang-cur"[^>]*>)[^<]*(</span>)', lambda x: x.group(1) + names[cur][1] + x.group(2), html)
+
+
+_ph = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'assets/phosphor.json')
+_CHECK = ('<svg class="ico" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" focusable="false">'
+          + json.load(open(_ph, encoding='utf-8')).get('check', '') + '</svg>') if os.path.exists(_ph) else ''
 
 
 # ---------------------------------------------------------------- URLs per language

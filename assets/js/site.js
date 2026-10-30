@@ -497,6 +497,24 @@
     if(document.readyState!=='loading')run(); else document.addEventListener('DOMContentLoaded',run);
   })();
 
+  /* ---------- language menu (globe button) ---------- */
+  $$('[data-lang]').forEach(function (box) {
+    var btn = $('.m-lang-btn', box), pop = $('.m-lang-pop', box);
+    if (!btn || !pop) return;
+    function set(open) {
+      pop.hidden = !open; btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) { var cur = $('a[aria-current]', pop) || $('a', pop); if (cur) cur.focus(); }
+    }
+    on(btn, 'click', function (e) { e.stopPropagation(); set(pop.hidden); });
+    on(d, 'click', function (e) { if (!pop.hidden && !box.contains(e.target)) set(false); });
+    on(d, 'keydown', function (e) { if (e.key === 'Escape' && !pop.hidden) { set(false); btn.focus(); } });
+    on(pop, 'keydown', function (e) {
+      var links = $$('a', pop), i = links.indexOf(d.activeElement);
+      if (e.key === 'ArrowDown') { e.preventDefault(); links[(i + 1) % links.length].focus(); }
+      if (e.key === 'ArrowUp') { e.preventDefault(); links[(i - 1 + links.length) % links.length].focus(); }
+    });
+  });
+
   /* ---------- Arabic site: the quote button goes to the rep of the visitor's country ---------- */
   (function () {
     if (LANG !== 'ar') return;
