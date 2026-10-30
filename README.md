@@ -33,7 +33,9 @@ python3 build.py          # writes dist/
 - `_redirects` (old WordPress redirects + removed cart/account pages), `_headers` (cache + noindex on *.pages.dev)
 - `feeds/google.xml` (Merchant Center, ids `gla_<id>`) and `feeds/meta.xml` (Commerce Manager, ids `<sku>_<id>`)
 - `data/catalog.json` — one shared file for load-more, sorting and search
+- `data/portal-feed.json` — every product for the employee portal: codes, names (ar/en/tr), images, category, price tiers and who owns the price (`data/portal_sync.json`). The portal reads it after each publish (`docs/portal/portal-request-site-sync-2026-10-31.md`)
 
 ## Next
 
-Products and prices will come from the employee portal (one source of truth) instead of `content/catalog.json`.
+Site → portal: `data/portal-feed.json` (names, images, categories, new products, site-owned prices).
+Portal → site: the portal's list prices for `price_owner = portal` items (`claude/portal-request-site-catalog-feed-2026-10-28.md`, not built yet).

@@ -990,6 +990,109 @@ def build_headers():
 """)
 
 
+# ---------------------------------------------------------------- the portal reads the catalogue from here
+# Ammar, 31 Oct 2026: «لما تعدل على الموقع يتعدل على البوابة». Every build publishes /data/portal-feed.json; the
+# portal reads it every few minutes and updates its catalogue (names, pictures, categories, new products).
+# Prices: the site's own price lists (MD-PR, MD-FL, MD-DS, MD-AG, MD-OF and the products made on the site) are
+# «site»; the supplier lists kept in the portal (MD-TR-*) are «portal». Costs and suppliers are never here.
+PORTAL_SYNC = J('data/portal_sync.json')
+
+
+def _price_owner(sku):
+    sku = sku or ''
+    if sku in PORTAL_SYNC['site_priced_codes']:
+        return 'site'
+    return 'portal' if any(sku.startswith(x) for x in PORTAL_SYNC['portal_priced_prefixes']) else 'site'
+
+
+def _portal_code(sku, simple):
+    """site code -> portal code (the portal adds -V01 to single-model gifts)."""
+    if simple and re.fullmatch(r'MD-TR-\d-\d{4}', sku or ''):
+        return sku + '-V01'
+    return sku
+
+
+def _qty_of(label):
+    m = re.search(r'\d[\d,]*', label or '')
+    return int(m.group(0).replace(',', '')) if m else None
+
+
+def _plain(html_):
+    return re.sub(r'\s+', ' ', BeautifulSoup(html_ or '', 'html.parser').get_text(' ', strip=True)).strip()
+
+
+def build_portal_feed():
+    mems = {l: i18n.Memory(ROOT, l) for l in i18n.LANGS}
+    out = []
+    for p in products:
+        simple = p['type'] != 'variable'
+        model = p['sku'] or ''
+        cat = primary_cat(p)
+        trail = []
+        c = cats.get(cat) if cat else None
+        while c:
+            trail.insert(0, c['name'])
+            c = cats.get(c['parent']) if c['parent'] else None
+        items = []
+        if simple:
+            pr = p['price']
+            items.append({'code': _portal_code(model, True), 'options': {}, 'tiers': [] if pr.get('price') is None else
+                          [{'qty': 1, 'unit': pr['price'], 'total': pr['price'], 'regular': pr.get('regular') if pr.get('on_sale') else None}]})
+        else:
+            qkey = next((r['name'] for r in p['form'] if 'كمية' in r['label'] or 'العدد' in r['label']), None)
+            groups = {}
+            for v in p['variations']:
+                attrs = {k: val for k, val in v['attrs'].items()}
+                q = _qty_of(attrs.pop(qkey, '')) if qkey else None
+                if qkey and q is None:
+                    continue
+                sku = v.get('sku') or ''
+                code = re.sub(r'-\d+$', '', sku) if qkey and q is not None and re.search(r'-\d+$', sku) else sku
+                # some old products give every variation the same SKU (KCN): the options keep them apart
+                g = groups.setdefault((code, tuple(sorted(attrs.items()))), {'code': code, 'options': attrs, 'tiers': []})
+                if v.get('price') is not None:
+                    qq = q or 1
+                    g['tiers'].append({'qty': qq, 'unit': round(v['price'] / qq, 6), 'total': v['price'], 'regular': None})
+            for g in groups.values():
+                g['tiers'].sort(key=lambda t: t['qty'])
+                items.append(g)
+        names = {'ar': p['name']}
+        for l, m in mems.items():
+            t = m.get(p['name'])
+            if t and not i18n.has_ar(t):
+                names[l] = t
+        row = {
+            'model': model, 'name': names, 'url': SITE + p['path'], 'category': trail,
+            'images': [SITE + images.local_url(i['src']) for i in p['images']],
+            'summary': _plain(p['short'])[:600], 'price_owner': _price_owner(model), 'on_request': all(not it['tiers'] for it in items),
+            'items': items,
+        }
+        # old WooCommerce products (KART-N, BRO…) have no MD code: the portal has its own items for them
+        # (MD-TR-6-*), so they are listed for reference and the portal leaves them alone
+        row['sync'] = model.startswith('MD-')
+        if not row['sync'] and model in PORTAL_SYNC.get('legacy_hint', {}):
+            row['portal_hint'] = PORTAL_SYNC['legacy_hint'][model]
+        if model.startswith('MD-OF-'):
+            row['bundle'] = []
+            for li in BeautifulSoup(p['short'], 'html.parser').select('li'):
+                a = li.find('a')
+                linked = by_path.get(a['href']) if a and a.get('href') in by_path else None
+                txt = _plain(str(li))
+                m = re.match(r'([\d,]+)\s+(.*)', txt)
+                piece = {'name': m.group(2) if m else txt, 'qty': int(m.group(1).replace(',', '')) if m else 1,
+                         'code': _portal_code(linked['sku'], linked['type'] != 'variable') if linked and linked.get('sku') else None}
+                if piece['code'] and PORTAL_SYNC.get('legacy_hint', {}).get(piece['code']):
+                    piece['portal_hint'] = PORTAL_SYNC['legacy_hint'][piece['code']]
+                row['bundle'].append(piece)
+        row['rev'] = hashlib.sha1(json.dumps(row, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:12]
+        out.append(row)
+    feed = {'site': SITE, 'generated_at': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'commit': os.environ.get('CF_PAGES_COMMIT_SHA', '')[:12], 'currency': 'USD',
+            'rules': PORTAL_SYNC['rules'], 'count': len(out), 'products': out}
+    write(os.path.join(OUT, 'data/portal-feed.json'), json.dumps(feed, ensure_ascii=False, separators=(',', ':')))
+    return len(out)
+
+
 def build_feeds():
     """Product feeds for Meta (Commerce Manager) and Google Merchant Center, RSS 2.0 with g: fields."""
     def item(p, gid, google):
@@ -1200,6 +1303,7 @@ def main():
     nred = build_redirects()
     build_headers()
     build_feeds()
+    build_portal_feed()
     nimg = images.export(OUT, copy_media=not NO_MEDIA)
     print(f'pages {len(made_pages)} · listing pages {len(made_shop)} · products {len(made_products)} · '
           f'sitemaps {sm} · redirects {nred} · images {nimg} · languages {langs}')

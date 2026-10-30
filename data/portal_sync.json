@@ -1,0 +1,74 @@
+{
+ "rules": {
+  "match": "items[].code = the portal product code; model = the site product code",
+  "site_owns": [
+   "name",
+   "images",
+   "category",
+   "summary",
+   "url",
+   "active (a product missing from the feed was taken off the site)",
+   "prices when price_owner = site"
+  ],
+  "portal_owns": [
+   "cost",
+   "supplier",
+   "supplier code",
+   "floor price",
+   "stock",
+   "centre and market prices",
+   "prices when price_owner = portal"
+  ],
+  "tiers": "qty = the quantity a price starts at; unit = price per piece in USD; total = the price shown on the site for that quantity",
+  "new_products": "a code the portal does not have is created from the feed; its portal price starts as the site price until the portal sets its own",
+  "sync": "sync = false: an old site product without an MD code (KART-N, BRO…). The portal has its own item for it; do not import it. portal_hint = the likely portal model, to confirm in the portal",
+  "bundle": "offers (MD-OF-*): bundle = the pieces in one set or bundle, with the portal code when the piece is on the site",
+  "price_owner": "price_owner = portal: the portal sets the price (MD-TR-* from the supplier lists; MD-FL-* = the sum of its source items in the portal, Ammar 30 Oct). price_owner = site: the site price is the list price (new fragrances and apparel, offers MD-OF-*, desk sets MD-DS-*, print MD-PR-*, agenda MD-AG-*)"
+ },
+ "portal_priced_prefixes": [
+  "MD-TR-",
+  "MD-FL-"
+ ],
+ "site_priced_codes": [
+  "MD-TR-1-0966",
+  "MD-TR-1-1001",
+  "MD-TR-1-1002",
+  "MD-TR-1-1003",
+  "MD-TR-1-1004",
+  "MD-TR-1-1005",
+  "MD-TR-1-1007",
+  "MD-TR-1-1008"
+ ],
+ "legacy_hint": {
+  "KART-N": [
+   "MD-TR-6-0005"
+  ],
+  "BRO": [
+   "MD-TR-6-0002"
+  ],
+  "ANT": [
+   "MD-TR-6-0009"
+  ],
+  "DOSYA": [
+   "MD-TR-6-0010"
+  ],
+  "ETK": [
+   "MD-TR-6-0011"
+  ],
+  "KCN": [
+   "MD-TR-6-0013"
+  ],
+  "ZARF": [
+   "MD-TR-6-0007",
+   "MD-TR-6-0008"
+  ],
+  "BP-01": [
+   "MD-TR-6-0014"
+  ],
+  "DFB": [
+   "MD-TR-2-0041",
+   "MD-TR-2-0043"
+  ],
+  "DFB-T": []
+ }
+}
