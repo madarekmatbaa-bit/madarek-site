@@ -893,8 +893,11 @@ def product_seo(p):
 SHIP_TO = ['SY', 'LY', 'IQ', 'SA', 'AE', 'KW', 'QA', 'BH', 'OM']
 # Production after the design is approved: 7 to 10 days, 20 to 25 for large orders (quote terms).
 HANDLING_DAYS = (7, 25)
-# Door to door, from /shipping/: sea from Istanbul to Misrata, «نحو أسبوعين إلى ثلاثة». Other countries: not stated yet.
-TRANSIT_DAYS = {'LY': (14, 21)}
+# Syria has its own execution centre (Ammar 31 Oct: «على سوريا في مركز تنفيذ مدة 10 ايام»): made and delivered there in 7 to 10 days
+HANDLING_BY_COUNTRY = {'SY': (7, 10)}
+# Door to door. Libya, from /shipping/: sea from Istanbul to Misrata, «نحو أسبوعين إلى ثلاثة».
+# Iraq and the Gulf, Ammar 31 Oct: «العراق 10 ايام، الخليج 25 يوم»
+TRANSIT_DAYS = {'LY': (14, 21), 'IQ': (10, 10), **{c: (25, 25) for c in ('SA', 'AE', 'KW', 'QA', 'BH', 'OM')}}
 # /return-policy/: products with the customer's name or logo are not returnable (a print fault is reprinted).
 # Shipping costs are quoted per order, so no shippingRate.
 RETURN_POLICY = {'@type': 'MerchantReturnPolicy', 'applicableCountry': SHIP_TO,
@@ -908,7 +911,7 @@ def _days(lo, hi):
 
 SHIPPING_DETAILS = []
 for _c in SHIP_TO:
-    _t = {'@type': 'ShippingDeliveryTime', 'handlingTime': _days(*HANDLING_DAYS)}
+    _t = {'@type': 'ShippingDeliveryTime', 'handlingTime': _days(*HANDLING_BY_COUNTRY.get(_c, HANDLING_DAYS))}
     if _c in TRANSIT_DAYS:
         _t['transitTime'] = _days(*TRANSIT_DAYS[_c])
     SHIPPING_DETAILS.append({'@type': 'OfferShippingDetails', 'shippingDestination': {'@type': 'DefinedRegion', 'addressCountry': _c},
