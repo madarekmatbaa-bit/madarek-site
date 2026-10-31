@@ -49,6 +49,11 @@ SOURCE_FIX = [
     ('<div class="mdk-person"><div class="who"><b>سامر بويضاني</b><span>مسؤول التصدير</span></div></div>', ''),
     ('wa.me/905074886377', 'wa.me/905071146377'), ('+90 507 488 63 77', '+90 507 114 63 77'),
     ('الأستاذ سامر', 'الأستاذ علي'),
+    # the return policy page still had the WordPress placeholder and a mail without a link (seen 31 Oct 2026);
+    # main number and mail from the brand kit
+    ('<li>📱 أو عبر واتساب: [رقمك هنا]</li>',
+     '<li>📱 أو عبر واتساب: <a href="https://wa.me/905516498048" dir="ltr">+90 551 649 80 48</a></li>'),
+    ('<a>support@madarekmatbaa.com</a>', '<a href="mailto:info@madarekmatbaa.com" dir="ltr">info@madarekmatbaa.com</a>'),
 ]
 _raw = open(os.path.join(ROOT, 'content/pages-raw.json'), encoding='utf-8').read()
 for _a, _b in SOURCE_FIX:
@@ -422,13 +427,28 @@ LD_FIX = [('Madarek Mtabaa', 'Madarek Matbaa'),
           ('"https://www.madarekmatbaa.com/?s={search_term_string}"', '"https://www.madarekmatbaa.com/search/?s={search_term_string}"')]
 
 
+def org_policy(raw):
+    """The return policy on the Organization too (Google reads it for every product of the shop)."""
+    if '#organization' not in raw or 'hasMerchantReturnPolicy' in raw:
+        return raw
+    try:
+        d = json.loads(raw)
+    except ValueError:
+        return raw
+    nodes = d.get('@graph') if isinstance(d, dict) and isinstance(d.get('@graph'), list) else [d]
+    for n in nodes:
+        if isinstance(n, dict) and n.get('@type') == 'Organization' and str(n.get('@id', '')).endswith('#organization'):
+            n['hasMerchantReturnPolicy'] = RETURN_POLICY
+    return json.dumps(d, ensure_ascii=False)
+
+
 def render(tpl, out_path, **ctx):
     if ctx.get('seo') and ctx['seo'].get('ld'):
         lds = []
         for x in ctx['seo']['ld']:
             for a, b in LD_FIX:
                 x = x.replace(a, b)
-            lds.append(x)
+            lds.append(org_policy(x))
         ctx['seo'] = dict(ctx['seo'], ld=lds)
     base = dict(nav=nav, icons=icons, social=SOCIAL, asset=lambda n: ASSETS[n], tracking=True, body_class='',
                 full=False, search_redirect=False, path='', active_menu='', mega=MEGA, nav_pages=NAV_PAGES,
@@ -854,10 +874,66 @@ def product_seo(p):
         graph = d.get('@graph') if isinstance(d, dict) else None
         nodes = graph if isinstance(graph, list) else [d]
         for n in nodes:
-            if isinstance(n, dict) and n.get('@type') == 'Product' and page_desc:
-                n['description'] = page_desc
+            if isinstance(n, dict) and n.get('@type') == 'Product':
+                if page_desc:
+                    n['description'] = page_desc
+                merchant_fields(n, p)
+        # a product on request has no price: Google counts a Product with no offers, review or rating as an error,
+        # so its page goes without the Product block until it has a price
+        if isinstance(graph, list):
+            d['@graph'] = [n for n in graph if not (isinstance(n, dict) and n.get('@type') == 'Product' and not n.get('offers'))]
+        elif isinstance(d, dict) and d.get('@type') == 'Product' and not d.get('offers'):
+            continue
         lds.append(json.dumps(d, ensure_ascii=False))
     return dict(p['seo'], ld=lds)
+
+
+# Google Search Console suggestions for product pages (31 Oct 2026, Ammar: «رتب المقترحات اللي هو اقترحها … كل ما حسنا نظهر اكثر»).
+# Countries we deliver to (madarek-brand: «نسلّم في سوريا وليبيا والعراق والخليج»).
+SHIP_TO = ['SY', 'LY', 'IQ', 'SA', 'AE', 'KW', 'QA', 'BH', 'OM']
+# Production after the design is approved: 7 to 10 days, 20 to 25 for large orders (quote terms).
+HANDLING_DAYS = (7, 25)
+# Door to door, from /shipping/: sea from Istanbul to Misrata, «نحو أسبوعين إلى ثلاثة». Other countries: not stated yet.
+TRANSIT_DAYS = {'LY': (14, 21)}
+# /return-policy/: products with the customer's name or logo are not returnable (a print fault is reprinted).
+# Shipping costs are quoted per order, so no shippingRate.
+RETURN_POLICY = {'@type': 'MerchantReturnPolicy', 'applicableCountry': SHIP_TO,
+                 'returnPolicyCategory': 'https://schema.org/MerchantReturnNotPermitted',
+                 'merchantReturnLink': SITE + '/return-policy/'}
+
+
+def _days(lo, hi):
+    return {'@type': 'QuantitativeValue', 'minValue': lo, 'maxValue': hi, 'unitCode': 'DAY'}
+
+
+SHIPPING_DETAILS = []
+for _c in SHIP_TO:
+    _t = {'@type': 'ShippingDeliveryTime', 'handlingTime': _days(*HANDLING_DAYS)}
+    if _c in TRANSIT_DAYS:
+        _t['transitTime'] = _days(*TRANSIT_DAYS[_c])
+    SHIPPING_DETAILS.append({'@type': 'OfferShippingDetails', 'shippingDestination': {'@type': 'DefinedRegion', 'addressCountry': _c},
+                             'deliveryTime': _t})
+
+
+def merchant_fields(n, p):
+    """brand and mpn (our code: printed-to-order products have no GTIN), return policy, shipping, condition, and the
+    old price as a strikethrough price. The WooCommerce UnitPriceSpecification only repeated the price with an end
+    date and no start date (the validFrom warning), so it goes."""
+    n.setdefault('brand', {'@type': 'Brand', 'name': 'Madarek'})
+    if p.get('sku'):
+        n.setdefault('mpn', p['sku'])
+    offers = n.get('offers')
+    for o in (offers if isinstance(offers, list) else [offers] if isinstance(offers, dict) else []):
+        o.pop('priceSpecification', None)
+        o['itemCondition'] = 'https://schema.org/NewCondition'
+        o['hasMerchantReturnPolicy'] = RETURN_POLICY
+        o['shippingDetails'] = SHIPPING_DETAILS
+        pr = p['price']
+        if o.get('@type') == 'Offer' and p['type'] != 'variable' and pr.get('on_sale') and pr.get('regular') and pr['regular'] > (pr.get('price') or 0):
+            o['priceSpecification'] = [
+                {'@type': 'UnitPriceSpecification', 'price': f"{pr['price']:.2f}", 'priceCurrency': 'USD'},
+                {'@type': 'UnitPriceSpecification', 'priceType': 'https://schema.org/StrikethroughPrice',
+                 'price': f"{pr['regular']:.2f}", 'priceCurrency': 'USD'}]
 
 
 def build_products():
