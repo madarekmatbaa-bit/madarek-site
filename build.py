@@ -900,7 +900,9 @@ HANDLING_BY_COUNTRY = {'SY': (7, 10)}
 # Syria, from the centre to the customer, Ammar 1 Nov: «من يوم لـ 3 أيام». Shipping cost stays per quote (Ammar 1 Nov: «بيضل حسب كل عرض»).
 TRANSIT_DAYS = {'SY': (1, 3), 'LY': (14, 21), 'IQ': (10, 10), **{c: (25, 25) for c in ('SA', 'AE', 'KW', 'QA', 'BH', 'OM')}}
 # /return-policy/: products with the customer's name or logo are not returnable (a print fault is reprinted).
-# Shipping costs are quoted per order, so no shippingRate.
+# Shipping costs are quoted per order, so no shippingRate, except Syria: free delivery (Ammar 1 Nov: «توصيل مجاني داخل سوريا خليها»),
+# also said on every product page.
+FREE_SHIPPING = {'SY'}
 RETURN_POLICY = {'@type': 'MerchantReturnPolicy', 'applicableCountry': SHIP_TO,
                  'returnPolicyCategory': 'https://schema.org/MerchantReturnNotPermitted',
                  'merchantReturnLink': SITE + '/return-policy/'}
@@ -915,8 +917,10 @@ for _c in SHIP_TO:
     _t = {'@type': 'ShippingDeliveryTime', 'handlingTime': _days(*HANDLING_BY_COUNTRY.get(_c, HANDLING_DAYS))}
     if _c in TRANSIT_DAYS:
         _t['transitTime'] = _days(*TRANSIT_DAYS[_c])
-    SHIPPING_DETAILS.append({'@type': 'OfferShippingDetails', 'shippingDestination': {'@type': 'DefinedRegion', 'addressCountry': _c},
-                             'deliveryTime': _t})
+    _d = {'@type': 'OfferShippingDetails', 'shippingDestination': {'@type': 'DefinedRegion', 'addressCountry': _c}, 'deliveryTime': _t}
+    if _c in FREE_SHIPPING:
+        _d['shippingRate'] = {'@type': 'MonetaryAmount', 'value': 0, 'currency': 'USD'}
+    SHIPPING_DETAILS.append(_d)
 
 
 def merchant_fields(n, p):
