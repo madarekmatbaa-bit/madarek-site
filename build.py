@@ -897,7 +897,8 @@ HANDLING_DAYS = (7, 25)
 HANDLING_BY_COUNTRY = {'SY': (7, 10)}
 # Door to door. Libya, from /shipping/: sea from Istanbul to Misrata, «نحو أسبوعين إلى ثلاثة».
 # Iraq and the Gulf, Ammar 31 Oct: «العراق 10 ايام، الخليج 25 يوم»
-TRANSIT_DAYS = {'LY': (14, 21), 'IQ': (10, 10), **{c: (25, 25) for c in ('SA', 'AE', 'KW', 'QA', 'BH', 'OM')}}
+# Syria, from the centre to the customer, Ammar 1 Nov: «من يوم لـ 3 أيام». Shipping cost stays per quote (Ammar 1 Nov: «بيضل حسب كل عرض»).
+TRANSIT_DAYS = {'SY': (1, 3), 'LY': (14, 21), 'IQ': (10, 10), **{c: (25, 25) for c in ('SA', 'AE', 'KW', 'QA', 'BH', 'OM')}}
 # /return-policy/: products with the customer's name or logo are not returnable (a print fault is reprinted).
 # Shipping costs are quoted per order, so no shippingRate.
 RETURN_POLICY = {'@type': 'MerchantReturnPolicy', 'applicableCountry': SHIP_TO,
