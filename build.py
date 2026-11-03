@@ -423,7 +423,11 @@ NAV_PAGES = [m for m in nav['menu'] if m['path'] not in ('/', '/shop/')]
 MEGA = mega_model()
 
 
-LD_FIX = [('Madarek Mtabaa', 'Madarek Matbaa'),
+# The logo with «printing house» under it (Ammar 3 Nov: «نستخدم الشعار اللي محطوط تحته اوبريتنج هاوس، لانه نحن عم نعمل هلا علامه
+# تجاريه ثانيه الحلول الرقميه»). The share picture got a new name so WhatsApp and Facebook fetch it again.
+SHARE_FIX = ('madarek-share-2026.jpg', 'madarek-share-2026-11.jpg')
+
+LD_FIX = [('Madarek Mtabaa', 'Madarek Matbaa'), SHARE_FIX,
           ('"https://www.madarekmatbaa.com/?s={search_term_string}"', '"https://www.madarekmatbaa.com/search/?s={search_term_string}"')]
 
 
@@ -450,6 +454,8 @@ def render(tpl, out_path, **ctx):
                 x = x.replace(a, b)
             lds.append(org_policy(x))
         ctx['seo'] = dict(ctx['seo'], ld=lds)
+    if ctx.get('seo') and ctx['seo'].get('tags'):
+        ctx['seo'] = dict(ctx['seo'], tags=[t.replace(*SHARE_FIX) for t in ctx['seo']['tags']])
     base = dict(nav=nav, icons=icons, social=SOCIAL, asset=lambda n: ASSETS[n], tracking=True, body_class='',
                 full=False, search_redirect=False, path='', active_menu='', mega=MEGA, nav_pages=NAV_PAGES,
                 contacts=CONTACTS, total_products=len(products))

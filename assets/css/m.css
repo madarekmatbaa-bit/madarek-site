@@ -27,7 +27,7 @@
 .m-hdr.is-hidden{transform:translateY(-100%)}
 .m-hdr-in{max-width:calc(var(--wrap) + 160px);margin-inline:auto;padding-inline:var(--gut);height:76px;display:flex;align-items:center;gap:36px}
 .m-logo{flex:none;display:flex;align-items:center}
-.m-logo img{display:block;width:auto;height:46px}
+.m-logo img{display:block;width:auto;height:58px}
 .m-nav{flex:1 1 auto;min-width:0}
 .m-nav-list{list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:28px}
 .m-nav-link{position:relative;display:inline-flex;align-items:center;gap:5px;height:76px;font-size:15px;font-weight:500;color:var(--text);white-space:nowrap}
@@ -102,7 +102,7 @@ html.mnav-open .mnav-shade{opacity:1;visibility:visible}
 html.mnav-open .mnav{transform:none}
 html.mnav-open,html.sheet-open{overflow:hidden}
 .mnav-top{display:flex;align-items:center;justify-content:space-between;padding:calc(10px + env(safe-area-inset-top,0px)) 12px 6px 20px}
-.mnav-top img{height:40px;width:auto}
+.mnav-top img{height:50px;width:auto}
 .mnav-tabs{display:flex;gap:6px;margin:6px 20px 8px;padding:4px;background:var(--surface);border-radius:var(--r-ctl)}
 .mnav-tabs button{flex:1;border:0;background:none;height:40px;border-radius:var(--r-ctl);font-weight:600;font-size:14.5px;color:var(--text-2);transition:background-color .2s ease,color .2s ease}
 .mnav-tabs button[aria-selected=true]{background:#fff;color:var(--heading);box-shadow:var(--shadow-1)}
@@ -410,7 +410,7 @@ html[dir=ltr] .m-hs-next .ico{transform:scaleX(-1)}
 .m-ftr a{color:#DCE3F0}
 .m-ftr a:hover{color:#fff}
 .m-ftr-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:56px;padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,.1)}
-.m-ftr-brand img{height:62px;width:auto;margin-bottom:18px}
+.m-ftr-brand img{height:84px;width:auto;margin-bottom:18px}
 .m-ftr-brand p{max-width:46ch;font-size:15px;line-height:1.9;margin:0 0 22px;color:#C6CFDF}
 .m-social{display:flex;flex-wrap:wrap;gap:6px}
 .m-social a{display:inline-flex;width:36px;height:36px;border-radius:50%;align-items:center;justify-content:center;background:rgba(255,255,255,.06);color:#fff;transition:background-color .15s ease}
@@ -460,7 +460,7 @@ body .mdk-markets .mdk-eyebrow,body .mdk-cta-band .mdk-eyebrow{color:var(--md-te
   .m-nav,.m-search,.m-hdr-cta{display:none}
   .m-search-btn,.m-burger{display:inline-flex}
   .m-logo{order:0;margin-inline-end:auto;padding-inline-start:4px}
-  .m-logo img{height:40px}
+  .m-logo img{height:50px}
   .m-tools{gap:2px;margin-inline-start:0}
   .m-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:32px 20px}
   .m-pdp-grid{grid-template-columns:1fr}
