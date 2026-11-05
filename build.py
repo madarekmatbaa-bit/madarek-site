@@ -1077,9 +1077,6 @@ def build_headers():
 
 /data/*
   Cache-Control: public, max-age=600
-
-/data/portal-feed.json
-  Access-Control-Allow-Origin: https://portal.madarekmatbaa.net
 """)
 
 
