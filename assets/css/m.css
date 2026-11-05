@@ -526,3 +526,25 @@ body .mdk-markets .mdk-eyebrow,body .mdk-cta-band .mdk-eyebrow{color:var(--md-te
 }
 @media (min-width:1025px){.mnav,.mnav-shade,.m-sheet{display:none!important}}
 @media (max-width:1024px){html.mdk-lbar-on body{padding-bottom:calc(62px + env(safe-area-inset-bottom,0px))}}
+/* motion (Ammar 5 Nov): see the motion block in site.js. Strong ease-out, short rise, no motion when reduced. */
+@media (prefers-reduced-motion:no-preference){
+.rv-on .rv{opacity:0;transform:translate3d(0,22px,0)}
+.rv-on .rv.rv-in{opacity:1;transform:none;transition:opacity .6s var(--ease-out) var(--rv-d,0ms),transform .8s var(--ease-out) var(--rv-d,0ms)}
+.rv-on .agb.rv .agb-img img{opacity:0;transform:translate3d(-28px,18px,0) rotate(-5deg)}
+.rv-on .agb.rv .agb-img .i2{transform:translate3d(24px,-14px,0) rotate(6deg)}
+.rv-on .agb.rv-in .agb-img img{opacity:1;transform:none;transition:opacity .7s var(--ease-out) .2s,transform 1s var(--ease-out) .2s}
+.rv-on .agb.rv-in .agb-img .i2{transition-delay:.32s}
+.rv-on .mdk-waves.rv-draw path{stroke-dasharray:1;stroke-dashoffset:1}
+.rv-on .mdk-waves.rv-draw.rv-in path{stroke-dashoffset:0;transition:stroke-dashoffset 2.4s cubic-bezier(.77,0,.175,1) var(--rv-d,0ms)}
+.mdk-markets .mdk-waves{animation:mdk-drift 22s ease-in-out infinite alternate}
+@keyframes mdk-drift{from{transform:translate3d(0,0,0)}to{transform:translate3d(-28px,10px,0)}}
+.mdk-step,.mdk-hub,.mdk-person{transition:transform .2s var(--ease-out),box-shadow .2s ease,border-color .2s ease}
+.mdk-cat .mdk-arrow{transition:background .2s,color .2s,transform .25s var(--ease-out)}
+@media (hover:hover){
+.mdk-step:hover{transform:translateY(-3px);box-shadow:0 16px 34px -20px rgba(13,36,76,.35)}
+.mdk-hub:hover{transform:translateY(-3px);border-color:rgba(80,196,200,.45)}
+.mdk-person:hover{transform:translateY(-3px)}
+.mdk-cat:hover .mdk-arrow{transform:translateX(-3px)}
+html[dir=ltr] .mdk-cat:hover .mdk-arrow{transform:translateX(3px)}
+}
+}

@@ -563,6 +563,52 @@
     }).catch(function () {});
   })();
 
+  /* ---------- motion (Ammar 5 Nov: «ضف لي موشن على الموقع»): sections and cards rise in as they come into view,
+     the market waves draw themselves, the agenda pictures settle. Only what starts below the fold; nothing with reduced motion. ---------- */
+  (function () {
+    if (reduce || !('IntersectionObserver' in W)) return;
+    var GROUPS = ['.mdk-cats', '.mdk-steps', '.mdk-hubs', '.mdk-chips', '.mdk-people', '.mdk-why2-list', '.mdk-seo-grid', '.mdk-dl-btns',
+      '.mdk-contacts', '.m-grid', '.m-subcats ul', '.m-assure', '.mdk-cards', '.mdk-faq'];
+    var SINGLE = ['.mdk-head', '.mdk-sec > .mdk-wrap > .mdk-h2', '.mdk-sec > .mdk-wrap > .mdk-lead', '.mdk-why2-grid > div:first-child',
+      '.agb', '.mdk-dl-in', '.mdk-cta-band > div:first-child', '.m-pdp-secs .m-sec', '.m-prose > h2'];
+    var vh = W.innerHeight || de.clientHeight, items = [];
+    function below(el) { var r = el.getBoundingClientRect(); return r.height > 0 && r.top > vh * 0.92; }
+    function add(el, delay) { if (el.classList.contains('rv') || !below(el)) return; el.classList.add('rv'); if (delay) el.style.setProperty('--rv-d', delay + 'ms'); items.push(el); }
+    SINGLE.forEach(function (q) { $$(q).forEach(function (el) { add(el, 0); }); });
+    GROUPS.forEach(function (q) {
+      $$(q).forEach(function (g) {
+        /* a sideways rail rises as one piece: its hidden items would only appear when swiped */
+        var ox = getComputedStyle(g).overflowX;
+        if (ox === 'auto' || ox === 'scroll') { add(g, 0); return; }
+        [].slice.call(g.children).forEach(function (c, i) { add(c, Math.min(i % 8, 6) * 70); });
+      });
+    });
+    var waves = $$('.mdk-waves');
+    waves.forEach(function (svg) {
+      if (!below(svg.parentNode)) return;
+      $$('path', svg).forEach(function (p, i) { p.setAttribute('pathLength', '1'); p.style.setProperty('--rv-d', (i * 90) + 'ms'); });
+      svg.classList.add('rv-draw'); items.push(svg);
+    });
+    if (!items.length) return;
+    de.classList.add('rv-on');
+    function done(el) { el.classList.remove('rv', 'rv-in'); el.style.removeProperty('--rv-d'); }
+    var io = new IntersectionObserver(function (ents) {
+      ents.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var el = e.target; io.unobserve(el);
+        el.classList.add('rv-in');
+        if (el.classList.contains('rv')) {
+          var dl = parseInt(el.style.getPropertyValue('--rv-d'), 10) || 0;
+          setTimeout(function () { done(el); }, 900 + dl);
+        }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    items.forEach(function (el) { io.observe(el); });
+    /* a tab or a resize can show something that was waiting: never leave it hidden */
+    on(W, 'pagehide', function () { items.forEach(done); });
+    setTimeout(function () { items.forEach(function (el) { if (el.classList.contains('rv') && !el.classList.contains('rv-in')) { var r = el.getBoundingClientRect(); if (r.bottom < 0) { el.classList.add('rv-in'); done(el); } } }); }, 4000);
+  })();
+
   /* ---------- leads: every WhatsApp, phone or e-mail tap is a lead (GA4 + Meta) ---------- */
   on(d, 'click', function (e) {
     var a = e.target.closest && e.target.closest('a[href]'); if (!a) return;
