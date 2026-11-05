@@ -10,7 +10,7 @@
 |---|---|---|
 | www.madarekmatbaa.com، madarekdigital.com، albayt-alasri.com | Cloudflare Pages (ملفات ثابتة) | ✅ (`server: cloudflare` و `cf-ray`) |
 | portal.madarekmatbaa.net | Hetzner `2.31.23.96` مباشرة | ❌ عنوان الخادم مكشوف، والدومين على Replit |
-| portal.madarekmatbaa.com | سجل في Cloudflare → `2.31.23.96` بوضع DNS only | ❌ وHTTPS عليه لا يعمل بعد |
+| portal.madarekmatbaa.com | سجل في Cloudflare → `2.31.23.96` بوضع DNS only | ❌ وHTTPS عليه لا يعمل بعد (فشل TLS، مجرّب 5 ت2 مساءً) |
 | app.madarekmatbaa.net | DigitalOcean `165.22.223.188` (nginx، الفريق التاني) | ❌ |
 | madarekmatbaa.net | Replit `34.111.179.208` (404 «This app isn't live yet») | ❌ والتحويل للدوت كوم لم يطبَّق بعد |
 
@@ -60,13 +60,21 @@
 7. **Turnstile** من Cloudflare على شاشة تسجيل الدخول (مجاني)، بدل أي كابتشا.
 8. بعد إغلاق الجدار: إن أمكن، **عنوان IP جديد** للخادم، لأن الحالي مكشوف في سجلات DNS قديمة.
 
-## من جهة Cloudflare (محادثة الموقع بتعملها بعد الخطوة 2)
-- قاعدة تحديد المعدّل الوحيدة في الخطة المجانية لزون madarekmatbaa.com:
-  - المواقع الثابتة (www) لا تحتاجها بقدر البوابة، فنجعلها للبوابة: `URI Path` يبدأ بـ `/login` أو `/api`، و20 طلباً خلال 10 ثوانٍ لكل IP، والإجراء Block.
-- عند هجوم: Under Attack Mode من Overview.
+## من جهة Cloudflare
+**تم في 5 ت2 (زون madarekmatbaa.com):**
+- SSL للزون **Full (strict)**، فلازم يكون على السيرفر شهادة صالحة (الخطوة 1) **قبل** ما نحوّل سجل `portal` إلى Proxied، وإلا بيطلع خطأ 526.
+- أقل نسخة TLS: 1.2.
+- قاعدة تحديد المعدّل الوحيدة في الخطة المجانية: أكثر من 200 طلب خلال 10 ثوانٍ من IP واحد ← Block لمدة 10 ثوانٍ (البوتات الموثوقة مستثناة). الخطة المجانية ما فيها غير Block، والحقول المتاحة المسار وVerified Bot بس (ما في اسم المضيف).
+
+**بعد الخطوة 2 (البوابة Proxied):** القاعدة العامة بتغطي البوابة كمان. إذا بدنا حد أشد على الدخول، منعدّلها لـ `URI Path` يبدأ بـ `/login` أو `/api`، و20 طلباً خلال 10 ثوانٍ، وBlock (وبيضل `limit_req` بالسيرفر خط الدفاع التاني).
+
+**عند هجوم:** Under Attack Mode من Overview.
 
 ## app.madarekmatbaa.net (الفريق التاني)
-نفس الخطر ونفس الحل: يوضع خلف Cloudflare (على اسم من الدوت كوم مثل `app.madarekmatbaa.com` بوضع Proxied)، ويُغلق خادم DigitalOcean إلا لعناوين Cloudflare. أو يُوقف إن لم يعد مستخدماً، لأنه أيضاً مفتوح لغوغل وينافس الموقع الرسمي (انظر ملاحظة السيو في طلب 28 ت1).
+**قرار عمار (5 ت2):** «تطبيق هذا تبع الاب وقفه، لا ما مستخدم». المطلوب:
+1. إيقاف خادم DigitalOcean `165.22.223.188` (Power Off، وبعد أسبوع بلا مشاكل Destroy، مع Snapshot قبلها إن لزم).
+2. حذف سجل `app` من DNS الدوت نت (هلق عند Replit/name.com، وزون Cloudflare للدوت نت لسا pending).
+بعدها ما بيضل عنوان مكشوف، ولا نسخة تانية من الموقع بتنافسه عند غوغل.
 
 ## التحقق
 ```bash
