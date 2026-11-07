@@ -567,7 +567,7 @@
      the market waves draw themselves, the agenda pictures settle. Only what starts below the fold; nothing with reduced motion. ---------- */
   (function () {
     if (reduce || !('IntersectionObserver' in W)) return;
-    var GROUPS = ['.mdk-cats', '.mdk-steps', '.mdk-hubs', '.mdk-chips', '.mdk-people', '.mdk-why2-list', '.mdk-seo-grid', '.mdk-dl-btns',
+    var GROUPS = ['.mdk-works-list', '.mdk-figs', '.mdk-dlv-grid', '.mdk-cats', '.mdk-steps', '.mdk-hubs', '.mdk-chips', '.mdk-people', '.mdk-why2-list', '.mdk-seo-grid', '.mdk-dl-btns',
       '.mdk-contacts', '.m-grid', '.m-subcats ul', '.m-assure', '.mdk-cards', '.mdk-faq'];
     var SINGLE = ['.mdk-head', '.mdk-sec > .mdk-wrap > .mdk-h2', '.mdk-sec > .mdk-wrap > .mdk-lead', '.mdk-why2-grid > div:first-child',
       '.agb', '.mdk-dl-in', '.mdk-cta-band > div:first-child', '.m-pdp-secs .m-sec', '.m-prose > h2'];
@@ -607,6 +607,18 @@
     /* a tab or a resize can show something that was waiting: never leave it hidden */
     on(W, 'pagehide', function () { items.forEach(done); });
     setTimeout(function () { items.forEach(function (el) { if (el.classList.contains('rv') && !el.classList.contains('rv-in')) { var r = el.getBoundingClientRect(); if (r.bottom < 0) { el.classList.add('rv-in'); done(el); } } }); }, 4000);
+  })();
+
+  /* ---------- home figures count up once they show (Ammar 7 Nov) ---------- */
+  (function () {
+    var els = $$('[data-count]'); if (!els.length || reduce || !('IntersectionObserver' in W)) return;
+    function run(el) {
+      var to = parseInt(el.getAttribute('data-count'), 10), from = to > 100 ? Math.max(0, to - 60) : 0, t0 = 0, dur = 1100;
+      function step(ts) { if (!t0) t0 = ts; var k = Math.min(1, (ts - t0) / dur); k = 1 - Math.pow(1 - k, 3); el.textContent = Math.round(from + (to - from) * k); if (k < 1) requestAnimationFrame(step); }
+      requestAnimationFrame(step);
+    }
+    var io = new IntersectionObserver(function (ents) { ents.forEach(function (e) { if (e.isIntersecting) { io.unobserve(e.target); run(e.target); } }); }, { threshold: 0.6 });
+    els.forEach(function (el) { io.observe(el); });
   })();
 
   /* ---------- leads: every WhatsApp, phone or e-mail tap is a lead (GA4 + Meta) ---------- */

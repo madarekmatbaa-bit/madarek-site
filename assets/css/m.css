@@ -548,3 +548,60 @@ body .mdk-markets .mdk-eyebrow,body .mdk-cta-band .mdk-eyebrow{color:var(--md-te
 html[dir=ltr] .mdk-cat:hover .mdk-arrow{transform:translateX(3px)}
 }
 }
+/* الرئيسية بعد مراجعة 7 ت2 (عمار: «عدل يلي اقترحته»): صور شغلنا، الأرقام، شبكة الأقسام بأحجام مختلفة، الخطوات كخط زمني، ومدد التسليم */
+.mdk-works{padding-top:clamp(56px,6vw,88px);padding-bottom:clamp(56px,6vw,88px)}
+.mdk-works-list{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.mdk-work{position:relative;margin:0;border-radius:var(--md-radius);overflow:hidden;background:var(--md-cream);aspect-ratio:4/3;transition:transform .25s var(--ease-out),box-shadow .25s ease}
+.mdk-work img{width:100%;height:100%;object-fit:cover;display:block}
+.mdk-work figcaption{position:absolute;inset-inline:0;bottom:0;padding:44px 18px 16px;color:#fff;background:linear-gradient(to top,rgba(8,20,44,.82),rgba(8,20,44,.35) 60%,rgba(8,20,44,0));display:flex;flex-direction:column;gap:2px}
+.mdk-work figcaption b{font-size:15px;font-weight:700;line-height:1.4}
+.mdk-work figcaption span{font-size:13px;color:#D6DEEE;line-height:1.5}
+.mdk-figs{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:40px;border-top:1px solid var(--line);padding-top:28px}
+.mdk-figs .mdk-fig b{display:block;font-size:clamp(28px,3vw,40px);font-weight:700;color:var(--heading);line-height:1.15;font-variant-numeric:tabular-nums}
+.mdk-figs .mdk-fig>span{display:block;margin-top:4px;font-size:14px;color:var(--text-3)}
+@media (max-width:860px){
+  .mdk-works-rail .mdk-works-list{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin-inline:calc(-1*var(--gut));padding:4px var(--gut) 8px;scrollbar-width:none}
+  .mdk-works-rail .mdk-works-list::-webkit-scrollbar{display:none}
+  .mdk-work{flex:0 0 78%;max-width:340px;scroll-snap-align:start}
+  .mdk-figs{grid-template-columns:repeat(2,1fr);margin-top:28px;gap:20px 12px}
+}
+@media (max-width:640px){.mdk-work{flex-basis:82%}}
+/* الأقسام: الهدايا الدعائية أكبر بطاقة، والمطبوعات عريضة */
+@media (min-width:1025px){
+  .mdk-cats.mdk-bento{grid-template-columns:repeat(4,1fr);grid-auto-rows:minmax(240px,auto);grid-auto-flow:dense;gap:18px}
+  .mdk-cats.mdk-bento .mdk-cat{min-height:0}
+  .mdk-cats.mdk-bento .mdk-cat:first-child{grid-column:span 2;grid-row:span 2}
+  .mdk-cats.mdk-bento .mdk-cat:first-child .mdk-cat-img img{max-height:360px}
+  .mdk-cats.mdk-bento .mdk-cat:first-child h3{font-size:26px}
+  .mdk-cats.mdk-bento .mdk-cat:first-child p{font-size:15px}
+  .mdk-cats.mdk-bento .mdk-cat:nth-child(2){grid-column:span 2}
+  .mdk-cats.mdk-bento .mdk-cat:nth-child(2){flex-direction:row-reverse;align-items:center}
+  .mdk-cats.mdk-bento .mdk-cat:nth-child(2) .mdk-cat-img{padding:18px}
+  .mdk-cats.mdk-bento .mdk-cat:nth-child(2) .mdk-cat-img img{max-height:200px}
+  .mdk-cats.mdk-bento .mdk-cat:nth-child(2) .mdk-cat-body{flex:1}
+  .mdk-cats.mdk-bento .mdk-cat .mdk-cat-img img{max-height:150px}
+}
+/* الخطوات: خط زمني برقم بارز وخط يوصل بينها */
+.mdk-process .mdk-steps{position:relative;gap:0;counter-reset:mdkstep}
+.mdk-process .mdk-step{background:transparent;border-radius:0;padding:0 18px 0 0;border-inline-start:1px solid rgba(13,36,76,.16)}
+.mdk-process .mdk-step .n{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:var(--heading);color:#fff;font-size:14px;margin:0 0 18px;transform:translateX(21px);box-shadow:0 0 0 6px var(--md-cream)}
+html[dir=ltr] .mdk-process .mdk-step .n{transform:translateX(-21px)}
+.mdk-process .mdk-step h3{margin:0 0 8px;font-size:17px}
+.mdk-process .mdk-step p{margin:0;font-size:14.5px;line-height:1.8;color:var(--md-ink)}
+@media (max-width:860px){
+  .mdk-process .mdk-steps{grid-template-columns:1fr;gap:0}
+  .mdk-process .mdk-step{display:grid;grid-template-columns:40px 1fr;column-gap:16px;border:0;padding:0 0 26px;position:relative}
+  .mdk-process .mdk-step::before{content:"";position:absolute;inset-inline-start:19.5px;top:40px;bottom:0;width:1px;background:rgba(13,36,76,.16)}
+  .mdk-process .mdk-step:last-child::before{display:none}
+  .mdk-process .mdk-step .n{transform:none;margin:0;grid-row:span 2;box-shadow:none}
+  .mdk-process .mdk-step h3{margin-top:8px}
+}
+@media (hover:hover){.mdk-process .mdk-step:hover{transform:none;box-shadow:none}.mdk-work:hover{transform:translateY(-3px);box-shadow:0 18px 36px -20px rgba(13,36,76,.45)}}
+/* مدد التسليم بشريط الأسواق */
+.mdk-delivery{margin-top:36px;border-top:1px solid rgba(255,255,255,.14);padding-top:28px}
+.mdk-dlv-h{margin:0 0 16px;font-size:14px;font-weight:600;color:var(--md-teal)}
+.mdk-dlv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px 24px}
+.mdk-dlv b{display:block;color:#fff;font-size:17px;font-weight:700;margin-bottom:4px}
+.mdk-dlv span{display:block;color:#fff;font-size:15px;font-variant-numeric:tabular-nums}
+.mdk-dlv small{display:block;color:#9FB0CF;font-size:13px;margin-top:2px}
+@media (max-width:860px){.mdk-dlv-grid{grid-template-columns:repeat(2,1fr)}}

@@ -569,6 +569,57 @@ def optimize_imgs(html, first_eager=False):
     return IMG_TAG.sub(sub, html)
 
 
+# the home page after the review of 7 Nov (Ammar: «راجع الموقع كله واقترح تصميم اجمل» ثم «عدل يلي اقترحته»):
+# real photos of delivered orders right after the story, the figures with them, the categories in a bento grid,
+# the steps as a timeline, delivery times in the markets band, and the SEO text at the very bottom.
+WORKS = [  # بلا شغل الجهات الحكومية (عمار 7 ت2: «اشياء الحكومة لا تحطها على الموقع»)
+    ('work-suneast', 'Sun East Co.', 'علبة جلدية: دفتر وقلم وميدالية'),
+    ('work-acrylic-plaque', 'درع أكريليك', 'مقصوص بشكل الشعار على قاعدة سوداء'),
+    ('work-uv-pens', 'أقلام معدنية', 'طباعة UV بشعار العميل'),
+    ('work-wood-plaque', 'روضة سنودي', 'درع تكريم خشبي محفور بالليزر'),
+]
+HOME_STATS = [('2020', '', 'نعمل منذ'), ('900', '+', 'جهة تعاملت معنا'), ('3', '', 'مراكز تنفيذ'), ('4', '', 'أسواق نسلّم إليها')]
+DELIVERY = [('سوريا', 'من 8 إلى 13 يوماً', 'تنفيذ محلي والتوصيل مجاني'), ('العراق', 'نحو 10 أيام شحن', 'بعد التنفيذ في تركيا'),
+            ('ليبيا', 'من 14 إلى 21 يوماً شحن', 'بعد التنفيذ في تركيا'), ('الخليج', 'نحو 25 يوماً شحن', 'بعد التنفيذ في تركيا')]
+
+
+def home_works_html():
+    cards = ''.join(
+        f'<figure class="mdk-work"><img alt="{who}: {what}" decoding="async" loading="lazy" src="/wp-content/uploads/2026/11/{f}.jpg"/>'
+        f'<figcaption><b><bdi>{who}</bdi></b><span>{what}</span></figcaption></figure>' for f, who, what in WORKS)
+    stats = ''.join(f'<div class="mdk-fig"><b>{"<span data-count=%s>%s</span>" % (n, n) if label != "نعمل منذ" else n}{plus}</b><span>{label}</span></div>'
+                    for n, plus, label in HOME_STATS)
+    return ('<section class="mdk mdk-sec mdk-works"><div class="mdk-wrap">'
+            '<div class="mdk-head"><div><h2 class="mdk-h2">من شغلنا</h2>'
+            '<p class="mdk-lead">صور من طلبيات سلّمناها، لا نماذج تصميم.</p></div>'
+            '<a class="mdk-link" href="/contact-us/">اطلب عرض سعر</a></div>'
+            f'<div class="mdk-works-rail" data-hs><div class="mdk-works-list m-hs-list">{cards}</div>'
+            f'<button type="button" class="m-hs-btn m-hs-prev" tabindex="-1" aria-hidden="true">{ico("caret-left")}</button>'
+            f'<button type="button" class="m-hs-btn m-hs-next" tabindex="-1" aria-hidden="true">{ico("caret-left")}</button></div>'
+            f'<div class="mdk-figs">{stats}</div></div></section>')
+
+
+def home_redesign(parts):
+    out = []
+    seo = None
+    for p in parts:
+        if 'class="mdk-seo' in p:
+            seo = p
+            continue
+        if 'class="mdk mdk-sec mdk-markets"' in p:
+            rows = ''.join(f'<div class="mdk-dlv"><b>{c}</b><span>{t}</span><small>{n}</small></div>' for c, t, n in DELIVERY)
+            p = re.sub(r'<div class="mdk-chips">.*?</div>',
+                       f'<div class="mdk-delivery"><p class="mdk-dlv-h">مدة التسليم بعد اعتماد التصميم</p><div class="mdk-dlv-grid">{rows}</div></div>', p, count=1, flags=re.S)
+        if 'class="mdk-cats"' in p:
+            p = p.replace('<div class="mdk-cats">', '<div class="mdk-cats mdk-bento">', 1)
+        out.append(p)
+        if 'class="mdk-story"' in p:
+            out.append(home_works_html())
+    if seo:
+        out.append(seo)
+    return out
+
+
 def build_pages():
     out = []
     for pg in pages_raw:
@@ -602,6 +653,8 @@ def build_pages():
                         parts.insert(0, f'<figure class="doc-fig">{img}</figure>')
                 else:
                     parts.append(widget_to_html(x[1], x[2]))
+        if path == '/':
+            parts = home_redesign(parts)
         body = optimize_imgs(relink('\n'.join(parts)), first_eager=(path != '/'))
         h1 = pg['title'].replace('​', '').strip()
         common = dict(seo=pg['seo'], path=path, active_menu=active_menu_for(path), body=body,
