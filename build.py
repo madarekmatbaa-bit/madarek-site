@@ -302,7 +302,8 @@ cat_by_path = {c['path']: c for c in catalog['categories']}
 cat_products = {}
 for c in catalog['categories']:
     ds = descendants(c['id'])
-    cat_products[c['id']] = [p for p in products if set(p['cats']) & ds]
+    # pinned products (data/sales_rank.json) open each category page together, in their order
+    cat_products[c['id']] = ranking.pin_block([p for p in products if set(p['cats']) & ds])
 cat_count = {cid: len(v) for cid, v in cat_products.items()}
 
 def catlinks(p):
@@ -511,6 +512,7 @@ def widget_to_html(kind, html):
 
 
 OFFERS_CAT = 380
+GIFT_BOXES_CAT = 302
 
 
 def home_products_tabs(raw, head=''):
@@ -529,6 +531,11 @@ def home_products_tabs(raw, head=''):
     if cat_products.get(OFFERS_CAT):
         tabs.insert(0, {'name': 'العروض', 'cat': cats[OFFERS_CAT], 'order': 'menu_order',
                         'items': [cards[p['id']] for p in cat_products[OFFERS_CAT][:8]]})
+    # the luxury gift boxes lead the home page (Ammar, 7 Nov: «خليها من المنتجات يلي بتطلع على الموقع فوق»)
+    boxes = next((t for t in tabs if t['cat']['id'] == GIFT_BOXES_CAT), None)
+    if boxes:
+        tabs.remove(boxes)
+        tabs.insert(0, boxes)
     return env.get_template('partials/ptabs.html').render(tabs=tabs, head=head)
 
 

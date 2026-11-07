@@ -213,7 +213,29 @@ def order(products, categories, data=None):
         for i, p in enumerate(card):
             keyed.append((1, (i + off) / w, -w, k, i, p))
     keyed.sort(key=lambda t: t[:5])
-    return [t[5] for t in keyed]
+    return pin([t[5] for t in keyed], data.get('pinned', []))
+
+
+def pin(ordered, skus):
+    """data/sales_rank.json "pinned": products the team always leads with (the luxury gift boxes, Ammar 7 Nov
+    2026: «خليها من المنتجات يلي بتطلع على الموقع فوق»). They take every other place at the top of every
+    listing they are in, in the order given, so the kinds stay mixed."""
+    if not skus:
+        return ordered
+    rank = {s: i for i, s in enumerate(skus)}
+    top = sorted((p for p in ordered if p.get('sku') in rank), key=lambda p: rank[p['sku']])
+    rest = [p for p in ordered if p.get('sku') not in rank]
+    for j, p in enumerate(top):
+        rest.insert(min(2 * j, len(rest)), p)
+    return rest
+
+
+def pin_block(ordered, skus=None):
+    """A category page: the pinned products it holds come first, side by side, in the order given."""
+    skus = load().get('pinned', []) if skus is None else skus
+    rank = {s: i for i, s in enumerate(skus)}
+    top = sorted((p for p in ordered if p.get('sku') in rank), key=lambda p: rank[p['sku']])
+    return top + [p for p in ordered if p.get('sku') not in rank]
 
 
 def _round_robin(groups):
