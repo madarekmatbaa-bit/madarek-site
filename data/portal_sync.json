@@ -23,7 +23,7 @@
   "new_products": "a code the portal does not have is created from the feed; its portal price starts as the site price until the portal sets its own",
   "sync": "sync = false: an old site product without an MD code (KART-N, BRO…). The portal has its own item for it; do not import it. portal_hint = the likely portal model, to confirm in the portal",
   "bundle": "offers (MD-OF-*): bundle = the pieces in one set or bundle, with the portal code when the piece is on the site",
-  "price_owner": "price_owner = portal: the portal sets the price (MD-TR-* from the supplier lists; MD-FL-* = the sum of its source items in the portal, Ammar 30 Oct; MD-GB-* = the luxury gift boxes, quoted in the portal by size and quantity, 7 Nov). price_owner = site: the site price is the list price (new fragrances and apparel, offers MD-OF-*, desk sets MD-DS-*, print MD-PR-*, agenda MD-AG-*)"
+  "price_owner": "price_owner = portal: the portal sets the price (MD-TR-* from the supplier lists; MD-FL-* = the sum of its source items in the portal, Ammar 30 Oct; MD-GB-* = the luxury gift boxes, quoted in the portal by size and quantity, 7 Nov; except MD-GB-0007 «الرفعة», list price 6.50$ set on the site, Ammar 7 Nov). price_owner = site: the site price is the list price (new fragrances and apparel, offers MD-OF-*, desk sets MD-DS-*, print MD-PR-*, agenda MD-AG-*)"
  },
  "portal_priced_prefixes": [
   "MD-TR-",
@@ -38,7 +38,8 @@
   "MD-TR-1-1004",
   "MD-TR-1-1005",
   "MD-TR-1-1007",
-  "MD-TR-1-1008"
+  "MD-TR-1-1008",
+  "MD-GB-0007"
  ],
  "legacy_hint": {
   "KART-N": [
