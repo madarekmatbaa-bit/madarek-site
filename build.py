@@ -1111,7 +1111,11 @@ def build_redirects():
                      ('/feed/', '/'), ('/comments/feed/', '/'), ('/sitemap.xml', '/sitemap_index.xml'),
                      ('/wp-sitemap.xml', '/sitemap_index.xml'), ('/product_tag/*', '/shop/'), ('/category/*', '/'),
                      ('/mailpoet_page-sitemap.xml', '/sitemap_index.xml'), ('/woodmart_slider-sitemap.xml', '/sitemap_index.xml'),
-                     ('/shop/page/1/', '/shop/')]:
+                     ('/shop/page/1/', '/shop/'),
+                     # old WordPress addresses Search Console still reports as 404 (9 Nov 2026)
+                     ('/product-category/promotional-ar/def/*', '/product-category/notebooks/'), ('/product-tag/*', '/shop/'),
+                     ('/tag/*', '/'), ('/product/:slug/feed/', '/product/:slug/'), ('/product-category/:a/feed/', '/product-category/:a/'),
+                     ('/product-category/:a/:b/feed/', '/product-category/:a/:b/')]:
         lines.append(f'{src} {dst} 301')
     for c in catalog['categories']:  # /page/1/ is the listing itself
         if cat_count.get(c['id'], 0):
