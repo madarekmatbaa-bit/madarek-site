@@ -1120,6 +1120,13 @@ def build_redirects():
     for c in catalog['categories']:  # /page/1/ is the listing itself
         if cat_count.get(c['id'], 0):
             lines.append(f"{c['path']}page/1/ {c['path']} 301")
+    # Cloudflare Pages: every rule after the first * or :placeholder counts as dynamic, and only 100 dynamic rules are
+    # read. With wildcards in the middle, everything past line ~625 was silently ignored (found 9 Nov 2026).
+    # So: all fixed rules first, wildcard rules last.
+    dyn = [l for l in lines if '*' in l.split(' ')[0] or '/:' in l.split(' ')[0]]
+    lines = [l for l in lines if l not in dyn] + dyn
+    if len(dyn) > 100 or len(lines) - len(dyn) > 2000:
+        raise SystemExit(f'_redirects over the Cloudflare limits: {len(lines) - len(dyn)} fixed, {len(dyn)} wildcard')
     write(os.path.join(OUT, '_redirects'), '\n'.join(lines) + '\n')
     return len(lines)
 
