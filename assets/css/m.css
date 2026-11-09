@@ -605,3 +605,21 @@ html[dir=ltr] .mdk-process .mdk-step .n{transform:translateX(-21px)}
 .mdk-dlv span{display:block;color:#fff;font-size:15px;font-variant-numeric:tabular-nums}
 .mdk-dlv small{display:block;color:#9FB0CF;font-size:13px;margin-top:2px}
 @media (max-width:860px){.mdk-dlv-grid{grid-template-columns:repeat(2,1fr)}}
+/* مقالات ودلائل تحت /print-tips/ (عمار 10 ت2) */
+.art-meta{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;font-size:13.5px;color:var(--text-3);margin:0 0 26px}
+.art-meta a{font-weight:600}
+.m-prose ul,.m-prose ol{padding-inline-start:22px;margin:0 0 16px}
+.m-prose li{margin-bottom:6px}
+.art-cta{margin:36px 0 8px;padding:24px;border:1px solid var(--line);border-radius:16px;background:var(--surface);display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between}
+.art-cta p{margin:0;flex:1 1 280px;color:var(--heading);font-weight:500}
+.m-prose .art-cta .m-btn{background:var(--heading);color:#fff;font-weight:600}
+.art-more{list-style:none;padding:0!important}
+.art-more li{padding:10px 0;border-bottom:1px solid var(--line-2);margin:0}
+.art-hub{padding:clamp(48px,6vw,84px) 0;border-top:1px solid var(--line)}
+.art-hub h2{font-size:clamp(22px,2.4vw,30px);margin:0 0 24px}
+.art-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.art-card{display:flex;flex-direction:column;gap:8px;padding:22px;border:1px solid var(--line);border-radius:16px;background:#fff;transition:border-color .18s ease,transform .2s var(--ease-out)}
+.art-card b{font-size:17px;line-height:1.5;color:var(--heading)}
+.art-card span{font-size:14px;line-height:1.8;color:var(--text-3);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+@media (hover:hover){.art-card:hover{border-color:var(--heading);transform:translateY(-2px)}}
+@media (max-width:900px){.art-grid{grid-template-columns:1fr}}

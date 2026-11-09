@@ -641,6 +641,71 @@ def home_redesign(parts):
     return out
 
 
+# ---------------------------------------------------------------- guide articles (under /print-tips/)
+# Ammar 10 Nov 2026: asked for articles so the site shows for what people search. Arabic only for now.
+ARTICLES_BASE = '/print-tips/'
+AR_MONTHS = ['كانون الثاني (يناير)', 'شباط (فبراير)', 'آذار (مارس)', 'نيسان (أبريل)', 'أيار (مايو)', 'حزيران (يونيو)', 'تموز (يوليو)', 'آب (أغسطس)',
+             'أيلول (سبتمبر)', 'تشرين الأول (أكتوبر)', 'تشرين الثاني (نوفمبر)', 'كانون الأول (ديسمبر)']
+SHARE_IMG = 'https://www.madarekmatbaa.com/wp-content/uploads/2026/10/madarek-share-2026.jpg'
+
+
+def load_articles():
+    """Each article becomes a page: same templates, sitemap and redirects as the rest."""
+    f = os.path.join(ROOT, 'content/articles.json')
+    arts = json.load(open(f, encoding='utf-8')) if os.path.exists(f) else []
+    by_sku = {p['sku']: p['path'] for p in products if p.get('sku')}
+
+    def sku_link(m):
+        if m.group(1) not in by_sku:
+            raise SystemExit(f'article links to a product that is not on the site: {m.group(1)}')
+        return f'href="{by_sku[m.group(1)]}"'
+    made = []
+    for a in arts:
+        path = f"{ARTICLES_BASE}{a['slug']}/"
+        url = SITE + path
+        y, mth, d = a['updated'].split('-')
+        others = ''.join(f'<li><a href="{ARTICLES_BASE}{o["slug"]}/">{H.escape(o["title"])}</a></li>' for o in arts if o['slug'] != a['slug'])
+        body = (f'<p class="art-meta"><a href="{ARTICLES_BASE}">نصائح الطباعة</a><span>آخر تحديث: {int(d)} {AR_MONTHS[int(mth) - 1]} {y}</span></p>'
+                + re.sub(r'href="sku:([^"]+)"', sku_link, a['body'])
+                + '<div class="art-cta"><p>عندك طلبية؟ أرسل لنا المنتج والكمية وبلد التسليم، ونرسل لك عرض السعر ونموذج التصميم.</p>'
+                  '<a class="m-btn" href="https://wa.me/905510059096" target="_blank" rel="noopener">اطلب عرض سعر على واتساب</a></div>'
+                + (f'<h2>اقرأ أيضاً</h2><ul class="art-more">{others}</ul>' if others else ''))
+        desc = H.escape(a['description'], quote=True)
+        title = H.escape(a['seo_title'], quote=True)
+        tags = ['<meta content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" name="robots"/>',
+                f'<meta content="{desc}" name="description"/>', '<meta content="ar_AR" property="og:locale"/>', '<meta content="article" property="og:type"/>',
+                f'<meta content="{title}" property="og:title"/>', f'<meta content="{desc}" property="og:description"/>', f'<meta content="{url}" property="og:url"/>',
+                '<meta content="مطبعة مدارك - Madarek Matbaa" property="og:site_name"/>',
+                f'<meta content="{a["published"]}T08:00:00+00:00" property="article:published_time"/>',
+                f'<meta content="{a["updated"]}T08:00:00+00:00" property="article:modified_time"/>',
+                f'<meta content="{SHARE_IMG}" property="og:image"/>', '<meta content="1200" property="og:image:width"/>',
+                '<meta content="630" property="og:image:height"/>', '<meta content="summary_large_image" name="twitter:card"/>',
+                '<meta content="@MadarekMatbaa" name="twitter:site"/>', f'<link href="{url}" rel="canonical"/>']
+        org = {'@id': SITE + '/#organization'}
+        ld = {'@context': 'https://schema.org', '@graph': [
+            {'@type': 'Article', '@id': url + '#article', 'headline': a['title'], 'description': a['description'], 'inLanguage': 'ar',
+             'datePublished': a['published'] + 'T08:00:00+00:00', 'dateModified': a['updated'] + 'T08:00:00+00:00', 'mainEntityOfPage': url,
+             'image': SHARE_IMG, 'author': org, 'publisher': org},
+            {'@type': 'BreadcrumbList', '@id': url + '#breadcrumb', 'itemListElement': [
+                {'@type': 'ListItem', 'position': 1, 'name': 'الرئيسية', 'item': SITE + '/'},
+                {'@type': 'ListItem', 'position': 2, 'name': 'نصائح الطباعة', 'item': SITE + ARTICLES_BASE},
+                {'@type': 'ListItem', 'position': 3, 'name': a['title']}]},
+            {'@type': 'Organization', '@id': SITE + '/#organization', 'name': 'مطبعة مدارك - Madarek Matbaa', 'url': SITE + '/'}]}
+        made.append({'id': 0, 'slug': a['slug'], 'path': path, 'parent': 0, 'title': a['title'], 'template': '', 'ar_only': True,
+                     'seo': {'title': a['seo_title'], 'tags': tags, 'ld': [json.dumps(ld, ensure_ascii=False)]}, 'parts': [['content', body]]})
+    return made
+
+
+def articles_hub():
+    """The list of articles at the end of the tips page."""
+    arts = [p for p in pages_raw if p.get('ar_only')]
+    if not arts:
+        return ''
+    desc = {p['path']: next((t.split('content="')[1].split('"')[0] for t in p['seo']['tags'] if 'name="description"' in t), '') for p in arts}
+    cards = ''.join(f'<a class="art-card" href="{p["path"]}"><b>{H.escape(p["title"])}</b><span>{desc[p["path"]]}</span></a>' for p in arts)
+    return f'<section class="art-hub"><div class="m-wrap"><h2>مقالات ودلائل</h2><div class="art-grid">{cards}</div></div></section>'
+
+
 def build_pages():
     out = []
     for pg in pages_raw:
@@ -676,6 +741,8 @@ def build_pages():
                     parts.append(widget_to_html(x[1], x[2]))
         if path == '/':
             parts = home_redesign(parts)
+        if path == ARTICLES_BASE:
+            parts.append(articles_hub())
         body = optimize_imgs(relink('\n'.join(parts)), first_eager=(path != '/'))
         h1 = pg['title'].replace('​', '').strip()
         common = dict(seo=pg['seo'], path=path, active_menu=active_menu_for(path), body=body,
@@ -1321,7 +1388,7 @@ def i18n_items():
     page_paths = {p['path'] for p in pages_raw}
     for pg in sorted(pages_raw, key=lambda p: p['path'].count('/')):
         path = pg['path']
-        if path in DROP_PAGES or path in ('/', '/shop/'):
+        if pg.get('ar_only') or path in DROP_PAGES or path in ('/', '/shop/'):
             continue
         parts = path.strip('/').split('/')
         parent = '/' + '/'.join(parts[:-1]) + '/' if len(parts) > 1 else None
@@ -1370,7 +1437,8 @@ def build_i18n(ar_paths):
         for l in langs:
             if l not in alts:
                 continue
-            write(file_for(alts[l]), trs[l].page(html, ar, alts))
+            # the articles are Arabic only for now, so their list stays off the translated tips page
+            write(file_for(alts[l]), trs[l].page(re.sub(r'<section class="art-hub">.*?</section>', '', html, flags=re.S), ar, alts))
             done[l].append((ar, alts[l]))
     for l in langs:
         tr = trs[l]
@@ -1469,6 +1537,7 @@ def main():
             shutil.rmtree(p) if os.path.isdir(p) else os.remove(p)
     os.makedirs(OUT, exist_ok=True)
     ASSETS = build_assets()
+    pages_raw.extend(load_articles())
     made_pages = build_pages()
     made_shop = build_shop()
     made_products = build_products()
