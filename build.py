@@ -432,9 +432,28 @@ LD_FIX = [('Madarek Mtabaa', 'Madarek Matbaa'), SHARE_FIX,
           ('"https://www.madarekmatbaa.com/?s={search_term_string}"', '"https://www.madarekmatbaa.com/search/?s={search_term_string}"')]
 
 
+# who we are, for Google: offices, phones and markets as they are on the contact page (Ammar 10 Nov 2026: «قوي ال seo»)
+ORG_FACTS = {
+    'foundingDate': '2020',
+    'telephone': '+905516498048',
+    'address': [
+        {'@type': 'PostalAddress', 'streetAddress': 'البحصة، شارع يوسف العظمة، برج الفندق الذهبي، الطابق السادس، مكتب 3', 'addressLocality': 'دمشق', 'addressCountry': 'SY'},
+        {'@type': 'PostalAddress', 'streetAddress': 'Davutpaşa Cad. Kazım Dinçol San. Sit. No: 81/73', 'addressLocality': 'Zeytinburnu', 'addressRegion': 'İstanbul',
+         'addressCountry': 'TR'},
+    ],
+    'contactPoint': [
+        {'@type': 'ContactPoint', 'contactType': 'sales', 'telephone': '+963980243748', 'areaServed': 'SY', 'availableLanguage': ['ar']},
+        {'@type': 'ContactPoint', 'contactType': 'sales', 'telephone': '+905510059096', 'areaServed': ['LY', 'IQ', 'SA', 'AE', 'KW', 'QA', 'BH', 'OM'],
+         'availableLanguage': ['ar', 'en', 'tr']},
+    ],
+    'areaServed': ['SY', 'LY', 'IQ', 'SA', 'AE', 'KW', 'QA', 'BH', 'OM'],
+    'knowsAbout': ['هدايا دعائية', 'هدايا شركات', 'طباعة تجارية', 'طباعة أعلام', 'تغليف وعلب هدايا', 'دروع تكريم'],
+}
+
+
 def org_policy(raw):
-    """The return policy on the Organization too (Google reads it for every product of the shop)."""
-    if '#organization' not in raw or 'hasMerchantReturnPolicy' in raw:
+    """The return policy on the Organization too (Google reads it for every product of the shop), and the facts above."""
+    if '#organization' not in raw:
         return raw
     try:
         d = json.loads(raw)
@@ -443,7 +462,9 @@ def org_policy(raw):
     nodes = d.get('@graph') if isinstance(d, dict) and isinstance(d.get('@graph'), list) else [d]
     for n in nodes:
         if isinstance(n, dict) and n.get('@type') == 'Organization' and str(n.get('@id', '')).endswith('#organization'):
-            n['hasMerchantReturnPolicy'] = RETURN_POLICY
+            n.setdefault('hasMerchantReturnPolicy', RETURN_POLICY)
+            for k, v in ORG_FACTS.items():
+                n.setdefault(k, v)
     return json.dumps(d, ensure_ascii=False)
 
 
