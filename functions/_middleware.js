@@ -22,6 +22,8 @@ export async function onRequest(context) {
         to.searchParams.set('s', url.searchParams.get('s'));
         return Response.redirect(to.toString(), 301);
       }
+      // صفحة البحث بتقرا s وproduct_cat، فما منلمس وسومها
+      if (/^\/(search|en\/search|tr\/arama)\//.test(url.pathname)) return context.next();
       let dropped = false;
       for (const key of [...url.searchParams.keys()]) {
         if (JUNK.has(key) || JUNK_PREFIX.some((p) => key.startsWith(p))) {
