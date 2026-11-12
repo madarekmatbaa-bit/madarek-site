@@ -24,16 +24,18 @@
   --shadow-2:0 2px 6px rgba(13,36,76,.06),0 22px 48px -20px rgba(13,36,76,.32);
   --font:"MdkLatin","IBM Plex Sans Arabic",system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;
 }
+/* role colours: the same value per role in the day look; dark.css redefines them for the night look */
+:root{--b-navy:#0D244C;--bg-a9:rgba(255,255,255,.9);--bg-a92:rgba(255,255,255,.92);--btn-navy:#0D244C;--btn-navy-h:#13306A;--bx-cream-0:rgba(237,234,229,0);--bx-e8e4dd:#E8E4DD;--bx-eae5dd:#EAE5DD;--bx-f3f1ed:#F3F1ED;--bx-f4f2ee:#F4F2EE;--bx-f7f5f1:#F7F5F1;--bx-fbfaf7d9:#fbfaf7d9;--bx-fbfaf7e0:#fbfaf7e0;--bx-wallhi-0:rgba(247,246,242,0);--l-navy:#0D244C;--la-08:rgba(13,36,76,.08);--la-12:rgba(13,36,76,.12);--la-16:rgba(13,36,76,.16);--la-5:rgba(13,36,76,.5);--lx-c9d3ea:#C9D3EA;--lx-cfd5e2:#CFD5E2;--lx-d9d5ce:#D9D5CE;--lx-dcd8d1:#DCD8D1;--lx-e3dfd8:#E3DFD8;--lx-efece7:#EFECE7;--lx-f1eee9:#F1EEE9;--t-blue:#3263DB;--t-ink:#3F4A5E;--t-mute:#7D8699;--tx-5b6475:#5B6475;--tx-5b6476:#5B6476;--tx-5b6577:#5B6577;--tx-666:#666;--tx-6b7487:#6B7487;--tx-7a8395:#7A8395;--tx-8a909c:#8A909C;--tx-b8becb:#B8BECB;--bx-f1eee8:#F1EEE8;--bx-fbfaf8:#FBFAF8;--la-14:rgba(13,36,76,.14);--lx-c9c2b6:#C9C2B6;--lx-d9d4cb:#D9D4CB;--lx-e6e1d8:#E6E1D8;--lx-e6e2da:#E6E2DA;--lx-e9e5de:#E9E5DE;--tx-1e8e78:#1E8E78;--tx-b5523b:#B5523B}
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:96px;scrollbar-color:#C9C4BB transparent}
 body{margin:0;font-family:var(--font);font-size:15px;line-height:1.7;color:var(--text);background:var(--bg);direction:rtl;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:clip}
 :lang(ar){letter-spacing:0;font-synthesis:none}
 ::selection{background:rgba(50,99,219,.18);color:var(--heading)}
-input,textarea{caret-color:var(--action)}
+input,textarea{caret-color:var(--t-blue)}
 img,svg,video{max-width:100%;height:auto}
 img{border:0;vertical-align:middle}
 a{color:var(--heading);text-decoration:none;text-underline-offset:.35em;transition:color .15s ease}
-a:hover{color:var(--action)}
+a:hover{color:var(--t-blue)}
 h1,h2,h3,h4,h5,h6{color:var(--heading);font-weight:700;line-height:1.35;margin:0 0 .5em;text-wrap:balance}
 h1{font-size:28px}h2{font-size:24px}h3{font-size:20px}h4{font-size:17px}h5{font-size:15px}h6{font-size:14px}
 p{margin:0 0 1em;text-wrap:pretty}
@@ -44,6 +46,6 @@ button{cursor:pointer}
 :focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:6px}
 bdi,.ltr{direction:ltr;unicode-bidi:isolate}
 .sr-only,.screen-reader-text{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-.skip-link{position:absolute;inset-inline-start:12px;top:-60px;z-index:900;background:var(--heading);color:#fff;padding:10px 16px;border-radius:999px}
+.skip-link{position:absolute;inset-inline-start:12px;top:-60px;z-index:900;background:var(--btn-navy);color:#fff;padding:10px 16px;border-radius:999px}
 .skip-link:focus{top:10px;color:#fff}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;scroll-behavior:auto!important}}

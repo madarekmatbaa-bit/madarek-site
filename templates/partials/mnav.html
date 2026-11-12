@@ -3,7 +3,7 @@
 {%- endmacro -%}
 <div class="mnav-shade" data-close></div>
 <aside class="mnav" id="mnav" aria-label="القائمة" aria-hidden="true">
-  <div class="mnav-top"><img src="/assets/brand/madarek-wordmark-navy.svg" alt="مطبعة مدارك" width="76" height="50"><button class="m-icon-btn" type="button" aria-label="إغلاق القائمة" data-close>{{ ico('x') }}</button></div>
+  <div class="mnav-top"><img src="/assets/brand/madarek-wordmark-navy.svg" alt="مطبعة مدارك" width="76" height="50"><span class="mnav-acts"><button class="m-icon-btn m-theme-btn" type="button" aria-label="الوضع الليلي" aria-pressed="false" data-theme-toggle>{{ ico('moon', 'i-moon') }}{{ ico('sun', 'i-sun') }}</button><button class="m-icon-btn" type="button" aria-label="إغلاق القائمة" data-close>{{ ico('x') }}</button></span></div>
   <div class="mnav-tabs" role="tablist"><button type="button" role="tab" aria-selected="true" data-tab="cats">المنتجات</button><button type="button" role="tab" aria-selected="false" data-tab="pages">الصفحات</button></div>
   <ul class="mnav-list" data-list="cats"><li><a href="/shop/">كل المنتجات</a></li>{{ mlist(nav.cat_nav) }}</ul>
   <ul class="mnav-list" data-list="pages" hidden><li{% if path == '/' %} class="on"{% endif %}><a href="/">الرئيسية</a></li>{{ mlist(nav_pages) }}</ul>

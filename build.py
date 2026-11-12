@@ -210,7 +210,7 @@ def seo_paged(seo, base_path, page, pages):
 
 # ---------------------------------------------------------------- assets
 def build_assets():
-    css_order = ['base.css', 'legacy-theme.css', 'legacy-tidy.css', 'legacy-block.css', 'legacy-shop.css', 'm.css', 'i18n.css']
+    css_order = ['base.css', 'legacy-theme.css', 'legacy-tidy.css', 'legacy-block.css', 'legacy-shop.css', 'm.css', 'i18n.css', 'dark.css']
     css = '\n'.join(open(os.path.join(ROOT, 'assets/css', f), encoding='utf-8').read() for f in css_order)
     # the shop shelf and its CSS anchored on Elementor ids; point them at our sections
     css = css.replace('.elementor-element-49de9f4', '.sh-nav').replace('.elementor-element-195c2fd1', '.sh-hero')

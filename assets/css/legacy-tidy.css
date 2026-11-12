@@ -157,7 +157,7 @@ body .mdk-g .g-terms b{font-size:16px}
 body .mdk-g .g-tags span{font-size:12.5px}
 body .mdk-g .g-steps li{font-size:14.5px}
 body .mdk-g .g-tags{display:flex;flex-wrap:wrap;gap:8px}
-body .mdk-g .g-tags span{background:#fff;border:1px solid var(--gl,#DCD8D1);border-radius:999px;padding:5px 14px;font-size:13px;font-weight:500;color:var(--gn,#0D244C)}
+body .mdk-g .g-tags span{background:var(--bg);border:1px solid var(--gl,var(--lx-dcd8d1));border-radius:999px;padding:5px 14px;font-size:13px;font-weight:500;color:var(--gn,var(--heading))}
 
 /* ---------- المتجر والأقسام ---------- */
 html body .wd-woo-page-title h1.entry-title{font-size:clamp(26px,2.4vw,32px)!important;line-height:1.35!important}

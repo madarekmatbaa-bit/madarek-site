@@ -527,6 +527,27 @@
   })();
 
   /* ---------- language menu (globe button) ---------- */
+  /* night mode (Ammar 12 Nov 2026): the visitor's choice is kept on the device; the page starts in the day look */
+  (function () {
+    var meta = document.querySelector('meta[name="theme-color"]');
+    function paint() {
+      var on = de.getAttribute('data-theme') === 'dark';
+      $$('[data-theme-toggle]').forEach(function (b) { b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+      if (meta) meta.setAttribute('content', on ? '#111A2C' : '#ffffff');
+    }
+    paint();
+    $$('[data-theme-toggle]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var on = de.getAttribute('data-theme') !== 'dark';
+        de.classList.add('is-theming');
+        if (on) de.setAttribute('data-theme', 'dark'); else de.removeAttribute('data-theme');
+        try { localStorage.setItem('mdk-theme', on ? 'dark' : 'light'); } catch (x) {}
+        paint();
+        setTimeout(function () { de.classList.remove('is-theming'); }, 260);
+      });
+    });
+  })();
+
   $$('[data-lang]').forEach(function (box) {
     var btn = $('.m-lang-btn', box), pop = $('.m-lang-pop', box);
     if (!btn || !pop) return;

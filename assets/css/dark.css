@@ -1,0 +1,46 @@
+/* Night mode (Ammar 12 Nov 2026: «ضيف مود الليلي على الموقع»).
+   The page keeps the same order of tones as the day look: the page is the lighter tone and cream wells are darker.
+   Navy bands stay navy, navy text turns light, and buttons move from navy to blue so they stand out. */
+html[data-theme=dark]{
+  color-scheme:dark;
+  --bg:#111A2C;--surface:#0C1423;--surface-2:#0A111E;--text:#E4E8F0;--text-2:#B5BECE;--text-3:#8F9AAE;
+  --heading:#EEF1F7;--action-hover:#4573E4;--line:#25324A;--line-2:#1C273B;--focus:#8CABF8;
+  --md-ink:#B5BECE;--md-line:#25324A;--md-mute:#8F9AAE;
+  --shadow-1:0 1px 2px rgba(0,0,0,.3),0 4px 14px -6px rgba(0,0,0,.5);
+  --shadow-2:0 2px 6px rgba(0,0,0,.3),0 22px 48px -20px rgba(0,0,0,.7);
+  --b-navy:#0B1E42;--btn-navy:#26499A;--btn-navy-h:#2F58B4;--l-navy:#6D8FE6;
+  --t-blue:#8CABF8;--t-ink:#B5BECE;--t-mute:#8792A6;
+  --bg-a9:rgba(17,26,44,.9);--bg-a92:rgba(17,26,44,.92);
+  --bx-cream-0:rgba(10,17,30,0);--bx-e8e4dd:#080F1B;--bx-eae5dd:#090F1B;--bx-f3f1ed:#0C1423;--bx-f4f2ee:#0D1523;--bx-f7f5f1:#0E1625;
+  --bx-fbfaf7d9:rgba(17,26,44,.85);--bx-fbfaf7e0:rgba(17,26,44,.88);--bx-wallhi-0:rgba(42,58,92,0);
+  --la-08:rgba(255,255,255,.11);--la-12:rgba(255,255,255,.15);--la-16:rgba(255,255,255,.19);--la-5:rgba(255,255,255,.53);
+  --lx-c9d3ea:#2C3B59;--lx-cfd5e2:#2C3B59;--lx-d9d5ce:#25324A;--lx-dcd8d1:#25324A;--lx-e3dfd8:#25324A;--lx-efece7:#1C273B;--lx-f1eee9:#1C273B;
+  --tx-5b6475:#A7AEBB;--tx-5b6476:#A6ADBB;--tx-5b6577:#A6ADBB;--tx-666:#A8AFBD;--tx-6b7487:#9AA0AF;--tx-7a8395:#939AA9;--tx-8a909c:#6B768B;--tx-b8becb:#46526A;
+  --bx-f1eee8:#0B1321;--bx-fbfaf8:#0F1829;--la-14:rgba(255,255,255,.17);--lx-c9c2b6:#25324A;--lx-d9d4cb:#25324A;--lx-e6e1d8:#25324A;--lx-e6e2da:#25324A;--lx-e9e5de:#25324A;--tx-1e8e78:#3DBB9F;--tx-b5523b:#E0806A;
+  scrollbar-color:#33415C transparent;
+}
+/* the shop shelf and the guide pages keep their own local colours */
+html[data-theme=dark] .mdks-root,html[data-theme=dark] .mdks-focus{--wall:#162136;--wall-hi:#2A3A5C;--paper:#111A2C;--ink:#E4E8F0;--muted:#A6ADBB;--line:#25324A;--board-top:#1D2942;--board-front:#131C2F}
+/* photos cut out for a light page keep a light plate behind them */
+html[data-theme=dark] .mdk-cat-img,html[data-theme=dark] .mdk-hero-img{background:#E6E2DB}
+html[data-theme=dark] .mdk-split img{background:#E6E2DB}
+html[data-theme=dark] ::selection{background:rgba(110,149,242,.35)}
+/* the toggle shows the moon by day and the sun by night */
+.m-theme-btn .i-sun{display:none}
+html[data-theme=dark] .m-theme-btn .i-moon{display:none}
+html[data-theme=dark] .m-theme-btn .i-sun{display:block}
+html.is-theming body,html.is-theming .m-hdr{transition:background-color .25s ease,color .25s ease}
+/* logos */
+html[data-theme=dark] img[src$="madarek-wordmark-navy.svg"]{content:url(/assets/brand/madarek-wordmark-white.svg)}
+html[data-theme=dark] img[src$="madarek-logo-en-navy.svg"]{content:url(/assets/brand/madarek-logo-en-white.svg)}
+/* sections that carry their colour inline in the page content */
+html[data-theme=dark] [style*="background:#fff"]{background-color:var(--bg)!important}
+html[data-theme=dark] [style*="background:#EDEAE5"]{background-color:var(--surface-2)!important}
+html[data-theme=dark] [style*="color:#0D244C"]{color:var(--heading)!important}
+
+.mnav-acts{display:flex;align-items:center;gap:2px}
+/* the longer English/Turkish logo leaves no room on small phones: there the button lives in the menu only */
+@media (max-width:400px){html[dir=ltr] .m-tools .m-theme-btn{display:none}}
+/* light labels that sit on gold or on a selected pill */
+html[data-theme=dark] .agb-tag{color:#0D244C}
+html[data-theme=dark] .m-sub-txt small{color:#fff}

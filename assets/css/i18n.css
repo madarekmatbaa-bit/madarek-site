@@ -12,7 +12,7 @@
 .m-lang-btn .ico{width:20px;height:20px}
 .m-lang-cur{font-size:12.5px;font-weight:600;line-height:1;color:var(--heading)}
 .m-lang-cur:lang(ar),.m-lang-cur{font-family:"MdkLatinX","MdkLatin","IBM Plex Sans Arabic",system-ui,sans-serif}
-.m-lang-pop{position:absolute;z-index:320;top:calc(100% + 8px);inset-inline-end:0;min-width:168px;padding:6px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-2);display:grid;gap:2px;transform-origin:top var(--lang-origin,left);transition:opacity .16s var(--ease-out),transform .16s var(--ease-out)}
+.m-lang-pop{position:absolute;z-index:320;top:calc(100% + 8px);inset-inline-end:0;min-width:168px;padding:6px;background:var(--bg);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-2);display:grid;gap:2px;transform-origin:top var(--lang-origin,left);transition:opacity .16s var(--ease-out),transform .16s var(--ease-out)}
 html[dir=rtl] .m-lang-pop{--lang-origin:left}
 html[dir=ltr] .m-lang-pop{--lang-origin:right}
 .m-lang-pop[hidden]{display:none}
@@ -20,7 +20,7 @@ html[dir=ltr] .m-lang-pop{--lang-origin:right}
 .m-lang-pop a,.m-lang-mob a{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;padding:0 12px;border-radius:10px;color:var(--text);font-size:14.5px;font-weight:500;text-decoration:none;transition:background-color .14s ease}
 .m-lang-pop a:hover,.m-lang-pop a:focus-visible{background:var(--surface);outline:none}
 .m-lang-pop a[aria-current],.m-lang-mob a[aria-current]{color:var(--heading);font-weight:700}
-.m-lang-pop .ico,.m-lang-mob .ico{width:16px;height:16px;color:var(--action)}
+.m-lang-pop .ico,.m-lang-mob .ico{width:16px;height:16px;color:var(--t-blue)}
 .m-lang-pop a[lang=ar],.m-lang-mob a[lang=ar]{font-family:"IBM Plex Sans Arabic",system-ui,sans-serif}
 .m-lang-pop a[lang=en],.m-lang-pop a[lang=tr],.m-lang-mob a[lang=en],.m-lang-mob a[lang=tr]{font-family:"MdkLatinX","MdkLatin",system-ui,sans-serif}
 .m-lang-mob{display:grid;gap:4px;margin:14px 0 4px;padding-top:12px;border-top:1px solid var(--line)}
@@ -63,7 +63,7 @@ html[dir=ltr] .ms-stats b{text-align:left}
 html[dir=ltr] .mdk,html[dir=ltr] .mdk-story,html[dir=ltr] .mdk-story *,html[dir=ltr] .mdk *{font-family:var(--font)}
 /* header on desktop: the menu keeps its width, the search box takes what is left (Ammar, 30 Oct: «مخربطين») */
 @media (min-width:1025px){
-  .m-nav{flex:0 1 auto}
+  .m-nav{flex:none}
   .m-tools{flex:1 1 auto;justify-content:flex-end;min-width:0}
   .m-search{flex:0 1 300px;width:auto;min-width:170px}
 }
