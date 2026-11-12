@@ -1179,8 +1179,9 @@ def build_sitemaps(page_paths):
 
 
 def build_robots():
+    # «?add-to-cart=» انشال من هون (12 ت2 2026): functions/_middleware.js صار يحوّل هالعناوين 301، ولازم Google يقدر يشوف التحويل
     write(os.path.join(OUT, 'robots.txt'),
-          'User-agent: *\nDisallow: /search/\nDisallow: /en/search/\nDisallow: /tr/arama/\nDisallow: /*?add-to-cart=\n\nSitemap: ' + SITE + '/sitemap_index.xml\n')
+          'User-agent: *\nDisallow: /search/\nDisallow: /en/search/\nDisallow: /tr/arama/\n\nSitemap: ' + SITE + '/sitemap_index.xml\n')
 
 
 def build_redirects():
