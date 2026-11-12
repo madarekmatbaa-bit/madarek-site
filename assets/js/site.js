@@ -20,7 +20,9 @@
       'اطلب عرض سعر عبر واتساب': 'Request a quote on WhatsApp',
       'اختر المواصفات والكمية لتشاهد السعر، ثم أرسل الطلب.': 'Choose the specifications and quantity to see the price, then send your request.',
       'إخفاء': 'Show less', 'اقرأ الوصف كاملاً': 'Read the full description', 'اقرأ المزيد': 'Read more',
-      'عرض {s} من {c}': 'Showing {s} of {c}', 'التنقل السريع': 'Quick navigation'
+      'عرض {s} من {c}': 'Showing {s} of {c}', 'التنقل السريع': 'Quick navigation',
+      'جهازك على الوضع الليلي. هل تكمل التصفح بالوضع الليلي أم النهاري؟': 'Your device is in night mode. Browse the site in night or day mode?',
+      'ليلي': 'Night', 'نهاري': 'Day', 'وضع العرض': 'Display mode'
     },
     tr: {
       'لا توجد نتائج لـ «{q}». جرّب كلمة أقصر أو كود المنتج.': '“{q}” için sonuç bulunamadı. Daha kısa bir kelime veya ürün kodunu deneyin.',
@@ -32,7 +34,9 @@
       'اطلب عرض سعر عبر واتساب': 'WhatsApp üzerinden teklif isteyin',
       'اختر المواصفات والكمية لتشاهد السعر، ثم أرسل الطلب.': 'Fiyatı görmek için özellikleri ve adedi seçin, ardından talebinizi gönderin.',
       'إخفاء': 'Daha az göster', 'اقرأ الوصف كاملاً': 'Açıklamanın tamamını okuyun', 'اقرأ المزيد': 'Devamını okuyun',
-      'عرض {s} من {c}': '{c} içinden {s} gösteriliyor', 'التنقل السريع': 'Hızlı gezinme'
+      'عرض {s} من {c}': '{c} içinden {s} gösteriliyor', 'التنقل السريع': 'Hızlı gezinme',
+      'جهازك على الوضع الليلي. هل تكمل التصفح بالوضع الليلي أم النهاري؟': 'Cihazınız gece modunda. Siteyi gece modunda mı, gündüz modunda mı gezmek istersiniz?',
+      'ليلي': 'Gece', 'نهاري': 'Gündüz', 'وضع العرض': 'Görünüm modu'
     }
   };
   function T(s, v) {
@@ -536,16 +540,34 @@
       if (meta) meta.setAttribute('content', on ? '#111A2C' : '#ffffff');
     }
     paint();
+    function set(on) {
+      de.classList.add('is-theming');
+      if (on) de.setAttribute('data-theme', 'dark'); else de.removeAttribute('data-theme');
+      try { localStorage.setItem('mdk-theme', on ? 'dark' : 'light'); } catch (x) {}
+      paint();
+      setTimeout(function () { de.classList.remove('is-theming'); }, 260);
+      var a = $('.m-ask'); if (a) a.parentNode.removeChild(a);
+    }
     $$('[data-theme-toggle]').forEach(function (b) {
-      b.addEventListener('click', function () {
-        var on = de.getAttribute('data-theme') !== 'dark';
-        de.classList.add('is-theming');
-        if (on) de.setAttribute('data-theme', 'dark'); else de.removeAttribute('data-theme');
-        try { localStorage.setItem('mdk-theme', on ? 'dark' : 'light'); } catch (x) {}
-        paint();
-        setTimeout(function () { de.classList.remove('is-theming'); }, 260);
-      });
+      b.addEventListener('click', function () { set(de.getAttribute('data-theme') !== 'dark'); });
     });
+    /* a device set to night gets asked once (Ammar 12 Nov 2026: «لليلي نطالعه خيار… النهاري ضغري نهار») */
+    var saved = null;
+    try { saved = localStorage.getItem('mdk-theme'); } catch (x) { saved = 'x'; }
+    if (!saved && W.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) {
+      var ask = d.createElement('div');
+      ask.className = 'm-ask';
+      ask.setAttribute('role', 'region');
+      ask.setAttribute('aria-label', T('وضع العرض'));
+      ask.innerHTML = '<p>' + esc(T('جهازك على الوضع الليلي. هل تكمل التصفح بالوضع الليلي أم النهاري؟')) + '</p><div class="m-ask-btns">' +
+        '<button type="button" class="m-btn m-btn-primary" data-v="1">' + esc(T('ليلي')) + '</button>' +
+        '<button type="button" class="m-btn m-btn-line" data-v="0">' + esc(T('نهاري')) + '</button></div>';
+      ask.addEventListener('click', function (e) {
+        var b = e.target.closest ? e.target.closest('button[data-v]') : null;
+        if (b) set(b.getAttribute('data-v') === '1');
+      });
+      d.body.appendChild(ask);
+    }
   })();
 
   $$('[data-lang]').forEach(function (box) {
