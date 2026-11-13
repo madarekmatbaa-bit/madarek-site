@@ -424,7 +424,7 @@ html[dir=ltr] .m-hs-next .ico{transform:scaleX(-1)}
 .m-ftr-mk{font-size:14px;font-weight:600;color:#fff}
 .m-ftr-mk small{display:block;font-size:12.5px;font-weight:400;color:#97A4BE}
 .m-ftr-contact bdi{font-size:15px;font-weight:600;color:#fff;text-align:start}
-.m-ftr-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px;padding:44px 0}
+.m-ftr-links{display:grid;grid-template-columns:minmax(0,1.5fr) repeat(3,minmax(0,1fr));gap:40px;padding:44px 0}
 .m-ftr-links ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .m-ftr-links a{font-size:14.5px;display:inline-flex;align-items:center;gap:8px}
 .m-ftr-links .ico{width:18px;height:18px;color:var(--md-teal)}

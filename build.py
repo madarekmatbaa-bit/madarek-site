@@ -480,7 +480,7 @@ def render(tpl, out_path, **ctx):
         ctx['seo'] = dict(ctx['seo'], tags=[t.replace(*SHARE_FIX) for t in ctx['seo']['tags']])
     base = dict(nav=nav, icons=icons, social=SOCIAL, asset=lambda n: ASSETS[n], tracking=True, body_class='',
                 full=False, search_redirect=False, path='', active_menu='', mega=MEGA, nav_pages=NAV_PAGES,
-                contacts=CONTACTS, total_products=len(products))
+                contacts=CONTACTS, total_products=len(products), services=services())
     base.update(ctx)
     html = env.get_template(tpl).render(**base)
     write(out_path, html)
@@ -620,6 +620,26 @@ def home_works_html():
             f'<div class="mdk-figs">{stats}</div></div></section>')
 
 
+# The services people search by name, linked with those words from every page
+# (Ammar 13 Nov 2026: «مطبعة عم تطلع، طباعة ما عم تطلع… متل طباعة كروت، طباعة هدايا دعائية»).
+SERVICES = [('طباعة كروت شخصية', 'sku:KART-N'), ('طباعة بروشورات', 'sku:BRO'), ('طباعة هدايا دعائية', '/product-category/promotional-ar/'),
+            ('طباعة أقلام دعائية', '/product-category/promotional-ar/pens/'), ('طباعة دفاتر وأجندات', '/product-category/notebooks/'),
+            ('طباعة أكياس ورقية', '/product-category/offset-ar/paper-bags/'), ('طباعة ستيكرات', 'sku:ETK'),
+            ('طباعة أعلام ورول أب', '/product-category/flag-ar/'), ('طباعة تيشيرتات وملابس', '/product-category/tekstil-ar/'),
+            ('طباعة علب هدايا', '/product-category/packaging/gift-boxes/')]
+_services = []
+
+
+def services():
+    if not _services:
+        by = {p['sku']: p['path'] for p in products if p.get('sku')}
+        for label, to in SERVICES:
+            if to.startswith('sku:') and to[4:] not in by:
+                raise SystemExit(f'SERVICES: no product with the code {to[4:]}')
+            _services.append(dict(label=label, path=by[to[4:]] if to.startswith('sku:') else to))
+    return _services
+
+
 def home_redesign(parts):
     out = []
     seo = None
@@ -637,6 +657,10 @@ def home_redesign(parts):
         if 'class="mdk-story"' in p:
             out.append(home_works_html())
     if seo:
+        links = ''.join(f'<a href="{x["path"]}">{x["label"]}</a>' for x in services())
+        seo, n = re.subn(r'(<nav[^>]*class="mdk-seo-mk")', f'<nav aria-label="خدمات الطباعة" class="mdk-seo-mk"><b>خدمات الطباعة:</b>{links}</nav>\\1', seo, count=1)
+        if not n:
+            raise SystemExit('home: the markets row moved, so the printing-services row has no place')
         out.append(seo)
     return out
 
