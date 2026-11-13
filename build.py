@@ -35,6 +35,7 @@ sys.path.insert(0, os.path.join(ROOT, 'lib'))
 import images  # noqa: E402
 import i18n  # noqa: E402
 import ranking  # noqa: E402
+import localpages  # noqa: E402
 
 images.setup(MEDIA, CACHE)
 
@@ -690,7 +691,7 @@ def load_articles():
         y, mth, d = a['updated'].split('-')
         others = ''.join(f'<li><a href="{ARTICLES_BASE}{o["slug"]}/">{H.escape(o["title"])}</a></li>' for o in arts if o['slug'] != a['slug'])
         body = (f'<p class="art-meta"><a href="{ARTICLES_BASE}">نصائح الطباعة</a><span>آخر تحديث: {int(d)} {AR_MONTHS[int(mth) - 1]} {y}</span></p>'
-                + re.sub(r'href="sku:([^"]+)"', sku_link, a['body'])
+                + re.sub(r'href="sku:([^"]+)"', sku_link, a['body']) + localpages.article_cities(a['slug'])
                 + '<div class="art-cta"><p>عندك طلبية؟ أرسل لنا المنتج والكمية وبلد التسليم، ونرسل لك عرض السعر ونموذج التصميم.</p>'
                   '<a class="m-btn" href="https://wa.me/905510059096" target="_blank" rel="noopener">اطلب عرض سعر على واتساب</a></div>'
                 + (f'<h2>اقرأ أيضاً</h2><ul class="art-more">{others}</ul>' if others else ''))
@@ -722,7 +723,7 @@ def load_articles():
 
 def articles_hub():
     """The list of articles at the end of the tips page."""
-    arts = [p for p in pages_raw if p.get('ar_only')]
+    arts = [p for p in pages_raw if p.get('ar_only') and p['path'].startswith(ARTICLES_BASE)]
     if not arts:
         return ''
     desc = {p['path']: next((t.split('content="')[1].split('"')[0] for t in p['seo']['tags'] if 'name="description"' in t), '') for p in arts}
@@ -743,7 +744,7 @@ def build_pages():
                 parts.append(reel_html(x[1]))
                 designed = True
             elif x[0] == 'html':
-                parts.append(x[1])
+                parts.append(localpages.city_section(path, x[1]))
                 designed = designed or 'mdk' in x[1]
             elif x[0] == 'content':
                 parts.append(x[1])
@@ -1462,8 +1463,8 @@ def build_i18n(ar_paths):
         for l in langs:
             if l not in alts:
                 continue
-            # the articles are Arabic only for now, so their list stays off the translated tips page
-            write(file_for(alts[l]), trs[l].page(re.sub(r'<section class="art-hub">.*?</section>', '', html, flags=re.S), ar, alts))
+            # the articles and the city service pages are Arabic only for now, so their lists stay off the translated pages
+            write(file_for(alts[l]), trs[l].page(re.sub(r'<section class="(?:art-hub|mdk g-sec loc-svc)">.*?</section>', '', html, flags=re.S), ar, alts))
             done[l].append((ar, alts[l]))
     for l in langs:
         tr = trs[l]
@@ -1562,7 +1563,9 @@ def main():
             shutil.rmtree(p) if os.path.isdir(p) else os.remove(p)
     os.makedirs(OUT, exist_ok=True)
     ASSETS = build_assets()
+    localpages.setup(catalog, pages_raw, CONTACTS)
     pages_raw.extend(load_articles())
+    pages_raw.extend(localpages.pages())
     made_pages = build_pages()
     made_shop = build_shop()
     made_products = build_products()

@@ -23,7 +23,7 @@ html[data-theme=dark]{
 html[data-theme=dark] .mdks-root,html[data-theme=dark] .mdks-focus{--wall:#162136;--wall-hi:#2A3A5C;--paper:#111A2C;--ink:#E4E8F0;--muted:#A6ADBB;--line:#25324A;--board-top:#1D2942;--board-front:#131C2F}
 /* photos cut out for a light page keep a light plate behind them */
 html[data-theme=dark] .mdk-cat-img,html[data-theme=dark] .mdk-hero-img{background:#E6E2DB}
-html[data-theme=dark] .mdk-split img{background:#E6E2DB}
+html[data-theme=dark] .mdk-split img,html[data-theme=dark] .mdk-g .g-figure{background:#E6E2DB}
 html[data-theme=dark] ::selection{background:rgba(110,149,242,.35)}
 /* the toggle shows the moon by day and the sun by night */
 .m-theme-btn .i-sun{display:none}

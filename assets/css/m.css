@@ -627,3 +627,26 @@ html[dir=ltr] .mdk-process .mdk-step .n{transform:translateX(-21px)}
 .art-card span{font-size:14px;line-height:1.8;color:var(--text-3);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 @media (hover:hover){.art-card:hover{border-color:var(--l-navy);transform:translateY(-2px)}}
 @media (max-width:900px){.art-grid{grid-template-columns:1fr}}
+
+/* ---------- service pages per city (lib/localpages.py) ---------- */
+.mdk-g .g-tablewrap .md-table.loc-t{min-width:0}
+.mdk-g .g-tablewrap.loc-tw{max-width:860px}
+.mdk-g .md-table.loc-t td.n{white-space:nowrap;font-variant-numeric:tabular-nums}
+.mdk-g .md-table.loc-t td small{color:var(--t-mute);font-size:13px;font-weight:400}
+.mdk-g .md-table.loc-t a{color:var(--heading);text-decoration:underline;text-decoration-color:var(--lx-c9c2b6);text-underline-offset:.3em}
+.mdk-g .md-table.loc-t a:hover{text-decoration-color:var(--t-blue)}
+.mdk-g .loc-cta{margin-top:20px}
+.mdk-g .loc-links{margin-top:0}
+.mdk-g .loc-h{margin-top:48px}
+.mdk-g .loc-cards{margin-top:48px}
+.mdk-g .loc-need{max-width:780px;margin-top:0}
+.mdk-g .loc-end{padding:0 0 96px}
+.mdk-g .loc-svc{padding-bottom:0}
+.art-cities{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:32px 0 0;padding-top:20px;border-top:1px solid var(--line)}
+.art-cities b{color:var(--heading);margin-inline-end:4px}
+.art-cities a{border:1px solid var(--line);border-radius:999px;padding:5px 13px;font-size:14px;color:var(--heading);text-decoration:none}
+.art-cities a:hover{border-color:var(--t-blue)}
+@media (max-width:640px){
+  .mdk-g .md-table.loc-t th,.mdk-g .md-table.loc-t td{padding:10px 9px;font-size:13.5px}
+  .mdk-g .loc-end{padding-bottom:64px}
+}
