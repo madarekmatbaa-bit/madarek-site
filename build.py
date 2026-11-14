@@ -211,7 +211,7 @@ def seo_paged(seo, base_path, page, pages):
 
 # ---------------------------------------------------------------- assets
 def build_assets():
-    css_order = ['base.css', 'legacy-theme.css', 'legacy-tidy.css', 'legacy-block.css', 'legacy-shop.css', 'm.css', 'i18n.css', 'dark.css']
+    css_order = ['base.css', 'legacy-theme.css', 'legacy-tidy.css', 'legacy-block.css', 'legacy-shop.css', 'm.css', 'home.css', 'i18n.css', 'dark.css']
     css = '\n'.join(open(os.path.join(ROOT, 'assets/css', f), encoding='utf-8').read() for f in css_order)
     # the shop shelf and its CSS anchored on Elementor ids; point them at our sections
     css = css.replace('.elementor-element-49de9f4', '.sh-nav').replace('.elementor-element-195c2fd1', '.sh-hero')
@@ -480,7 +480,7 @@ def render(tpl, out_path, **ctx):
     if ctx.get('seo') and ctx['seo'].get('tags'):
         ctx['seo'] = dict(ctx['seo'], tags=[t.replace(*SHARE_FIX) for t in ctx['seo']['tags']])
     base = dict(nav=nav, icons=icons, social=SOCIAL, asset=lambda n: ASSETS[n], tracking=True, body_class='',
-                full=False, search_redirect=False, path='', active_menu='', mega=MEGA, nav_pages=NAV_PAGES,
+                full=False, search_redirect=False, home=False, path='', active_menu='', mega=MEGA, nav_pages=NAV_PAGES,
                 contacts=CONTACTS, total_products=len(products), services=services())
     base.update(ctx)
     html = env.get_template(tpl).render(**base)
@@ -657,7 +657,7 @@ def home_cats(html):
         if not os.path.exists(f):
             raise SystemExit(f'home: the render for {href} is missing: {src}')
         w, h = images._size(f)
-        v = images.fit(src, round(w * min(340 / w, 320 / h, 1)))  # shown at most 150px high: twice that is enough
+        v = images.fit(src, round(w * min(472 / w, 400 / h, 1)))  # shown at most 196px high and 236px wide: twice that is enough
         html, n = re.subn(r'<a class="mdk-cat" href="' + re.escape(href) + r'"><div class="mdk-cat-img"><img alt="([^"]*)"[^>]*/>',
                           lambda m: (f'<a class="mdk-cat is-art" href="{href}"><div class="mdk-cat-img">'
                                      f'<img alt="{m.group(1)}" decoding="async" height="{v["h"]}" loading="lazy" src="{v["url"]}" width="{v["w"]}"/>'), html, count=1)
@@ -668,33 +668,60 @@ def home_cats(html):
 
     def shown(m):
         k[0] += 1
-        return m.group(0) + f' data-sizes="(max-width: 1024px) 40vw, {360 if k[0] == 1 else 200}px"'
+        return m.group(0) + f' data-sizes="(max-width: 640px) 44vw, (max-width: 1024px) 40vw, {440 if k[0] < 3 else 300}px"'
     return re.sub(r'(?<=<div class="mdk-cat-img">)<img(?=[^>]*\.png")', shown, html)
 
 
+# The home page as one premium piece (Ammar 14 Nov 2026: «طورها كلها بشكل تصير احترافية حتى فكرة العلبة اذا بدك غيره اعمل
+# دراسة وبدي شغلة فخمه كتير تشبه الشركات الضخمة متل ابل وسامسونج»). The study is in the project docs
+# (claude/site-home-premium-study-2026-11-14.md). What it settled:
+#   - the box stays as the opening, on a dark stage, without the outline lettering behind it, and shorter;
+#   - products come right after it, then the agenda, the ready products, the catalogues, our work, how we work,
+#     where we deliver, the team and the contacts;
+#   - the look is in assets/css/home.css. Words, headings and links are the same as before.
+HOME_ORDER = ['story', 'cats', 'agb', 'ptabs', 'dl', 'works', 'why', 'process', 'markets', 'team', 'cta', 'seo']
+HOME_KEYS = [('story', 'class="mdk-story"'), ('agb', 'class="mdk mdk-agb"'), ('dl', 'class="mdk mdk-dl"'), ('cats', 'class="mdk-cats"'),
+             ('ptabs', 'class="mdk mdk-ptabs"'), ('why', 'mdk-why2'), ('process', 'mdk-process'), ('markets', 'class="mdk mdk-sec mdk-markets"'),
+             ('team', 'mdk-team'), ('seo', 'class="mdk-seo'), ('cta', 'class="mdk-cta-band"')]
+
+
+def home_story(html):
+    """The opening film on its dark stage: no outline lettering, and the box a little larger."""
+    html, n = re.subn(r'<div aria-hidden="true" class="ms-giant">.*?</div>\s*', '', html, count=1, flags=re.S)
+    old = 'else { base = Math.min(w / 1500, h / 860); offX = -w * .14; }'
+    if not n or old not in html:
+        raise SystemExit('home: the opening film changed, so its staging has no place')
+    return html.replace(old, 'else { base = Math.min(w / 1380, h / 800); offX = -w * .15; }', 1)
+
+
 def home_redesign(parts):
-    out = []
-    seo = None
+    found = {}
     for p in parts:
-        if 'class="mdk-seo' in p:
-            seo = p
-            continue
-        if 'class="mdk mdk-sec mdk-markets"' in p:
-            rows = ''.join(f'<div class="mdk-dlv"><b>{c}</b><span>{t}</span><small>{n}</small></div>' for c, t, n in DELIVERY)
-            p = re.sub(r'<div class="mdk-chips">.*?</div>',
-                       f'<div class="mdk-delivery"><p class="mdk-dlv-h">مدة التسليم بعد اعتماد التصميم</p><div class="mdk-dlv-grid">{rows}</div></div>', p, count=1, flags=re.S)
-        if 'class="mdk-cats"' in p:
-            p = home_cats(p.replace('<div class="mdk-cats">', '<div class="mdk-cats mdk-bento">', 1))
-        out.append(p)
-        if 'class="mdk-story"' in p:
-            out.append(home_works_html())
-    if seo:
-        links = ''.join(f'<a href="{x["path"]}">{x["label"]}</a>' for x in services())
-        seo, n = re.subn(r'(<nav[^>]*class="mdk-seo-mk")', f'<nav aria-label="خدمات الطباعة" class="mdk-seo-mk"><b>خدمات الطباعة:</b>{links}</nav>\\1', seo, count=1)
-        if not n:
-            raise SystemExit('home: the markets row moved, so the printing-services row has no place')
-        out.append(seo)
-    return out
+        key = next((k for k, mark in HOME_KEYS if mark in p), None)
+        if not key or key in found:
+            raise SystemExit('home: a part of the page has no place in the new order: ' + p[:120].replace('\n', ' '))
+        found[key] = p
+    found['works'] = home_works_html()
+    missing = [k for k in HOME_ORDER if k not in found]
+    if missing:
+        raise SystemExit(f'home: parts missing from the page: {missing}')
+    found['story'] = home_story(found['story'])
+    rows = ''.join(f'<div class="mdk-dlv"><b>{c}</b><span>{t}</span><small>{n}</small></div>' for c, t, n in DELIVERY)
+    found['markets'] = re.sub(r'<div class="mdk-chips">.*?</div>',
+                              f'<div class="mdk-delivery"><p class="mdk-dlv-h">مدة التسليم بعد اعتماد التصميم</p><div class="mdk-dlv-grid">{rows}</div></div>',
+                              found['markets'], count=1, flags=re.S)
+    found['cats'] = home_cats(found['cats'].replace('<div class="mdk-cats">', '<div class="mdk-cats mdk-bento">', 1)
+                              .replace('<section class="mdk mdk-sec" style="padding-bottom:40px">', '<section class="mdk mdk-sec mdk-catsec">', 1))
+    found['cta'] = found['cta'].replace('<section class="mdk" style="padding:0 0 96px;background:#fff">', '<section class="mdk mdk-cta">', 1)
+    found['seo'] = found['seo'].replace(' style="padding-top:0;background:#fff"', '', 1)
+    for k, mark in (('cats', 'mdk-catsec'), ('cta', 'class="mdk mdk-cta"')):
+        if mark not in found[k]:
+            raise SystemExit(f'home: the {k} section changed its opening tag')
+    links = ''.join(f'<a href="{x["path"]}">{x["label"]}</a>' for x in services())
+    found['seo'], n = re.subn(r'(<nav[^>]*class="mdk-seo-mk")', f'<nav aria-label="خدمات الطباعة" class="mdk-seo-mk"><b>خدمات الطباعة:</b>{links}</nav>\\1', found['seo'], count=1)
+    if not n:
+        raise SystemExit('home: the markets row moved, so the printing-services row has no place')
+    return [found[k] for k in HOME_ORDER]
 
 
 # ---------------------------------------------------------------- guide articles (under /print-tips/)
@@ -804,7 +831,7 @@ def build_pages():
         common = dict(seo=pg['seo'], path=path, active_menu=active_menu_for(path), body=body,
                       search_redirect=(path == '/'))
         if designed:
-            render('page.html', file_for(path), full=True, body_class='page', **common)
+            render('page.html', file_for(path), full=True, body_class='page home' if path == '/' else 'page', home=(path == '/'), **common)
         else:
             render('doc.html', file_for(path), h1=h1, body_class='page page-doc', **common)
         out.append(path)

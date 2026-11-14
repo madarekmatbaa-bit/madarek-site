@@ -1,0 +1,277 @@
+/* الصفحة الرئيسية بمستوى الشركات الكبيرة (عمار 14 ت2: «طورها كلها بشكل تصير احترافية حتى فكرة العلبة اذا بدك غيره اعمل دراسة
+   وبدي شغلة فخمه كتير تشبه الشركات الضخمة متل ابل وسامسونج»). الدراسة بمستندات المشروع: claude/site-home-premium-study-2026-11-14.md
+   قواعدها: رسالة وحدة بكل شاشة، عناوين كبيرة، سطحين فاتحين وسطح كحلي، لون واحد للأزرار، وبلا بطاقة جوّا بطاقة.
+   كل شي هون تحت .home حتى ما يتغيّر شكل باقي الصفحات. الألوان من المتغيّرات حتى يضل الوضع الليلي شغّال. */
+.home{--hx-pad:clamp(84px,9.4vw,148px);--hx-h2:clamp(30px,3.9vw,56px);--hx-lead:clamp(16.5px,1.4vw,20px);--hx-r:28px;--hx-hair:rgba(255,255,255,.16)}
+
+/* ---------- الهيدر فوق فيلم العلبة: شفاف بأول الصفحة، وكحلي نص شفاف مع النزول ---------- */
+html.over-hero .m-hdr{background:transparent;border-bottom-color:transparent;box-shadow:none}
+html.over-hero .m-hdr.is-stuck{background:rgba(7,19,44,.8);-webkit-backdrop-filter:saturate(1.5) blur(18px);backdrop-filter:saturate(1.5) blur(18px);box-shadow:none}
+html.over-hero .m-search{background:rgba(255,255,255,.1)}
+html.over-hero .m-search:focus-within{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.32);box-shadow:none}
+
+/* ---------- فيلم العلبة: مسرح كحلي غامق، بلا زخرفة، وأقصر (كان 660vh) ---------- */
+.home .mdk-story{height:480vh;margin-top:-77px;color:#fff}
+.home .mdk-story .ms-bg{background:radial-gradient(62% 70% at 33% 58%,#1B3D7D 0%,#11306A 26%,#0B2049 54%,#07132C 100%)}
+.home .mdk-story .ms-bar{display:none}
+/* دائرة التعتيم القديمة بتضل موجودة بلا لون: إخفاؤها كان يخلّي المتصفح يحسب قفزة بالتخطيط بآخر الفيلم */
+.home .mdk-story .ms-dk{background:none}
+.home .mdk-story .ms-copy{width:min(600px,44vw);right:clamp(24px,6.4vw,112px);top:calc(50% + 28px)}
+.home .mdk-story .ms-ch h1,.home .mdk-story .ms-ch h2{color:#fff;font-weight:700;line-height:1.22}
+.home .mdk-story .ms-ch h1{font-size:clamp(38px,min(4.9vw,8.8vh),76px)}
+.home .mdk-story .ms-ch h2{font-size:clamp(34px,min(4.5vw,8.2vh),68px)}
+.home .mdk-story .ms-ch p{color:rgba(255,255,255,.78);font-size:clamp(16px,1.4vw,20px);line-height:1.8;max-width:500px;margin-top:20px}
+.home .mdk-story .ms-kick{color:#9DBBFF;font-size:14px;font-weight:500;margin-bottom:18px;gap:0}
+.home .mdk-story .ms-kick:before{display:none}
+.home .mdk-story .ms-cta{gap:12px;margin-top:32px}
+.home .mdk-story .ms-btn{height:52px;padding:0 30px;font-size:16px;font-weight:600;transition:transform .16s var(--ease-out),background-color .2s ease,border-color .2s ease}
+.home .mdk-story .ms-btn:hover{transform:none}
+.home .mdk-story .ms-btn:active{transform:scale(.97)}
+.home .mdk-story .ms-btn-p,.home .mdk-story .ms-btn-t{background:#fff;color:#0D244C!important}
+.home .mdk-story .ms-btn-p:hover,.home .mdk-story .ms-btn-t:hover{background:#E6ECFB}
+.home .mdk-story .ms-btn-o,.home .mdk-story .ms-btn-g{border:1px solid rgba(255,255,255,.42);color:#fff!important}
+.home .mdk-story .ms-btn-o:hover,.home .mdk-story .ms-btn-g:hover{border-color:#fff;background:rgba(255,255,255,.08)}
+.home .mdk-story .ms-btn:focus-visible,.home .mdk-story .ms-cats a:focus-visible{outline:2px solid #9DBBFF;outline-offset:3px}
+.home .mdk-story .ms-cats{gap:4px 24px;margin-top:30px;max-width:470px}
+.home .mdk-story .ms-cats a{padding:5px 0;border:0;border-radius:0;background:none;color:rgba(255,255,255,.7)!important;font-size:14.5px;font-weight:500;transition:color .15s ease}
+.home .mdk-story .ms-cats a:hover{background:none;color:#fff!important}
+.home .mdk-story .ms-stats{gap:44px;margin-top:30px}
+.home .mdk-story .ms-stats b{font-size:clamp(34px,3.4vw,52px);line-height:1.1}
+.home .mdk-story .ms-stats span{font-size:14.5px;margin-top:6px;color:rgba(255,255,255,.7)}
+.home .mdk-story .ms-hint{color:rgba(255,255,255,.55);bottom:26px;left:34%}
+.home .mdk-story .ms-hint:after{background:linear-gradient(#fff,rgba(255,255,255,0))}
+/* بالإنكليزي والتركي العنوان أطول، فبيصغر شوي حتى ما يطلع عن الشاشة */
+html[dir=ltr] .home .mdk-story .ms-ch h1{font-size:clamp(32px,min(3.9vw,7.2vh),60px);line-height:1.14}
+html[dir=ltr] .home .mdk-story .ms-ch h2{font-size:clamp(30px,min(3.7vw,7vh),56px);line-height:1.14}
+/* أول ظهور: الكلام بيطلع سطر ورا سطر والعلبة بتستقر */
+@media (prefers-reduced-motion:no-preference){
+  .home .mdk-story .ms-ch-hero>*{animation:hxRise .9s var(--ease-out) both}
+  .home .mdk-story .ms-ch-hero>h1{animation-delay:.08s}
+  .home .mdk-story .ms-ch-hero>p{animation-delay:.18s}
+  .home .mdk-story .ms-ch-hero>.ms-cta{animation-delay:.28s}
+  .home .mdk-story .ms-ch-hero>.ms-cats{animation-delay:.38s}
+  .home .mdk-story .ms-stage{animation:hxStage 1.3s var(--ease-out) .1s both}
+}
+@keyframes hxRise{from{opacity:0;transform:translate3d(0,18px,0)}}
+@keyframes hxStage{from{opacity:0;transform:translate3d(0,28px,0)}}
+@media (max-height:760px){.home .mdk-story .ms-hint{display:none}}
+@media (max-width:1024px){.home .mdk-story{margin-top:-65px}}
+@media (max-width:767px){
+  .home .mdk-story{height:460vh}
+  .home .mdk-story .ms-bg{background:radial-gradient(92% 46% at 50% 68%,#1B3D7D 0%,#11306A 30%,#0B2049 58%,#07132C 100%)}
+  .home .mdk-story .ms-copy{width:auto;right:20px;left:20px;top:96px}
+  .home .mdk-story .ms-ch h1{font-size:clamp(31px,9vw,42px)}
+  .home .mdk-story .ms-ch h2{font-size:clamp(29px,8.4vw,38px)}
+  html[dir=ltr] .home .mdk-story .ms-ch h1{font-size:clamp(27px,7.6vw,36px)}
+  html[dir=ltr] .home .mdk-story .ms-ch h2{font-size:clamp(26px,7.2vw,34px)}
+  .home .mdk-story .ms-ch p{font-size:15.5px;margin-top:12px}
+  .home .mdk-story .ms-kick{margin-bottom:10px;font-size:13px}
+  .home .mdk-story .ms-cta{margin-top:20px;gap:10px}
+  .home .mdk-story .ms-btn{height:48px;padding:0 18px;font-size:15px}
+  .home .mdk-story .ms-cats{margin:18px -20px 0;padding:0 20px 4px;gap:20px;max-width:none}
+  .home .mdk-story .ms-stats{gap:24px;margin-top:18px}
+  .home .mdk-story .ms-stats b{font-size:28px}
+  .home .mdk-story .ms-hint{display:none}
+}
+
+/* ---------- قواعد الأقسام: مسافات واسعة وعناوين كبيرة بالوسط ---------- */
+.home .mdk-sec{padding:var(--hx-pad) 0}
+.home .mdk-h2{font-size:var(--hx-h2);line-height:1.25;margin:0}
+.home .mdk-lead{font-size:var(--hx-lead);line-height:1.8;color:var(--text-2);max-width:620px;margin:18px 0 0}
+.home .mdk-head{flex-direction:column;align-items:center;text-align:center;gap:22px;max-width:880px;margin:0 auto clamp(40px,5vw,72px)}
+.home .mdk-head .mdk-lead{margin-inline:auto}
+.home .mdk-link{font-size:16px}
+html[dir=ltr] .home .mdk-h2,html[dir=ltr] .home .mdk-agb h2,html[dir=ltr] .home .mdk-cta-band h2{line-height:1.14}
+
+/* ---------- الأقسام: بطاقات منتج، الاسم فوق والقطعة تحت ---------- */
+.home .mdk-catsec{background:var(--bg)}
+.home .mdk-cats.mdk-bento{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:20px}
+.home .mdk-cat{grid-column:span 2;display:flex;flex-direction:column;align-items:center;text-align:center;min-height:392px;padding:42px 28px 0;background:var(--surface);border-radius:var(--hx-r);overflow:hidden;transition:background-color .25s ease}
+.home .mdk-cat:nth-child(-n+2){grid-column:span 3;min-height:520px;padding-top:56px}
+.home .mdk-cat:hover{box-shadow:none;transform:none}
+.home .mdk-cat-body{order:-1;flex:none;padding:0}
+.home .mdk-cat h3{font-size:24px;line-height:1.35;margin:0 0 8px}
+.home .mdk-cat:nth-child(-n+2) h3{font-size:clamp(28px,2.8vw,38px);margin-bottom:10px}
+.home .mdk-cat p{font-size:15px;line-height:1.7;color:var(--text-2);padding:0;margin:0 auto;max-width:30ch}
+.home .mdk-cat:nth-child(-n+2) p{font-size:17px;max-width:38ch}
+.home .mdk-cat-img{flex:1;display:flex;align-items:flex-end;justify-content:center;width:100%;padding:26px 0 38px}
+/* رسومات الهوية فيها فراغ من فوق وتحت، فبتنسحب لحتى تقعد القطعة بمكانها */
+.home .mdk-cat-img img{width:auto;height:266px;max-width:100%;max-height:none;margin:-40px 0 -22px;object-fit:contain}
+.home .mdk-cat:nth-child(-n+2) .mdk-cat-img img{height:404px;margin:-62px 0 -30px}
+.home .mdk-cat.is-art .mdk-cat-img img{mix-blend-mode:normal;height:196px;max-width:min(62%,236px);margin:0;filter:drop-shadow(0 16px 14px rgba(13,36,76,.16))}
+.home .mdk-cat .mdk-arrow{left:auto;inset-inline-end:20px;bottom:20px;width:40px;height:40px;background:var(--la-08);color:var(--heading);transition:background-color .2s ease,color .2s ease,transform .25s var(--ease-out)}
+.home .mdk-cat:hover .mdk-arrow{background:var(--btn-navy);color:#fff}
+.home .mdk-cat:focus-visible{outline:2px solid var(--focus,#3263DB);outline-offset:3px}
+@media (hover:hover){.home .mdk-cat:hover{background:var(--surface-2)}}
+@media (max-width:1024px){
+  .home .mdk-cats.mdk-bento{gap:14px}
+  .home .mdk-cat{min-height:320px;padding:32px 18px 0}
+  .home .mdk-cat:nth-child(-n+2){min-height:420px;padding-top:40px}
+  .home .mdk-cat h3{font-size:20px}
+  .home .mdk-cat p{font-size:14px}
+  .home .mdk-cat-img img{height:200px;margin:-30px 0 -16px}
+  .home .mdk-cat:nth-child(-n+2) .mdk-cat-img img{height:290px;margin:-44px 0 -22px}
+  .home .mdk-cat.is-art .mdk-cat-img img{height:140px;margin:0}
+}
+@media (max-width:640px){
+  .home .mdk-cats.mdk-bento{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .home .mdk-cat,.home .mdk-cat:nth-child(-n+2){grid-column:auto;min-height:0;padding:22px 12px 0;border-radius:22px}
+  .home .mdk-cat h3,.home .mdk-cat:nth-child(-n+2) h3{font-size:16px;margin:0}
+  .home .mdk-cat-img{padding:14px 0 20px}
+  .home .mdk-cat-img img,.home .mdk-cat:nth-child(-n+2) .mdk-cat-img img{height:150px;margin:-22px 0 -12px}
+  .home .mdk-cat.is-art .mdk-cat-img img{height:104px;max-width:62%;margin:0}
+}
+
+/* ---------- أجندة 2027: بطاقة كحلية كبيرة ---------- */
+.home .mdk-agb{padding:0 0 var(--hx-pad)}
+.home .mdk-agb .agb{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(28px,4vw,64px);padding:clamp(40px,5vw,76px);border-radius:var(--hx-r);min-height:520px}
+.home .mdk-agb .agb:hover{transform:none;box-shadow:none}
+.home .mdk-agb .agb-tag{background:none;border:1px solid rgba(209,178,43,.7);color:#E5CB55;font-weight:600;padding:4px 14px;margin-bottom:22px}
+.home .mdk-agb h2{font-size:clamp(28px,3.4vw,48px);line-height:1.25;margin:0 0 16px}
+.home .mdk-agb p{font-size:17px;line-height:1.8;max-width:44ch;margin-bottom:28px}
+.home .mdk-agb .agb-price{font-size:16px;margin-bottom:32px}
+.home .mdk-agb .agb-price b{font-size:clamp(36px,3.4vw,48px);margin:0 6px}
+.home .mdk-agb .agb-cta{height:52px;padding:0 28px;border-radius:999px;background:#fff;color:#0D244C;font-size:16px;font-weight:600}
+.home .mdk-agb .agb:hover .agb-cta{background:#E6ECFB}
+.home .mdk-agb .agb-img{height:clamp(300px,33vw,430px)}
+.home .mdk-agb .agb-img img{border-radius:18px}
+.home .mdk-agb .agb-img .i1{width:66%}
+.home .mdk-agb .agb-img .i2{width:50%;right:2%}
+@media (max-width:860px){
+  .home .mdk-agb .agb{grid-template-columns:1fr;padding:28px 22px 34px;min-height:0;border-radius:22px}
+  .home .mdk-agb .agb-img{height:250px}
+  .home .mdk-agb p{font-size:15.5px}
+  .home .mdk-agb .agb-cta{height:48px;padding:0 20px;font-size:15px}
+}
+
+/* ---------- المنتجات الجاهزة: تبويبات حبّة ---------- */
+.home .mdk-ptabs{padding:0 0 var(--hx-pad)}
+.home .mdk-ptabs .mdk-head{margin-bottom:30px}
+.home .ptabs-bar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);border-bottom:0;margin:0 0 44px}
+.home .ptabs-navwrap{grid-column:2;min-width:0;max-width:100%}
+.home .ptabs-arrows{grid-column:3;justify-self:end}
+.home .ptabs-nav{gap:8px}
+.home .ptabs-nav button{height:44px;padding:0 20px;border-radius:999px;background:var(--surface);color:var(--text);font-size:15px;transition:background-color .2s ease,color .2s ease}
+.home .ptabs-nav button:hover{background:var(--surface-2);color:var(--heading)}
+.home .ptabs-nav button[aria-selected=true]{background:var(--btn-navy);color:#fff}
+.home .ptabs-nav button[aria-selected=true]:after{display:none}
+.home .mdk-ptabs .m-card-media{border-radius:22px}
+.home .mdk-ptabs .ptabs-all{margin-top:44px}
+@media (max-width:1024px){.home .ptabs-bar{display:flex;margin-bottom:28px}}
+
+/* ---------- الكتالوجات: قائمة هادئة بخطوط رفيعة ---------- */
+.home .mdk-dl{padding:0 0 var(--hx-pad);background:none}
+.home .mdk-dl-in{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:clamp(28px,5vw,72px);align-items:start;background:none;border-radius:0;border-top:1px solid var(--line);padding:clamp(36px,4.4vw,60px) 0 0;overflow:visible}
+.home .mdk-dl-txt h3{font-size:clamp(22px,2.3vw,32px);line-height:1.35;margin:0 0 10px}
+.home .mdk-dl-txt p{font-size:16px;line-height:1.8;color:var(--text-2)}
+.home .mdk-dl-btns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 44px}
+.home .mdk-dl-btn{flex-direction:row-reverse;justify-content:space-between;gap:16px;padding:20px 0;background:none;border:0;border-bottom:1px solid var(--line);border-radius:0;color:var(--heading)!important;transition:color .15s ease}
+.home .mdk-dl-btn:first-child,.home .mdk-dl-btn:nth-child(2){border-top:1px solid var(--line)}
+.home .mdk-dl-btn:hover{box-shadow:none;transform:none;color:var(--t-blue)!important}
+.home .mdk-dl-btn b{font-size:16.5px;font-weight:600}
+.home .mdk-dl-btn small{font-size:13.5px;opacity:1;color:var(--text-3);margin-top:3px}
+.home .mdk-dl-btn svg{color:var(--t-blue)}
+.home .mdk-dl-primary{background:none}
+@media (max-width:860px){
+  .home .mdk-dl-in{grid-template-columns:1fr;gap:22px}
+  .home .mdk-dl-btns{grid-template-columns:1fr}
+  .home .mdk-dl-btn:nth-child(2){border-top:0}
+}
+
+/* ---------- من شغلنا: على سطح فاتح، والأرقام كبيرة ---------- */
+.home .mdk-works{background:var(--surface);padding:var(--hx-pad) 0}
+.home .mdk-works .mdk-head{align-items:flex-start;text-align:start;max-width:none;margin:0}
+.home .mdk-works .mdk-head .mdk-lead{margin-inline:0}
+.home .mdk-work{border-radius:22px}
+.home .mdk-figs .mdk-fig b{font-size:clamp(34px,3.6vw,52px)}
+.home .mdk-figs .mdk-fig>span{font-size:15px;margin-top:6px}
+@media (max-width:1024px){.home .mdk-works .mdk-head{margin-bottom:32px}}
+
+/* ---------- لماذا مدارك ---------- */
+.home .mdk-why2 .mdk-why2-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(32px,6vw,96px)}
+.home .mdk-why2 .mdk-h2{font-size:clamp(28px,3.3vw,48px)}
+.home .mdk-why2 .mdk-why2-list{column-gap:44px;row-gap:0}
+.home .mdk-why2 .mdk-why2-list li{padding:26px 0 32px;border-top:1px solid var(--line)}
+.home .mdk-why2 .mdk-why2-list h3{font-size:clamp(19px,1.7vw,23px);margin:0 0 8px}
+.home .mdk-why2 .mdk-why2-list p{font-size:16px;line-height:1.8;color:var(--text-2)}
+
+/* ---------- الخطوات ---------- */
+.home .mdk-process{background:var(--surface)}
+.home .mdk-process .mdk-step .n{width:44px;height:44px;font-size:15px;margin-bottom:24px;box-shadow:0 0 0 10px var(--surface)}
+.home .mdk-process .mdk-step h3{font-size:clamp(17px,1.5vw,21px);margin-bottom:10px}
+.home .mdk-process .mdk-step p{font-size:15.5px;color:var(--text-2)}
+@media (min-width:861px){.home .mdk-process .mdk-step::before{top:21.5px}}
+@media (max-width:860px){.home .mdk-process .mdk-step .n{margin:0;box-shadow:none}.home .mdk-process .mdk-step{grid-template-columns:44px 1fr}.home .mdk-process .mdk-step::before{inset-inline-start:21.5px;top:44px}}
+
+/* ---------- مراكز التنفيذ والتسليم: فصل كحلي بخطوط رفيعة بدل البطاقات ---------- */
+.home .mdk-markets .mdk-h2,.home .mdk-markets .mdk-lead{text-align:center;margin-inline:auto}
+.home .mdk-markets .mdk-lead{color:#C9D2E3;max-width:580px}
+.home .mdk-hubs{gap:0;margin-top:clamp(44px,5vw,76px);border-top:1px solid var(--hx-hair)}
+.home .mdk-hub{padding:34px 28px 40px;border:0;border-inline-start:1px solid var(--hx-hair);border-radius:0;background:none}
+.home .mdk-hub:first-child{border-inline-start:0;padding-inline-start:0}
+.home .mdk-hub:hover{transform:none}
+.home .mdk-hub small{font-size:14px;margin-bottom:14px}
+.home .mdk-hub h3{font-size:clamp(24px,2.4vw,34px);margin:0 0 10px}
+.home .mdk-hub p{font-size:15.5px;line-height:1.8;color:#C9D2E3}
+.home .mdk-delivery{margin-top:0;border-top:1px solid var(--hx-hair);padding-top:36px}
+.home .mdk-dlv-h{font-size:15px;margin-bottom:26px}
+.home .mdk-dlv-grid{gap:0}
+.home .mdk-dlv{padding-inline:28px;border-inline-start:1px solid var(--hx-hair)}
+.home .mdk-dlv:first-child{border-inline-start:0;padding-inline-start:0}
+.home .mdk-dlv b{font-size:15px;font-weight:500;color:#C9D2E3;margin-bottom:8px}
+.home .mdk-dlv span{font-size:clamp(18px,1.55vw,22px);font-weight:700;line-height:1.5}
+.home .mdk-dlv small{font-size:14px;margin-top:8px}
+@media (max-width:860px){
+  .home .mdk-hubs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .home .mdk-hub,.home .mdk-hub:first-child{padding:24px 0 26px;padding-inline-end:16px;border-inline-start:0;border-top:1px solid var(--hx-hair)}
+  .home .mdk-hubs{border-top:0}
+  .home .mdk-dlv,.home .mdk-dlv:first-child{padding:0 0 26px;padding-inline-end:16px;border-inline-start:0}
+}
+
+/* ---------- الفريق: أسماء بصف واحد ---------- */
+.home .mdk-team{padding-bottom:clamp(56px,6vw,88px)}
+.home .mdk-team .mdk-people{gap:0;max-width:1000px;margin-inline:auto;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.home .mdk-team .mdk-person{align-items:center;text-align:center;padding:30px 16px;background:none;border-radius:0;border-inline-start:1px solid var(--line)}
+.home .mdk-team .mdk-person:first-child{border-inline-start:0}
+.home .mdk-team .mdk-person:hover{transform:none}
+.home .mdk-team .mdk-person .who b{font-size:18px;margin-bottom:6px}
+.home .mdk-team .mdk-person .who span{font-size:14.5px;color:var(--text-3)}
+@media (max-width:640px){
+  .home .mdk-team .mdk-people{grid-template-columns:repeat(2,minmax(0,1fr));border-bottom:0}
+  .home .mdk-team .mdk-person{padding:22px 10px;border-bottom:1px solid var(--line)}
+  .home .mdk-team .mdk-person:nth-child(odd){border-inline-start:0}
+  .home .mdk-team .mdk-person .who b{font-size:16.5px}
+}
+
+/* ---------- الختام: دعوة للتواصل بلون الزر، والأرقام قائمة بلا بطاقات ---------- */
+.home .mdk-cta{padding:0 0 var(--hx-pad);background:none}
+.home .mdk-cta-band{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(32px,6vw,96px);padding:clamp(40px,6vw,92px);border-radius:var(--hx-r);background:#3263DB}
+.home .mdk-cta-band h2{font-size:clamp(28px,3.3vw,48px);line-height:1.25;margin:0 0 16px}
+.home .mdk-cta-band p{font-size:var(--hx-lead);line-height:1.8;color:#EEF2FF}
+.home .mdk-contacts{gap:0;border-top:1px solid rgba(255,255,255,.3)}
+.home .mdk-contact{padding:20px 0;background:none;border:0;border-bottom:1px solid rgba(255,255,255,.3);border-radius:0}
+.home .mdk-contact:hover{background:none}
+.home .mdk-contact small{font-size:14px;color:#EEF2FF;margin-bottom:2px}
+.home .mdk-contact b{font-size:clamp(18px,1.7vw,22px)}
+.home .mdk-contact i{padding:10px 18px;background:#fff;color:#2449A8;font-size:14px;transition:background-color .2s ease}
+.home .mdk-contact:hover i{background:#E6ECFB}
+@media (max-width:1024px){.home .mdk-cta-band{grid-template-columns:1fr;border-radius:22px}}
+
+/* ---------- نص محركات البحث: أعمدة بلا بطاقات ---------- */
+.home .mdk-seo{background:var(--surface)}
+.home .mdk-seo .mdk-head{align-items:flex-start;text-align:start;max-width:none;margin-bottom:36px}
+.home .mdk-seo .mdk-h2{font-size:clamp(24px,2.4vw,34px)}
+.home .mdk-seo-grid{gap:44px}
+.home .mdk-seo-col{padding:22px 0 0;background:none;border-radius:0;border-top:1px solid var(--line)}
+.home .mdk-seo-col h3{font-size:19px;margin-bottom:12px}
+.home .mdk-seo-col p{font-size:15.5px;color:var(--text-2)}
+.home .mdk-seo-more button{text-decoration-color:var(--t-blue)}
+@media (max-width:1024px){.home .mdk-seo-grid{gap:28px}}
+
+/* ---------- الوضع الليلي: بطاقات الأقسام بتضل فاتحة لأن رسوماتها مقصوصة لخلفية فاتحة ---------- */
+html[data-theme=dark] .home .mdk-cat,html[data-theme=dark] .home .mdk-cat:hover{background:#E9E6E0}
+html[data-theme=dark] .home .mdk-cat-img{background:none}
+html[data-theme=dark] .home .mdk-cat h3{color:#0D244C}
+html[data-theme=dark] .home .mdk-cat p{color:#4A5568}
+html[data-theme=dark] .home .mdk-cat .mdk-arrow{background:rgba(13,36,76,.08);color:#0D244C}
+html[data-theme=dark] .home .mdk-cat:hover .mdk-arrow{background:#0D244C;color:#fff}

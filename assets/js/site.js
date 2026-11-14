@@ -166,6 +166,16 @@
     on(W, 'scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
   })();
 
+  /* ---------- home: the header keeps its dark look while the opening film is under it ---------- */
+  (function () {
+    var st = $('.mdk-story'); if (!st || !d.body.classList.contains('home')) return;
+    var t = false;
+    function upd() { t = false; de.classList.toggle('over-hero', st.getBoundingClientRect().bottom > 90); }
+    on(W, 'scroll', function () { if (!t) { t = true; requestAnimationFrame(upd); } }, { passive: true });
+    on(W, 'resize', upd);
+    upd();
+  })();
+
   /* ---------- mega menu ---------- */
   (function () {
     var li = $('[data-mega]'); if (!li) return;

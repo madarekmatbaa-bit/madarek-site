@@ -570,21 +570,6 @@ html[dir=ltr] .mdk-cat:hover .mdk-arrow{transform:translateX(3px) scaleX(-1)}
   .mdk-figs{grid-template-columns:repeat(2,1fr);margin-top:28px;gap:20px 12px}
 }
 @media (max-width:640px){.mdk-work{flex-basis:82%}}
-/* الأقسام: الهدايا الدعائية أكبر بطاقة، والمطبوعات عريضة */
-@media (min-width:1025px){
-  .mdk-cats.mdk-bento{grid-template-columns:repeat(4,1fr);grid-auto-rows:minmax(240px,auto);grid-auto-flow:dense;gap:18px}
-  .mdk-cats.mdk-bento .mdk-cat{min-height:0}
-  .mdk-cats.mdk-bento .mdk-cat:first-child{grid-column:span 2;grid-row:span 2}
-  .mdk-cats.mdk-bento .mdk-cat:first-child .mdk-cat-img img{max-height:360px}
-  .mdk-cats.mdk-bento .mdk-cat:first-child h3{font-size:26px}
-  .mdk-cats.mdk-bento .mdk-cat:first-child p{font-size:15px}
-  .mdk-cats.mdk-bento .mdk-cat:nth-child(2){grid-column:span 2}
-  .mdk-cats.mdk-bento .mdk-cat:nth-child(2){flex-direction:row-reverse;align-items:center}
-  .mdk-cats.mdk-bento .mdk-cat:nth-child(2) .mdk-cat-img{padding:18px}
-  .mdk-cats.mdk-bento .mdk-cat:nth-child(2) .mdk-cat-img img{max-height:200px}
-  .mdk-cats.mdk-bento .mdk-cat:nth-child(2) .mdk-cat-body{flex:1}
-  .mdk-cats.mdk-bento .mdk-cat .mdk-cat-img img{max-height:150px}
-}
 /* الخطوات: خط زمني برقم بارز وخط واحد يمر بالأرقام (أفقي عالكمبيوتر، عمودي عالموبايل) */
 .mdk-process .mdk-steps{position:relative;gap:0;counter-reset:mdkstep}
 .mdk-process .mdk-step{position:relative;background:transparent;border-radius:0;padding:0;padding-inline-end:28px}
@@ -614,7 +599,7 @@ html[dir=ltr] .mdk-cat:hover .mdk-arrow{transform:translateX(3px) scaleX(-1)}
 .mdk-dlv small{display:block;color:#9FB0CF;font-size:13px;margin-top:2px}
 @media (max-width:860px){.mdk-dlv-grid{grid-template-columns:repeat(2,1fr)}}
 /* الرئيسية، تطوير 14 ت2 (عمار: «طور واجهة الموقع الصفحة الرئيسية وتاكد انه ال seo تبعها ما خرب»):
-   صور الشغل أكبر والأرقام بجانبها، بطاقات الأقسام كلها برسومات الهوية، وبطاقات الفريق تملأ الصف. النصوص والعناوين والروابط نفسها. */
+   صور الشغل أكبر والأرقام بجانبها، وبطاقات الفريق تملأ الصف. بطاقات الأقسام وباقي شكل الصفحة صاروا بـ home.css. */
 @media (min-width:861px){
   .mdk-works-list{grid-template-columns:repeat(2,1fr)}
   .mdk-work figcaption{padding:60px 22px 18px}
@@ -628,14 +613,10 @@ html[dir=ltr] .mdk-cat:hover .mdk-arrow{transform:translateX(3px) scaleX(-1)}
   .mdk-works .mdk-works-rail{grid-column:2;grid-row:1/span 2}
   .mdk-works .mdk-figs{grid-column:1;grid-row:2;align-self:end;grid-template-columns:repeat(2,1fr);gap:28px 20px;margin-top:44px}
   .mdk-team .mdk-people{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
-  .mdk-cats.mdk-bento .mdk-cat:nth-child(n+3):not(.is-art) .mdk-cat-img img{max-height:176px}
 }
-/* بالإنكليزي والتركي: سهم البطاقة عند نهاية السطر وباتجاه القراءة، وما بيركب فوق الاسم */
-.mdk-cats .mdk-cat .mdk-arrow{left:auto;inset-inline-end:20px}
+/* بالإنكليزي والتركي: الأسهم باتجاه القراءة */
 html[dir=ltr] .mdk-cat .mdk-arrow{transform:scaleX(-1)}
-html[dir=ltr] .mdk-cats .mdk-cat p{padding-left:0;padding-right:44px}
 html[dir=ltr] .mdk-link:after{content:" →"}
-.mdk-cat.is-art .mdk-cat-img img{mix-blend-mode:normal;max-width:min(62%,190px);height:auto;object-fit:contain;filter:drop-shadow(0 12px 12px rgba(13,36,76,.14))}
 /* مقالات ودلائل تحت /print-tips/ (عمار 10 ت2) */
 .art-meta{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;font-size:13.5px;color:var(--text-3);margin:0 0 26px}
 .art-meta a{font-weight:600}

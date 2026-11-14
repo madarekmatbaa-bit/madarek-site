@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script>document.documentElement.className=document.documentElement.className.replace('no-js','js');try{if(localStorage.getItem('mdk-theme')==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}{% if search_redirect %}if(/[?&]s=/.test(location.search))location.replace('/search/'+location.search);{% endif %}</script>
+<script>document.documentElement.className=document.documentElement.className.replace('no-js','js');try{if(localStorage.getItem('mdk-theme')==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}{% if home %}document.documentElement.classList.add('over-hero');{% endif %}{% if search_redirect %}if(/[?&]s=/.test(location.search))location.replace('/search/'+location.search);{% endif %}</script>
 <title>{{ seo.title }}</title>
 {% for t in seo.tags %}{{ t|safe }}
 {% endfor -%}

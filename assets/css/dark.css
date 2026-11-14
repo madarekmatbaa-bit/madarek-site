@@ -1,7 +1,8 @@
 /* Night mode (Ammar 12 Nov 2026: «ضيف مود الليلي على الموقع»).
    The page keeps the same order of tones as the day look: the page is the lighter tone and cream wells are darker.
    Navy bands stay navy, navy text turns light, and buttons move from navy to blue so they stand out. */
-html[data-theme=dark]{
+/* the same palette dresses the header while it sits over the dark opening film of the home page (html.over-hero) */
+html[data-theme=dark],html.over-hero .m-hdr{
   color-scheme:dark;
   --bg:#111A2C;--surface:#0C1423;--surface-2:#0A111E;--text:#E4E8F0;--text-2:#B5BECE;--text-3:#8F9AAE;
   --heading:#EEF1F7;--action-hover:#4573E4;--line:#25324A;--line-2:#1C273B;--focus:#8CABF8;
@@ -31,8 +32,8 @@ html[data-theme=dark] .m-theme-btn .i-moon{display:none}
 html[data-theme=dark] .m-theme-btn .i-sun{display:block}
 html.is-theming body,html.is-theming .m-hdr{transition:background-color .25s ease,color .25s ease}
 /* logos */
-html[data-theme=dark] img[src$="madarek-wordmark-navy.svg"]{content:url(/assets/brand/madarek-wordmark-white.svg)}
-html[data-theme=dark] img[src$="madarek-logo-en-navy.svg"]{content:url(/assets/brand/madarek-logo-en-white.svg)}
+html[data-theme=dark] img[src$="madarek-wordmark-navy.svg"],html.over-hero .m-hdr img[src$="madarek-wordmark-navy.svg"]{content:url(/assets/brand/madarek-wordmark-white.svg)}
+html[data-theme=dark] img[src$="madarek-logo-en-navy.svg"],html.over-hero .m-hdr img[src$="madarek-logo-en-navy.svg"]{content:url(/assets/brand/madarek-logo-en-white.svg)}
 /* sections that carry their colour inline in the page content */
 html[data-theme=dark] [style*="background:#fff"]{background-color:var(--bg)!important}
 html[data-theme=dark] [style*="background:#EDEAE5"]{background-color:var(--surface-2)!important}
