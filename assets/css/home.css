@@ -56,22 +56,60 @@ html[dir=ltr] .home .mdk-story .ms-ch h2{font-size:clamp(30px,min(3.7vw,7vh),56p
 @keyframes hxStage{from{opacity:0;transform:translate3d(0,28px,0)}}
 @media (max-height:760px){.home .mdk-story .ms-hint{display:none}}
 @media (max-width:1024px){.home .mdk-story{margin-top:-65px}}
-@media (max-width:767px){
+/* عالموبايل والتابلت الواقف (عمار 14 ت2: «داخل ببعضها»): الكلام فوق بالنص والعلبة تحته. مكان العلبة وحجمها بينحسبوا بسكربت الفيلم
+   من ارتفاع الكلام والشريط السفلي، حتى ما يدخلوا ببعض على أي مقاس. نفس الشرط مكتوب بالسكربت (matchMedia)، فإذا تغيّر هون بيتغيّر هناك.
+   روابط الأقسام وأزرار آخر الفيلم ما بتظهر هون لأنها موجودة ببطاقات الأقسام بعد الفيلم وبالشريط السفلي. */
+@media (max-width:1279px){
+  .home .mdk-story .ms-copy{width:min(520px,42vw)}
+  .home .mdk-story .ms-cats{display:none}
+}
+@media (max-width:767px),(max-width:1024px) and (orientation:portrait){
   .home .mdk-story{height:460vh}
-  .home .mdk-story .ms-bg{background:radial-gradient(92% 46% at 50% 68%,#1B3D7D 0%,#11306A 30%,#0B2049 58%,#07132C 100%)}
-  .home .mdk-story .ms-copy{width:auto;right:20px;left:20px;top:96px}
-  .home .mdk-story .ms-ch h1{font-size:clamp(31px,9vw,42px)}
-  .home .mdk-story .ms-ch h2{font-size:clamp(29px,8.4vw,38px)}
-  html[dir=ltr] .home .mdk-story .ms-ch h1{font-size:clamp(27px,7.6vw,36px)}
-  html[dir=ltr] .home .mdk-story .ms-ch h2{font-size:clamp(26px,7.2vw,34px)}
-  .home .mdk-story .ms-ch p{font-size:15.5px;margin-top:12px}
+  .home .mdk-story .ms-bg{background:radial-gradient(96% 44% at 50% var(--ms-oy,68%),#1F4488 0%,#12326E 28%,#0B2049 58%,#07132C 100%)}
+  .home .mdk-story .ms-world{top:0}
+  .home .mdk-story .ms-copy{width:auto;height:auto;right:20px;left:20px;top:88px;text-align:center}
+  .home .mdk-story .ms-ch{top:0;translate:none;text-align:center}
+  .home .mdk-story .ms-btn{flex:1 1 0}
+  .home .mdk-story .ms-ch-hero{align-items:center}
+  .home .mdk-story .ms-ch-hero .ms-kick{align-self:center}
+  .home .mdk-story .ms-ch h1{font-size:clamp(29px,8.6vw,40px);text-wrap:balance}
+  .home .mdk-story .ms-ch h2{font-size:clamp(27px,8vw,36px);text-wrap:balance}
+  html[dir=ltr] .home .mdk-story .ms-ch h1{font-size:clamp(24px,6.7vw,30px)}
+  html[dir=ltr] .home .mdk-story .ms-ch h2{font-size:clamp(24px,6.6vw,30px)}
+  .home .mdk-story .ms-ch p{font-size:15.5px;line-height:1.75;margin:12px auto 0;max-width:340px;text-wrap:balance}
   .home .mdk-story .ms-kick{margin-bottom:10px;font-size:13px}
-  .home .mdk-story .ms-cta{margin-top:20px;gap:10px}
-  .home .mdk-story .ms-btn{height:48px;padding:0 18px;font-size:15px}
-  .home .mdk-story .ms-cats{margin:18px -20px 0;padding:0 20px 4px;gap:20px;max-width:none}
-  .home .mdk-story .ms-stats{gap:24px;margin-top:18px}
-  .home .mdk-story .ms-stats b{font-size:28px}
+  .home .mdk-story .ms-cta{width:100%;max-width:360px;margin-top:20px;gap:10px;justify-content:center}
+  .home .mdk-story .ms-btn{height:48px;padding:0 14px;font-size:15px;white-space:nowrap}
+  html[dir=ltr] .home .mdk-story .ms-btn{font-size:14px;padding:0 10px}
+  .home .mdk-story .ms-cats,.home .mdk-story .ms-ch:not(.ms-ch-hero) .ms-kick,.home .mdk-story .ms-ch:not(.ms-ch-hero) .ms-cta{display:none}
+  .home .mdk-story .ms-stats{gap:30px;margin-top:20px;justify-content:center}
+  .home .mdk-story .ms-stats div{align-items:center}
+  .home .mdk-story .ms-stats b{font-size:28px;text-align:center}
   .home .mdk-story .ms-hint{display:none}
+  /* التابلت الواقف: نفس الترتيب بخط أكبر */
+  @media (min-width:600px){
+    .home .mdk-story .ms-copy{top:112px}
+    .home .mdk-story .ms-ch h1{font-size:clamp(40px,6.6vw,58px)}
+    .home .mdk-story .ms-ch h2{font-size:clamp(36px,6vw,52px)}
+    html[dir=ltr] .home .mdk-story .ms-ch h1{font-size:clamp(36px,5.6vw,48px)}
+    html[dir=ltr] .home .mdk-story .ms-ch h2{font-size:clamp(34px,5.2vw,44px)}
+    .home .mdk-story .ms-ch p{font-size:18px;max-width:520px;margin-top:16px}
+    .home .mdk-story .ms-kick{font-size:14px;margin-bottom:14px}
+    .home .mdk-story .ms-cta{margin-top:28px}
+    .home .mdk-story .ms-btn{height:52px;font-size:16px}
+    .home .mdk-story .ms-stats b{font-size:40px}
+    .home .mdk-story .ms-stats{gap:44px;margin-top:26px}
+  }
+  /* الشاشات القصيرة (الصنف بينحط من السكربت حسب ارتفاع الشاشة الثابت، مو من media حتى ما يتغيّر الخط مع طلوع شريط العنوان ونزوله) */
+  .home .mdk-story.ms-short .ms-copy{top:76px}
+  .home .mdk-story.ms-short .ms-ch h1{font-size:clamp(25px,7.4vw,30px)}
+  .home .mdk-story.ms-short .ms-ch h2{font-size:clamp(24px,7vw,28px)}
+  html[dir=ltr] .home .mdk-story.ms-short .ms-ch h1{font-size:clamp(23px,6.6vw,27px)}
+  html[dir=ltr] .home .mdk-story.ms-short .ms-ch h2{font-size:clamp(22px,6.3vw,26px)}
+  .home .mdk-story.ms-short .ms-ch p{font-size:14.5px;line-height:1.65;margin-top:8px}
+  .home .mdk-story.ms-short .ms-kick{margin-bottom:6px}
+  .home .mdk-story.ms-short .ms-cta{margin-top:14px}
+  .home .mdk-story.ms-short .ms-btn{height:44px}
 }
 
 /* ---------- قواعد الأقسام: مسافات واسعة وعناوين كبيرة بالوسط ---------- */
