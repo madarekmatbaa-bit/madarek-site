@@ -1,15 +1,23 @@
-"""The new box of the opening film on the home page.
+"""The box of the opening film on the home page.
 
-Ammar, 14 Nov 2026, about the box: «ما حلو الموديل اعمل واحد حديث اكتر وانيق وبسيط», then «طوره».
+Ammar, 14 Nov 2026, about the box: «ما حلو الموديل اعمل واحد حديث اكتر وانيق وبسيط», then «طوره», then «طوره اكثر».
 The old model was a navy box with a short lid, a large logo and wave lines on the lid and the front. The new one is a rigid
-box with a full lid that slides down over the base (the way phone boxes are made): matt navy with nothing on it but a small
-logo in the middle of the lid, and a blue base that shows as a thin line under the lid and comes into view when the lid lifts.
+box with a full lid that slides down over the base (the way phone boxes are made): matt navy with nothing on it but the logo
+in the middle of the lid, and a blue base that shows as a thin line under the lid and comes into view when the lid lifts.
+
+The second pass («طوره اكثر») keeps the same box and its sizes and works on how it is made and lit:
+  - the logo is a silver foil stamp (a silver layer cut to the logo's shape) that catches the light as the film moves, and it
+    is set across the lid, so it reads upright when the box stands up;
+  - a thumb cut in the near side of the lid shows the blue base, the way stationery boxes are opened;
+  - the faces are lit from one side: a lighter top, a half-lit near side, a dark far side, and edges that catch the light;
+  - the box stands up with its lid to the viewer before it goes into the bag (it used to show its plain underside);
+  - the bag is plain white with the logo and blue handles, without the wave band, like the box.
+The first moments (the lid settling, the light crossing it) are CSS in assets/css/home.css.
 
     python3 tools/home_box_2026_11_14.py
 
 It rewrites the block that builds the box inside the film's script (content/pages-raw.json, the home page, first part) and
-the numbers that depended on the old heights: where the lid rests, how high it lifts, and the middle the box turns around
-when it stands up to go into the bag. Running it twice changes nothing.
+the lines outside it that depend on the box. Running it twice changes nothing.
 """
 import json
 import os
@@ -19,9 +27,10 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 START, END = '  // ---------- box ----------', '  // ---------- items ----------'
 
 NEW_BLOCK = r'''  // ---------- box ----------
-  // موديل العلبة (عمار 14 ت2: «ما حلو الموديل اعمل واحد حديث اكتر وانيق وبسيط»): علبة صلبة بغطا كامل بينزل لتحت متل علب
-  // الموبايلات، كحلي مطفي بلا خطوط ولا زخرفة، شعار صغير بنص الغطا، وقاعدة زرقا بيبيّن منها خط رفيع تحت الغطا وبتطلع كلها
-  // لما ينرفع. قبلها كانت علبة بغطا قصير وشعار كبير وخطوط موج (12 ت1: «العلبة لو تكون واقعية أكتر»)، والإضاءة والملمس من هديك النسخة.
+  // موديل العلبة (عمار 14 ت2: «ما حلو الموديل اعمل واحد حديث اكتر وانيق وبسيط»، وبعدها «طوره» و«طوره اكثر»): علبة صلبة
+  // بغطا كامل بينزل لتحت متل علب الموبايلات، كحلي مطفي بلا خطوط ولا زخرفة، وقاعدة زرقا بيبيّن منها خط رفيع تحت الغطا.
+  // التطوير التاني: الشعار ختم فضّي بيلمع مع الحركة ومكتوب بعرض الغطا (بيضل مقروء لما توقف العلبة لتنزل بالكيس)، فتحة إصبع
+  // بالغطا بتبيّن القاعدة الزرقا، وإضاءة أوضح للوجوه والحواف. الملمس (TEX) من نسخة 12 ت1: «العلبة لو تكون واقعية أكتر».
   var BW = 300, BD = 400, BH = 96, LH = 92, LIP = 8, MID = (LIP + LH) / 2;
   __TEX__
   function face(w, h, bg, tf, inner) {
@@ -45,58 +54,91 @@ NEW_BLOCK = r'''  // ---------- box ----------
   box.appendChild(mface(BW, BD, 'radial-gradient(78% 72% at 50% 50%,rgba(0,0,0,0) 42%,rgba(6,18,58,.5) 100%)', 'linear-gradient(135deg,#2a54c0,#1f44a4)', 'translate3d(0,0,4px)'));
   box.appendChild(mface(BW, BH, RIM, 'linear-gradient(#1a3a8e,#2850b8)', 'translate3d(0,' + (-BD / 2) + 'px,' + (BH / 2) + 'px) rotateX(-90deg)'));
   box.appendChild(mface(BH, BD, 'linear-gradient(90deg,rgba(6,18,58,.45),rgba(6,18,58,0) 30%)', 'linear-gradient(90deg,#2850b8,#1c3e94)', 'translate3d(' + (BW / 2) + 'px,0,' + (BH / 2) + 'px) rotateY(-90deg)'));
-  box.appendChild(mface(BW, BH, 'linear-gradient(100deg,rgba(255,255,255,.14),rgba(255,255,255,0) 46%)', 'linear-gradient(170deg,#4b7cf2,#3263DB 55%,#2a55c4)', 'translate3d(0,' + (BD / 2) + 'px,' + (BH / 2) + 'px) rotateX(-90deg)', '',
-    'inset 0 0 0 1px rgba(255,255,255,.07),inset 0 1px 0 rgba(255,255,255,.22)'));
-  box.appendChild(mface(BH, BD, 'linear-gradient(270deg,rgba(6,18,58,.3),rgba(6,18,58,0) 30%)', 'linear-gradient(90deg,#2347a8,#2c57c6)', 'translate3d(' + (-BW / 2) + 'px,0,' + (BH / 2) + 'px) rotateY(-90deg)', '',
-    'inset 0 0 0 1px rgba(255,255,255,.05),inset -1px 0 0 rgba(255,255,255,.16)'));
+  box.appendChild(mface(BW, BH, 'linear-gradient(100deg,rgba(255,255,255,.16),rgba(255,255,255,0) 46%)', 'linear-gradient(172deg,#5384f6,#3263DB 52%,#2851bd)', 'translate3d(0,' + (BD / 2) + 'px,' + (BH / 2) + 'px) rotateX(-90deg)', '',
+    'inset 0 0 0 1px rgba(255,255,255,.07),inset 0 1px 0 rgba(255,255,255,.26)'));
+  box.appendChild(mface(BH, BD, 'linear-gradient(270deg,rgba(6,18,58,.3),rgba(6,18,58,0) 30%)', 'linear-gradient(90deg,#2143a0,#2c57c6)', 'translate3d(' + (-BW / 2) + 'px,0,' + (BH / 2) + 'px) rotateY(-90deg)', '',
+    'inset 0 0 0 1px rgba(255,255,255,.05),inset -1px 0 0 rgba(255,255,255,.18)'));
   // الظل: تلامس قريب داكن، وظل محيط واسع.
   box.appendChild(el('ms-face', 'width:' + (BW + 60) + 'px;height:' + (BD + 60) + 'px;margin:' + (-(BD + 60) / 2) + 'px 0 0 ' + (-(BW + 60) / 2) + 'px;border-radius:30px;' +
-    'background:radial-gradient(closest-side,rgba(4,11,28,.55),rgba(4,11,28,0)) calc(50% - 11px) calc(50% - 15px)/' + (BW + 16) + 'px ' + (BD + 16) + 'px no-repeat,radial-gradient(closest-side,rgba(8,22,52,.36),rgba(8,22,52,0));transform:translate3d(16px,22px,-1px)'));
+    'background:radial-gradient(closest-side,rgba(4,11,28,.6),rgba(4,11,28,0)) calc(50% - 11px) calc(50% - 15px)/' + (BW + 16) + 'px ' + (BD + 16) + 'px no-repeat,radial-gradient(closest-side,rgba(8,22,52,.4),rgba(8,22,52,0));transform:translate3d(16px,22px,-1px)'));
   var boxSh = box.lastChild;
   grp.appendChild(box);
-  // الغطا: كحلي مطفي، سطح واحد نظيف، والشعار صغير بالنص ومطبوع فضّي خفيف.
+  // الغطا: كحلي مطفي. الضو جاي من ورا ومن اليسار: السطح أفتح بالبعيد، والوجه القريب اليمين نص مضوّى، واليسار معتم.
   var lid = el('ms-el ms-lid');
   var LW = BW + 12, LD = BD + 12;
+  // الشعار ختم فضّي: طبقة فضّة مقصوصة على شكل الشعار، والبروز من ظل فوقها وتحتها. الصورة البيضا بتضل للمتصفح يلي ما بيقص.
+  var WM = A + 'wm_white.webp';
   lid.appendChild(mface(LW, LD,
-    'radial-gradient(90% 68% at 22% 14%,rgba(255,255,255,.17),rgba(255,255,255,0) 60%),radial-gradient(130% 115% at 50% 46%,rgba(0,0,0,0) 62%,rgba(3,10,26,.3) 100%)',
-    'linear-gradient(135deg,#224a96,#132f66 52%,#0d2350)', 'translate3d(0,0,' + LH + 'px)',
-    '<img decoding="async" src="' + A + 'wm_white.webp" style="position:absolute;left:50%;top:50%;width:36%;transform:translate(-50%,-50%) rotate(90deg);opacity:.96;filter:drop-shadow(0 .8px 0 rgba(0,0,0,.45)) drop-shadow(0 -.5px 0 rgba(255,255,255,.22))" alt="">',
-    'inset 0 0 0 1px rgba(255,255,255,.07),inset 1.5px 1.5px 0 rgba(255,255,255,.15),inset -1px -1px 0 rgba(0,0,0,.28)'));
+    'linear-gradient(118deg,rgba(255,255,255,0) 18%,rgba(255,255,255,.05) 38%,rgba(255,255,255,.035) 46%,rgba(255,255,255,0) 66%),radial-gradient(120% 86% at 42% 0%,rgba(120,168,255,.3),rgba(120,168,255,0) 64%),radial-gradient(90% 80% at 4% 100%,rgba(3,10,26,.3),rgba(3,10,26,0) 70%)',
+    'linear-gradient(165deg,#26509c,#163877 46%,#0e2757)', 'translate3d(0,0,' + LH + 'px)',
+    '<span class="ms-foil"><img decoding="async" src="' + WM + '" alt=""><i style="-webkit-mask-image:url(' + WM + ');mask-image:url(' + WM + ')"></i></span><b class="ms-sheen"></b>',
+    'inset 0 0 0 1px rgba(255,255,255,.07),inset 0 -1.5px 0 rgba(255,255,255,.22),inset 1.5px 0 0 rgba(255,255,255,.17),inset 0 1px 0 rgba(255,255,255,.1)'));
+  var foil = lid.lastChild.querySelector('.ms-foil i');
   // جوانب الغطا: الحافة العليا بتلقط الضو، والسفلية أغمق.
-  var LEDGE = 'inset 0 1px 0 rgba(255,255,255,.24),inset 0 -1px 0 rgba(0,0,0,.4),inset 0 -6px 8px -6px rgba(0,0,0,.35)';
-  lid.appendChild(mface(LW, LH, 'linear-gradient(100deg,rgba(255,255,255,.09),rgba(255,255,255,0) 46%)', 'linear-gradient(#1e4590,#12306a 70%,#0e2552)', 'translate3d(0,' + (LD / 2) + 'px,' + (LH / 2) + 'px) rotateX(-90deg)', '', LEDGE));
-  lid.appendChild(mface(LW, LH, '', 'linear-gradient(#0b1f45,#081633)', 'translate3d(0,' + (-LD / 2) + 'px,' + (LH / 2) + 'px) rotateX(-90deg)', '', LEDGE));
-  lid.appendChild(mface(LH, LD, '', 'linear-gradient(90deg,#0d2350,#102a5e)', 'translate3d(' + (-LW / 2) + 'px,0,' + (LH / 2) + 'px) rotateY(-90deg)', '', 'inset 1px 0 0 rgba(255,255,255,.16),inset -1px 0 0 rgba(0,0,0,.4)'));
-  lid.appendChild(mface(LH, LD, '', 'linear-gradient(90deg,#0b1f45,#0a1b3b)', 'translate3d(' + (LW / 2) + 'px,0,' + (LH / 2) + 'px) rotateY(-90deg)', '', 'inset -1px 0 0 rgba(255,255,255,.1)'));
+  var LEDGE = 'inset 0 1px 0 rgba(255,255,255,.28),inset 0 -1px 0 rgba(0,0,0,.4),inset 0 -6px 8px -6px rgba(0,0,0,.35)';
+  // الوجه القريب فيه فتحة الإصبع: نص دايرة مقصوصة من تحت، بتبيّن القاعدة الزرقا وهي مسكّرة.
+  var NR = 22, NOTCH = 'radial-gradient(circle at 50% 100%,transparent ' + (NR - .5) + 'px,#000 ' + (NR + .5) + 'px)';
+  lid.appendChild(mface(LW, LH, 'linear-gradient(100deg,rgba(255,255,255,.1),rgba(255,255,255,0) 50%)', 'linear-gradient(#214890,#143170 58%,#0c214b)', 'translate3d(0,' + (LD / 2) + 'px,' + (LH / 2) + 'px) rotateX(-90deg)', '', LEDGE));
+  lid.lastChild.style.webkitMaskImage = NOTCH; lid.lastChild.style.maskImage = NOTCH;
+  // ظل سماكة الكرتون جوّا الفتحة: غامق عند القوس وبيخفّ لتحت.
+  lid.appendChild(el('ms-face', 'width:' + (NR * 2) + 'px;height:' + NR + 'px;margin:' + (-NR / 2) + 'px 0 0 ' + (-NR) + 'px;border-radius:' + NR + 'px ' + NR + 'px 0 0;' +
+    'background:radial-gradient(circle at 50% 100%,rgba(4,12,38,0) ' + (NR * .35) + 'px,rgba(4,12,38,.62) ' + NR + 'px);transform:translate3d(0,' + (LD / 2 - 2) + 'px,' + (NR / 2) + 'px) rotateX(-90deg)'));
+  // الوجه الخلفي بيصير سطح العلبة لما توقف لتنزل بالكيس، لهيك مضوّى.
+  lid.appendChild(mface(LW, LH, 'linear-gradient(100deg,rgba(255,255,255,.1),rgba(255,255,255,0) 60%)', 'linear-gradient(#27519e,#1a3f84)', 'translate3d(0,' + (-LD / 2) + 'px,' + (LH / 2) + 'px) rotateX(-90deg)', '', LEDGE));
+  lid.appendChild(mface(LH, LD, '', 'linear-gradient(90deg,#081735,#0e2554)', 'translate3d(' + (-LW / 2) + 'px,0,' + (LH / 2) + 'px) rotateY(-90deg)', '', 'inset -1px 0 0 rgba(255,255,255,.2),inset 1px 0 0 rgba(0,0,0,.4),inset 6px 0 8px -6px rgba(0,0,0,.35)'));
+  lid.appendChild(mface(LH, LD, '', 'linear-gradient(90deg,#0b1f45,#102a5c)', 'translate3d(' + (LW / 2) + 'px,0,' + (LH / 2) + 'px) rotateY(-90deg)', '', 'inset -1px 0 0 rgba(255,255,255,.14)'));
   lid.appendChild(el('ms-face', 'width:' + (LW + 40) + 'px;height:' + (LD + 40) + 'px;margin:' + (-(LD + 40) / 2) + 'px 0 0 ' + (-(LW + 40) / 2) + 'px;border-radius:24px;' +
-    'background:radial-gradient(closest-side,rgba(4,11,28,.45),rgba(4,11,28,0)) calc(50% - 9px) calc(50% - 13px)/' + (LW + 10) + 'px ' + (LD + 10) + 'px no-repeat,radial-gradient(closest-side,rgba(8,22,52,.32),rgba(8,22,52,0));transform:translate3d(14px,20px,-1px)'));
+    'background:radial-gradient(closest-side,rgba(4,11,28,.5),rgba(4,11,28,0)) calc(50% - 9px) calc(50% - 13px)/' + (LW + 10) + 'px ' + (LD + 10) + 'px no-repeat,radial-gradient(closest-side,rgba(8,22,52,.34),rgba(8,22,52,0));transform:translate3d(14px,20px,-1px)'));
   var lidSh = lid.lastChild;
   grp.appendChild(lid);
 '''
 
-# the three places that knew the old heights: where the lid rests, and the middle the box turns around when it stands up
-CONSTS = [
+BAG_WAVES = """  var bwaves = '<svg viewBox="0 0 350 90" preserveAspectRatio="none" style="position:absolute;left:0;bottom:0;width:100%;height:27%">' +
+    '<rect width="350" height="90" fill="#0D244C"/>' +
+    [0, 1, 2, 3, 4].map(function (i) { return '<path d="M-10 ' + (34 + i * 9) + ' C 90 ' + (8 + i * 9) + ', 190 ' + (66 + i * 9) + ', 360 ' + (22 + i * 9) + '" fill="none" stroke="#50C4C8" stroke-width="1.3" stroke-opacity="' + (.75 - i * .13) + '"/>'; }).join('') + '</svg>';
+"""
+BAG_FRONT_OLD = """holes + bwaves +
+    '<img decoding="async" src="' + A + 'wm_navy.webp" style="position:absolute;left:50%;top:40%;width:46%;transform:translate(-50%,-50%);opacity:.95" alt="">' +
+    '<span style="position:absolute;left:0;right:0;top:61%;text-align:center;font:600 10px/1 system-ui,sans-serif;letter-spacing:3px;color:#3263DB">MADAREKMATBAA.COM</span></div>'"""
+BAG_FRONT = """holes +
+    '<img decoding="async" src="' + A + 'wm_navy.webp" style="position:absolute;left:50%;top:50%;width:44%;transform:translate(-50%,-50%);opacity:.96" alt=""></div>'"""
+
+# Lines outside the block, as (what was there, what is there now). The first six are from the first pass (the lid became as
+# tall as the box, so where it rests, how high it lifts and the middle the box turns around all moved).
+EDITS = [
     ("K.lid = fill([[0, { x: 0, y: 0, z: BH, rz: 0, rx: 0 }]", "K.lid = fill([[0, { x: 0, y: 0, z: LIP, rz: 0, rx: 0 }]"),
     ("[.93, { x: 0, y: 0, z: BH, rz: 0, rx: 0 }], [1, { x: 0, y: 0, z: BH, rz: 0, rx: 0 }]]);", "[.93, { x: 0, y: 0, z: LIP, rz: 0, rx: 0 }], [1, { x: 0, y: 0, z: LIP, rz: 0, rx: 0 }]]);"),
     ("K.grp = fill([[0, { z: 72, rx: 0 }], [.04, { z: 72, rx: 0 }],", "K.grp = fill([[0, { z: MID, rx: 0 }], [.04, { z: MID, rx: 0 }],"),
-    # the lid is taller now, so it lifts less: its top stays below where the old lid's top went
     ("[.08, { x: -40, y: -10, z: 330, rz: -6, rx: -8 }]", "[.08, { x: -40, y: -10, z: 250, rz: -6, rx: -8 }]"),
     ("[.86, { x: -80, y: -20, z: 360, rz: -6, rx: -6 }]", "[.86, { x: -80, y: -20, z: 270, rz: -6, rx: -6 }]"),
     ("ga.toFixed(2) + 'deg) translate3d(0,0,-72px)');", "ga.toFixed(2) + 'deg) translate3d(0,0,' + (-MID) + 'px)');"),
+    # the foil of the logo moves with the film: three passes of light from the first frame to the last
+    ("css(boxSh, 'opacity', fadeG.toFixed(3)); css(lidSh, 'opacity', fadeG.toFixed(3));\n    css(world,",
+     "css(boxSh, 'opacity', fadeG.toFixed(3)); css(lidSh, 'opacity', fadeG.toFixed(3));\n    css(foil, 'backgroundPosition', ((pp * 450) % 150).toFixed(1) + '% 0');\n    css(world,"),
+    # the box stands up with its lid to the viewer, so the logo shows before it goes into the bag
+    ("[.32, { z: 690, rx: 90 }], [.5, { z: 690, rx: 90 }], [.82, { z: 213, rx: 90 }], [1, { z: 213, rx: 90 }]]);",
+     "[.32, { z: 690, rx: -90 }], [.5, { z: 690, rx: -90 }], [.82, { z: 213, rx: -90 }], [1, { z: 213, rx: -90 }]]);"),
+    # the bag: plain white with the logo and blue handles
+    (BAG_WAVES, ""),
+    (BAG_FRONT_OLD, BAG_FRONT),
+    ("""fill="none" stroke="#50C4C8" stroke-width="5" stroke-linecap="round"/></svg>';""", """fill="none" stroke="#3263DB" stroke-width="5" stroke-linecap="round"/></svg>';"""),
 ]
 
 
 def box_edit(h):
     a, b = h.index(START), h.index(END)
-    old = h[a:b]
-    tex = re.search(r'  var TEX = "url\(data:image/webp;base64,[^"]*";\n', old)
+    tex = re.search(r'  var TEX = "url\(data:image/webp;base64,[^"]*";\n', h[a:b])
     if not tex:
-        raise SystemExit('the paper texture line of the old box was not found')
+        raise SystemExit('the paper texture line of the box was not found')
     h = h[:a] + NEW_BLOCK.replace('  __TEX__\n', tex.group(0)) + h[b:]
-    for o, n in CONSTS:
-        if h.count(o) != 1:
-            raise SystemExit('a number of the old box moved: ' + o[:50])
-        h = h.replace(o, n, 1)
+    for old, new in EDITS:
+        if new and h.count(new) == 1:
+            continue  # already there
+        if h.count(old) != 1:
+            if not new and old not in h:
+                continue  # already removed
+            raise SystemExit('a line the box depends on has moved: ' + old[:60])
+        h = h.replace(old, new, 1)
     return h
 
 
@@ -107,9 +149,10 @@ if __name__ == '__main__':
     kind, film = home['parts'][0]
     if 'class="mdk-story"' not in film:
         raise SystemExit('the first part of the home page is not the opening film')
-    if 'var BW = 300, BD = 400, BH = 96, LH = 92, LIP = 8' in film:
-        print('the new box is already in place')
+    new = box_edit(film)
+    if new == film:
+        print('the box is already in place')
     else:
-        home['parts'][0] = [kind, box_edit(film)]
+        home['parts'][0] = [kind, new]
         json.dump(pages, open(path, 'w', encoding='utf-8'), ensure_ascii=False)  # the file's own format: one line, no ASCII escapes
-        print('the new box is written to content/pages-raw.json')
+        print('the box is written to content/pages-raw.json')

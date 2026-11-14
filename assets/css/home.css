@@ -51,7 +51,19 @@ html[dir=ltr] .home .mdk-story .ms-ch p{font-size:clamp(15px,1.2vw,18px)}
 /* اللابتوب بيعرض ارتفاع أقل من مقاس شاشته بسبب أشرطة المتصفح (1366×768 بتطلع حوالي 650). عالشاشات القصيرة روابط الأقسام
    ما بتظهر، حتى يضل الكلام بين الهيدر وآخر الشاشة */
 @media (max-height:700px){.home .mdk-story .ms-cats{display:none}}
-/* أول ظهور: الكلام بيطلع سطر ورا سطر والعلبة بتستقر */
+/* شعار العلبة ختم فضّي (عمار 14 ت2: «طوره اكثر»): طبقة فضّة مقصوصة على شكل الشعار، وظل فوقها وتحتها ليبيّن بارز.
+   مكانها بيتحرك مع الفيلم من السكربت. المتصفح يلي ما بيعرف يقص بيضل عنده الشعار الأبيض العادي */
+.home .mdk-story .ms-foil{position:absolute;left:50%;top:50%;width:44%;height:0;padding-top:23.32%;transform:translate(-50%,-50%);filter:drop-shadow(0 .8px 0 rgba(0,0,0,.5)) drop-shadow(0 -.6px 0 rgba(255,255,255,.2))}
+.home .mdk-story .ms-foil img{position:absolute;inset:0;width:100%;height:100%;opacity:.96}
+.home .mdk-story .ms-foil i{display:none}
+@supports ((-webkit-mask-image:linear-gradient(#000,#000)) or (mask-image:linear-gradient(#000,#000))){
+  .home .mdk-story .ms-foil img{opacity:0}
+  .home .mdk-story .ms-foil i{display:block;position:absolute;inset:0;-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;background:linear-gradient(100deg,#aab5c9,#f1f4f9 17%,#fff 25%,#9aa7bd 43%,#dde4ee 60%,#fff 73%,#c3ccdb 88%,#aab5c9) 0 0/300% 100% repeat-x}
+}
+/* لمعة بتمرق على الغطا مرة وحدة بعد ما يستقر */
+.home .mdk-story .ms-sheen{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.home .mdk-story .ms-sheen::before{content:"";position:absolute;top:-10%;bottom:-10%;left:0;width:70%;background:linear-gradient(100deg,rgba(255,255,255,0),rgba(255,255,255,.14) 50%,rgba(255,255,255,0));transform:translate3d(-130%,0,0) skewX(-18deg)}
+/* أول ظهور: الكلام بيطلع سطر ورا سطر، والعلبة بتستقر، وغطاها بينزل عليها (بتبيّن القاعدة الزرقا لحظة)، وبعدها اللمعة */
 @media (prefers-reduced-motion:no-preference){
   .home .mdk-story .ms-ch-hero>*{animation:hxRise .9s var(--ease-out) both}
   .home .mdk-story .ms-ch-hero>h1{animation-delay:.08s}
@@ -59,9 +71,15 @@ html[dir=ltr] .home .mdk-story .ms-ch p{font-size:clamp(15px,1.2vw,18px)}
   .home .mdk-story .ms-ch-hero>.ms-cta{animation-delay:.28s}
   .home .mdk-story .ms-ch-hero>.ms-cats{animation-delay:.38s}
   .home .mdk-story .ms-stage{animation:hxStage 1.3s var(--ease-out) .1s both}
+  .home .mdk-story .ms-lid{animation:hxLid 1.1s cubic-bezier(.45,.05,.15,1) .55s backwards}
+  .home .mdk-story .ms-sheen::before{animation:hxSheen 1.6s cubic-bezier(.4,0,.2,1) 1.5s both}
+  .home .mdk-story .ms-foil i{animation:hxFoil 1.6s cubic-bezier(.4,0,.2,1) 1.5s backwards}
 }
 @keyframes hxRise{from{opacity:0;transform:translate3d(0,18px,0)}}
 @keyframes hxStage{from{opacity:0;transform:translate3d(0,28px,0)}}
+@keyframes hxLid{from{transform:translate3d(0,0,44px)}}
+@keyframes hxSheen{to{transform:translate3d(280%,0,0) skewX(-18deg)}}
+@keyframes hxFoil{from{background-position:-70% 0}}
 @media (max-height:760px){.home .mdk-story .ms-hint{display:none}}
 @media (max-width:1024px){.home .mdk-story{margin-top:-65px}}
 /* عالموبايل والتابلت الواقف (عمار 14 ت2: «داخل ببعضها»): الكلام فوق بالنص والعلبة تحته. مكان العلبة وحجمها بينحسبوا بسكربت الفيلم
