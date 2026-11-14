@@ -549,7 +549,7 @@ body .mdk-markets .mdk-eyebrow,body .mdk-cta-band .mdk-eyebrow{color:var(--md-te
 .mdk-hub:hover{transform:translateY(-3px);border-color:rgba(80,196,200,.45)}
 .mdk-person:hover{transform:translateY(-3px)}
 .mdk-cat:hover .mdk-arrow{transform:translateX(-3px)}
-html[dir=ltr] .mdk-cat:hover .mdk-arrow{transform:translateX(3px)}
+html[dir=ltr] .mdk-cat:hover .mdk-arrow{transform:translateX(3px) scaleX(-1)}
 }
 }
 /* الرئيسية بعد مراجعة 7 ت2 (عمار: «عدل يلي اقترحته»): صور شغلنا، الأرقام، شبكة الأقسام بأحجام مختلفة، الخطوات كخط زمني، ومدد التسليم */
@@ -585,19 +585,23 @@ html[dir=ltr] .mdk-cat:hover .mdk-arrow{transform:translateX(3px)}
   .mdk-cats.mdk-bento .mdk-cat:nth-child(2) .mdk-cat-body{flex:1}
   .mdk-cats.mdk-bento .mdk-cat .mdk-cat-img img{max-height:150px}
 }
-/* الخطوات: خط زمني برقم بارز وخط يوصل بينها */
+/* الخطوات: خط زمني برقم بارز وخط واحد يمر بالأرقام (أفقي عالكمبيوتر، عمودي عالموبايل) */
 .mdk-process .mdk-steps{position:relative;gap:0;counter-reset:mdkstep}
-.mdk-process .mdk-step{background:transparent;border-radius:0;padding:0 18px 0 0;border-inline-start:1px solid var(--la-16)}
-.mdk-process .mdk-step .n{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:var(--btn-navy);color:#fff;font-size:14px;margin:0 0 18px;transform:translateX(21px);box-shadow:0 0 0 6px var(--surface-2)}
-html[dir=ltr] .mdk-process .mdk-step .n{transform:translateX(-21px)}
+.mdk-process .mdk-step{position:relative;background:transparent;border-radius:0;padding:0;padding-inline-end:28px}
+.mdk-process .mdk-step .n{position:relative;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:var(--btn-navy);color:#fff;font-size:14px;margin:0 0 20px;box-shadow:0 0 0 8px var(--surface-2)}
+@media (min-width:861px){
+  .mdk-process .mdk-steps{row-gap:40px}
+  .mdk-process .mdk-step::before{content:"";position:absolute;top:19.5px;inset-inline:0;height:1px;background:var(--la-16)}
+  .mdk-process .mdk-step:last-child::before{inset-inline-end:auto;width:40px}
+}
 .mdk-process .mdk-step h3{margin:0 0 8px;font-size:17px}
 .mdk-process .mdk-step p{margin:0;font-size:14.5px;line-height:1.8;color:var(--t-ink)}
 @media (max-width:860px){
   .mdk-process .mdk-steps{grid-template-columns:1fr;gap:0}
   .mdk-process .mdk-step{display:grid;grid-template-columns:40px 1fr;column-gap:16px;border:0;padding:0 0 26px;position:relative}
-  .mdk-process .mdk-step::before{content:"";position:absolute;inset-inline-start:19.5px;top:40px;bottom:0;width:1px;background:rgba(13,36,76,.16)}
+  .mdk-process .mdk-step::before{content:"";position:absolute;inset-inline-start:19.5px;top:40px;bottom:0;width:1px;background:var(--la-16)}
   .mdk-process .mdk-step:last-child::before{display:none}
-  .mdk-process .mdk-step .n{transform:none;margin:0;grid-row:span 2;box-shadow:none}
+  .mdk-process .mdk-step .n{margin:0;grid-row:span 2;box-shadow:none}
   .mdk-process .mdk-step h3{margin-top:8px}
 }
 @media (hover:hover){.mdk-process .mdk-step:hover{transform:none;box-shadow:none}.mdk-work:hover{transform:translateY(-3px);box-shadow:0 18px 36px -20px rgba(13,36,76,.45)}}
@@ -609,6 +613,29 @@ html[dir=ltr] .mdk-process .mdk-step .n{transform:translateX(-21px)}
 .mdk-dlv span{display:block;color:#fff;font-size:15px;font-variant-numeric:tabular-nums}
 .mdk-dlv small{display:block;color:#9FB0CF;font-size:13px;margin-top:2px}
 @media (max-width:860px){.mdk-dlv-grid{grid-template-columns:repeat(2,1fr)}}
+/* الرئيسية، تطوير 14 ت2 (عمار: «طور واجهة الموقع الصفحة الرئيسية وتاكد انه ال seo تبعها ما خرب»):
+   صور الشغل أكبر والأرقام بجانبها، بطاقات الأقسام كلها برسومات الهوية، وبطاقات الفريق تملأ الصف. النصوص والعناوين والروابط نفسها. */
+@media (min-width:861px){
+  .mdk-works-list{grid-template-columns:repeat(2,1fr)}
+  .mdk-work figcaption{padding:60px 22px 18px}
+  .mdk-work figcaption b{font-size:16px}
+  .mdk-work figcaption span{font-size:13.5px}
+}
+@media (min-width:1025px){
+  .mdk-works>.mdk-wrap{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);grid-template-rows:auto 1fr;column-gap:clamp(36px,5vw,72px)}
+  .mdk-works .mdk-head{grid-column:1;grid-row:1;flex-direction:column;align-items:flex-start;gap:22px;margin-bottom:0}
+  .mdk-works .mdk-h2{margin-top:0}
+  .mdk-works .mdk-works-rail{grid-column:2;grid-row:1/span 2}
+  .mdk-works .mdk-figs{grid-column:1;grid-row:2;align-self:end;grid-template-columns:repeat(2,1fr);gap:28px 20px;margin-top:44px}
+  .mdk-team .mdk-people{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+  .mdk-cats.mdk-bento .mdk-cat:nth-child(n+3):not(.is-art) .mdk-cat-img img{max-height:176px}
+}
+/* بالإنكليزي والتركي: سهم البطاقة عند نهاية السطر وباتجاه القراءة، وما بيركب فوق الاسم */
+.mdk-cats .mdk-cat .mdk-arrow{left:auto;inset-inline-end:20px}
+html[dir=ltr] .mdk-cat .mdk-arrow{transform:scaleX(-1)}
+html[dir=ltr] .mdk-cats .mdk-cat p{padding-left:0;padding-right:44px}
+html[dir=ltr] .mdk-link:after{content:" →"}
+.mdk-cat.is-art .mdk-cat-img img{mix-blend-mode:normal;max-width:min(62%,190px);height:auto;object-fit:contain;filter:drop-shadow(0 12px 12px rgba(13,36,76,.14))}
 /* مقالات ودلائل تحت /print-tips/ (عمار 10 ت2) */
 .art-meta{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;font-size:13.5px;color:var(--text-3);margin:0 0 26px}
 .art-meta a{font-weight:600}

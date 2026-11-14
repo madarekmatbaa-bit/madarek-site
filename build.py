@@ -579,13 +579,15 @@ def optimize_imgs(html, first_eager=False):
             if not os.path.exists(images._file(src)):
                 return tag
         big, small = images.fit(src, 1100), images.fit(src, 620)
-        t = re.sub(r'\s(src|srcset|sizes|width|height)="[^"]*"', '', tag)
+        shown = re.search(r'\sdata-sizes="([^"]*)"', tag)  # a picture shown smaller than the usual half page says so
+        t = re.sub(r'\s(src|srcset|sizes|width|height|data-sizes)="[^"]*"', '', tag)
         n[0] += 1
         eager = first_eager and n[0] == 1
         if eager:
             t = re.sub(r'\sloading="[^"]*"', '', t)
-        attrs = (f' src="{big["url"]}" srcset="{small["url"]} {small["w"]}w, {big["url"]} {big["w"]}w"'
-                 f' sizes="(max-width: 900px) 92vw, 560px" width="{big["w"]}" height="{big["h"]}"'
+        sizes = shown.group(1) if shown else '(max-width: 900px) 92vw, 560px'
+        srcset = ', '.join(f'{c["url"]} {c["w"]}w' for c in ([images.fit(src, 320)] if shown else []) + [small, big])
+        attrs = (f' src="{big["url"]}" srcset="{srcset}" sizes="{sizes}" width="{big["w"]}" height="{big["h"]}"'
                  + (' fetchpriority="high"' if eager else ''))
         return t[:4] + attrs + t[4:]
     return IMG_TAG.sub(sub, html)
@@ -607,7 +609,7 @@ DELIVERY = [('سوريا', 'من 8 إلى 13 يوماً', 'تنفيذ محلي �
 
 def home_works_html():
     cards = ''.join(
-        f'<figure class="mdk-work"><img alt="{who}: {what}" decoding="async" loading="lazy" src="/wp-content/uploads/2026/11/{f}.jpg"/>'
+        f'<figure class="mdk-work"><img alt="{who}: {what}" data-sizes="(max-width: 860px) 78vw, 360px" decoding="async" loading="lazy" src="/wp-content/uploads/2026/11/{f}.jpg"/>'
         f'<figcaption><b><bdi>{who}</bdi></b><span>{what}</span></figcaption></figure>' for f, who, what in WORKS)
     stats = ''.join(f'<div class="mdk-fig"><b>{"<span data-count=%s>%s</span>" % (n, n) if label != "نعمل منذ" else n}{plus}</b><span>{label}</span></div>'
                     for n, plus, label in HOME_STATS)
@@ -641,6 +643,35 @@ def services():
     return _services
 
 
+# The home page, 14 Nov 2026 (Ammar: «طور واجهة الموقع الصفحة الرئيسية وتاكد انه ال seo تبعها ما خرب»). Four category cards had no brand
+# drawing and showed a small catalogue shot instead (erasers with size labels, a name badge for the awards); they now use the
+# brand renders of the shop shelf, so the eight cards read as one set. Texts, headings, links and alt texts stay as they were.
+CAT_ART = {'/product-category/notebooks/': 'notebook-navy', '/product-category/stationery/': 'pencilcup-blue',
+           '/product-category/packaging/': 'giftbox-navy', '/product-category/kristal/': 'award-navy'}
+
+
+def home_cats(html):
+    for href, art in CAT_ART.items():
+        src = f'/wp-content/uploads/2026/10/mdk-shelf-{art}.webp'
+        f = images._file(src)
+        if not os.path.exists(f):
+            raise SystemExit(f'home: the render for {href} is missing: {src}')
+        w, h = images._size(f)
+        v = images.fit(src, round(w * min(340 / w, 320 / h, 1)))  # shown at most 150px high: twice that is enough
+        html, n = re.subn(r'<a class="mdk-cat" href="' + re.escape(href) + r'"><div class="mdk-cat-img"><img alt="([^"]*)"[^>]*/>',
+                          lambda m: (f'<a class="mdk-cat is-art" href="{href}"><div class="mdk-cat-img">'
+                                     f'<img alt="{m.group(1)}" decoding="async" height="{v["h"]}" loading="lazy" src="{v["url"]}" width="{v["w"]}"/>'), html, count=1)
+        if not n:
+            raise SystemExit(f'home: no category card for {href}')
+    # the drawings are shown small (the first card larger), so the browser should not fetch the half-page size for them
+    k = [0]
+
+    def shown(m):
+        k[0] += 1
+        return m.group(0) + f' data-sizes="(max-width: 1024px) 40vw, {360 if k[0] == 1 else 200}px"'
+    return re.sub(r'(?<=<div class="mdk-cat-img">)<img(?=[^>]*\.png")', shown, html)
+
+
 def home_redesign(parts):
     out = []
     seo = None
@@ -653,7 +684,7 @@ def home_redesign(parts):
             p = re.sub(r'<div class="mdk-chips">.*?</div>',
                        f'<div class="mdk-delivery"><p class="mdk-dlv-h">مدة التسليم بعد اعتماد التصميم</p><div class="mdk-dlv-grid">{rows}</div></div>', p, count=1, flags=re.S)
         if 'class="mdk-cats"' in p:
-            p = p.replace('<div class="mdk-cats">', '<div class="mdk-cats mdk-bento">', 1)
+            p = home_cats(p.replace('<div class="mdk-cats">', '<div class="mdk-cats mdk-bento">', 1))
         out.append(p)
         if 'class="mdk-story"' in p:
             out.append(home_works_html())
