@@ -697,7 +697,7 @@ STORY_EDITS = [
       root.classList.toggle('ms-short', h < 640);
       var cpT = root.querySelector('.ms-copy').offsetTop, hh = chs[0].offsetHeight, fh = 0, lb = document.querySelector('.mdk-lbar');
       for (var ci = 1; ci < chs.length; ci++) fh = Math.max(fh, chs[ci].offsetHeight);
-      var L = h - (lb ? window.innerHeight - lb.getBoundingClientRect().top + 12 : 84), bh = cpT + hh + 18, bf = cpT + fh + 18;
+      var L = h - (lb ? window.innerHeight - lb.getBoundingClientRect().top + 12 : 84), bh = cpT + hh + 24, bf = cpT + fh + 18;
       base = clamp((L - bh) / 631, w / 1250, w / 860); offX = 0;
       oyH = bh + 303 * base;
       oyF = Math.max(bf + 300 * base, Math.min(h * .66, L - 240 * base));
@@ -709,7 +709,7 @@ STORY_EDITS = [
     # stacked: the opening text leaves before the lid lifts, and the last chapter waits until the lid is back
     ('var CH = [[-1, 0, .08, .12], [.12, .15, .28, .31], [.32, .35, .48, .51], [.54, .57, .74, .77], [.8, .84, 2, 2]];',
      'var CH = [[-1, 0, .08, .12], [.12, .15, .28, .31], [.32, .35, .48, .51], [.54, .57, .74, .77], [.8, .84, 2, 2]];\n'
-     '  var CHM = [[-1, 0, .012, .04], [.12, .15, .28, .31], [.32, .35, .48, .51], [.54, .57, .74, .77], [.88, .92, 2, 2]];'),
+     '  var CHM = [[-1, 0, .008, .034], [.12, .15, .28, .31], [.32, .35, .48, .51], [.54, .57, .74, .77], [.88, .92, 2, 2]];'),
     ('var w = CH[i], o;', 'var w = (mobile ? CHM : CH)[i], o;'),
     # text sizes settle once the font is in and the bottom bar exists, so the scene is placed again then
     ("window.addEventListener('load', function () { cache(); onScroll(); });",
