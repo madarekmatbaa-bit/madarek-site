@@ -1,0 +1,10 @@
+{"rig": 2.0, "tilt": 17, "look": "Medium High Contrast", "mx": 0.04, "mt": 0.03, "mb": 0.05, "items": [
+ {"i":"notebook","v":"white","x":-0.27,"y":0.20},
+ {"i":"folder","v":"navy","x":-0.05,"y":0.30},
+ {"i":"deskflag","v":"blue","x":0.21,"y":0.27},
+ {"i":"award","v":"navy","x":0.30,"y":0.02},
+ {"i":"thermos","v":"white","x":-0.16,"y":0.00},
+ {"i":"giftbox","v":"navy","x":0.05,"y":-0.10},
+ {"i":"pencilcup","v":"blue","x":-0.33,"y":-0.08},
+ {"i":"cap","v":"navy","x":-0.12,"y":-0.34}
+]}

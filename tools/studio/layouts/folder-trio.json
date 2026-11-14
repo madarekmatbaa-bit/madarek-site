@@ -1,0 +1,5 @@
+{"rig": 1.8, "tilt": 11, "look": "Medium High Contrast", "mx": 0.03, "mt": 0.02, "mb": 0.04, "items": [
+ {"i":"folder","v":"white","x":-0.165,"y":0.16},
+ {"i":"folder","v":"blue","x":0.0,"y":0.08},
+ {"i":"folder","v":"navy","x":0.165,"y":0.0}
+]}

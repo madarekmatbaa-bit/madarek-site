@@ -36,6 +36,7 @@ import images  # noqa: E402
 import i18n  # noqa: E402
 import ranking  # noqa: E402
 import localpages  # noqa: E402
+import homepage  # noqa: E402
 
 images.setup(MEDIA, CACHE)
 
@@ -643,33 +644,28 @@ def services():
     return _services
 
 
-# The home page, 14 Nov 2026 (Ammar: «طور واجهة الموقع الصفحة الرئيسية وتاكد انه ال seo تبعها ما خرب»). Four category cards had no brand
-# drawing and showed a small catalogue shot instead (erasers with size labels, a name badge for the awards); they now use the
-# brand renders of the shop shelf, so the eight cards read as one set. Texts, headings, links and alt texts stay as they were.
-CAT_ART = {'/product-category/notebooks/': 'notebook-navy', '/product-category/stationery/': 'pencilcup-blue',
-           '/product-category/packaging/': 'giftbox-navy', '/product-category/kristal/': 'award-navy'}
+# The category cards, 14 Nov 2026. Ammar had no studio photos («ماعنا دبر حالك»), so the eight cards show studio shots rendered from
+# the brand's own 3D pieces (tools/studio): one piece for each category, with the floor shadow of the scene, and the two leading
+# cards show the piece in the three brand colours. Before this, four cards had line drawings and four had loose renders.
+# Texts, headings, links and alt texts stay as they were.
+CAT_ART = {'/product-category/promotional-ar/': 'thermos-trio', '/product-category/offset-ar/': 'folder-trio',
+           '/product-category/notebooks/': 'notebook', '/product-category/stationery/': 'pencilcup',
+           '/product-category/packaging/': 'giftbox', '/product-category/flag-ar/': 'deskflag',
+           '/product-category/tekstil-ar/': 'cap', '/product-category/kristal/': 'award'}
 
 
 def home_cats(html):
-    for href, art in CAT_ART.items():
-        src = f'/wp-content/uploads/2026/10/mdk-shelf-{art}.webp'
-        f = images._file(src)
-        if not os.path.exists(f):
-            raise SystemExit(f'home: the render for {href} is missing: {src}')
-        w, h = images._size(f)
-        v = images.fit(src, round(w * min(472 / w, 400 / h, 1)))  # shown at most 196px high and 236px wide: twice that is enough
+    for k, (href, art) in enumerate(CAT_ART.items()):
+        src = f'/wp-content/uploads/2026/11/mdk-studio-{art}.png'
+        if not os.path.exists(images._file(src)):
+            raise SystemExit(f'home: the studio shot for {href} is missing: {src}')
+        shown = '(max-width: 640px) 44vw, (max-width: 1024px) 44vw, 440px' if k < 2 else '(max-width: 640px) 44vw, (max-width: 1024px) 30vw, 300px'
         html, n = re.subn(r'<a class="mdk-cat" href="' + re.escape(href) + r'"><div class="mdk-cat-img"><img alt="([^"]*)"[^>]*/>',
-                          lambda m: (f'<a class="mdk-cat is-art" href="{href}"><div class="mdk-cat-img">'
-                                     f'<img alt="{m.group(1)}" decoding="async" height="{v["h"]}" loading="lazy" src="{v["url"]}" width="{v["w"]}"/>'), html, count=1)
+                          lambda m: (f'<a class="mdk-cat" href="{href}"><div class="mdk-cat-img">'
+                                     f'<img alt="{m.group(1)}" data-sizes="{shown}" decoding="async" loading="lazy" src="{src}"/>'), html, count=1)
         if not n:
             raise SystemExit(f'home: no category card for {href}')
-    # the drawings are shown small (the first card larger), so the browser should not fetch the half-page size for them
-    k = [0]
-
-    def shown(m):
-        k[0] += 1
-        return m.group(0) + f' data-sizes="(max-width: 640px) 44vw, (max-width: 1024px) 40vw, {440 if k[0] < 3 else 300}px"'
-    return re.sub(r'(?<=<div class="mdk-cat-img">)<img(?=[^>]*\.png")', shown, html)
+    return html
 
 
 # The home page as one premium piece (Ammar 14 Nov 2026: «طورها كلها بشكل تصير احترافية حتى فكرة العلبة اذا بدك غيره اعمل
@@ -690,7 +686,10 @@ HOME_KEYS = [('story', 'class="mdk-story"'), ('agb', 'class="mdk mdk-agb"'), ('d
 # and 240 are the scene's reach above and below its centre, measured from the rendered film. The media query is the same one home.css uses.
 STORY_EDITS = [
     ('else { base = Math.min(w / 1500, h / 860); offX = -w * .14; }',
-     'else { var nar = w < 1280; base = Math.min(w / 1380, h / 800) * (nar ? .84 : 1); offX = -w * (nar ? .2 : .15); }'),
+     # side by side: on narrow screens, and in English and Turkish (their text starts at the column's edge nearest the scene),
+     # the scene is smaller and stands further from the text
+     "else { var tight = (w < 1280 ? 1 : 0) + (document.documentElement.dir === 'ltr' ? 1 : 0); "
+     "base = Math.min(w / 1380, h / 800) * [1, .84, .72][tight]; offX = -w * [.15, .2, .23][tight]; }"),
     ('var mobile = false, base = 1, offX = 0;', 'var mobile = false, base = 1, offX = 0, oyH = 0, oyF = 0;'),
     ('mobile = w < 768;', "mobile = window.matchMedia('(max-width:767px),(max-width:1024px) and (orientation:portrait)').matches;"),
     ('if (mobile) { base = Math.min(w / 860, h / 1300); offX = 0; }',
@@ -698,7 +697,7 @@ STORY_EDITS = [
       root.classList.toggle('ms-short', h < 640);
       var cpT = root.querySelector('.ms-copy').offsetTop, hh = chs[0].offsetHeight, fh = 0, lb = document.querySelector('.mdk-lbar');
       for (var ci = 1; ci < chs.length; ci++) fh = Math.max(fh, chs[ci].offsetHeight);
-      var L = h - ((lb ? lb.offsetHeight : 62) + 30), bh = cpT + hh + 18, bf = cpT + fh + 18;
+      var L = h - (lb ? window.innerHeight - lb.getBoundingClientRect().top + 12 : 84), bh = cpT + hh + 18, bf = cpT + fh + 18;
       base = clamp((L - bh) / 631, w / 1250, w / 860); offX = 0;
       oyH = bh + 303 * base;
       oyF = Math.max(bf + 300 * base, Math.min(h * .66, L - 240 * base));
@@ -728,7 +727,8 @@ def home_story(html):
         if html.count(old) != 1:
             raise SystemExit('home: the opening film changed, so its staging has no place: ' + old[:70])
         html = html.replace(old, new, 1)
-    return html
+    # «350 غ» stays on one line (the translation memory reads any white space as one space, so the key is the same)
+    return re.sub(r'(?<=\d) (?=غ[ ،.])', '\u00a0', html)
 
 
 def home_redesign(parts):
@@ -751,6 +751,8 @@ def home_redesign(parts):
                               .replace('<section class="mdk mdk-sec" style="padding-bottom:40px">', '<section class="mdk mdk-sec mdk-catsec">', 1))
     found['cta'] = found['cta'].replace('<section class="mdk" style="padding:0 0 96px;background:#fff">', '<section class="mdk mdk-cta">', 1)
     found['seo'] = found['seo'].replace(' style="padding-top:0;background:#fff"', '', 1)
+    # less writing on screen, every word still in the page (lib/homepage.py)
+    found['why'], found['process'], found['seo'] = homepage.fold_why(found['why']), homepage.fold_steps(found['process']), homepage.fold_seo(found['seo'])
     for k, mark in (('cats', 'mdk-catsec'), ('cta', 'class="mdk mdk-cta"')):
         if mark not in found[k]:
             raise SystemExit(f'home: the {k} section changed its opening tag')

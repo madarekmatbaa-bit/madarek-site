@@ -176,6 +176,15 @@
     upd();
   })();
 
+  /* ---------- home: the points and the steps are written open; phones fold them to their headings (Ammar 14 Nov: «قلل الكتابة») ---------- */
+  (function () {
+    var rows = $$('.home details[data-wide]'); if (!rows.length || !W.matchMedia) return;
+    var wide = W.matchMedia('(min-width:861px)');
+    function set() { rows.forEach(function (x) { x.open = wide.matches; var s = x.querySelector('summary'); if (s) s.tabIndex = wide.matches ? -1 : 0; }); }
+    if (wide.addEventListener) wide.addEventListener('change', set); else if (wide.addListener) wide.addListener(set);
+    set();
+  })();
+
   /* ---------- mega menu ---------- */
   (function () {
     var li = $('[data-mega]'); if (!li) return;
@@ -480,8 +489,37 @@
     update();
   })();
 
-  /* ---------- bottom bar (mobile): the old mdk-lbar, reading its items from .lbar-src ---------- */
-  (function(){ var NS='http://www.w3.org/2000/svg', R0=31, F0=11, BY=2, DUR=460; var ICONS={shop:['M5 8.5h14l-1.1 11.5H6.1z','M9 8.5V7.2a3 3 0 0 1 6 0v1.3'],home:['M3.5 11.2 12 4l8.5 7.2','M6 9.6V20h12V9.6','M10.2 20v-5.2h3.6V20'],quote:['M12 3.6a8.3 8.3 0 0 0-7.2 12.4l-1.2 4.4 4.5-1.2A8.3 8.3 0 1 0 12 3.6z','M8.6 10.4h6.8','M8.6 13.4h4.4']}; function sv(t,a){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);return e} function icon(n){var s=sv('svg',{viewBox:'0 0 24 24','aria-hidden':'true',focusable:'false'});ICONS[n].forEach(function(dd){s.appendChild(sv('path',{d:dd}))});return s} function clamp(v){return Math.max(0,Math.min(1,v))} function eio(t){return t>=.5?1-Math.pow(-2*t+2,3)/2:4*t*t*t} function eout(t){return 1-Math.pow(1-t,3)} function ein(t){return t*t*t} function sock(cx,t){if(.02>=t)return '';var R=R0*t,f=F0*t,dd=Math.sqrt((R+f)*(R+f)-f*f),k=R/(R+f);return ' L'+(cx-dd).toFixed(2)+',0 A'+f.toFixed(2)+','+f.toFixed(2)+' 0 0 1 '+(cx-dd*k).toFixed(2)+','+(f*k).toFixed(2)+' A'+R.toFixed(2)+','+R.toFixed(2)+' 0 0 0 '+(cx+dd*k).toFixed(2)+','+(f*k).toFixed(2)+' A'+f.toFixed(2)+','+f.toFixed(2)+' 0 0 1 '+(cx+dd).toFixed(2)+',0'} function activeFor(items){var p=location.pathname;for(var i=0;items.length>i;i++){var it=items[i];if(it.ext)continue;if(it.k==='home'&&(p==='/'||p===''||p===ROOT))return i;if(it.k==='shop'&&/^\/(?:(?:en|tr)\/)?(shop|product-category|product|category|urunler|urun|kategori)(\/|$)/.test(p))return i}return -1} function init(){ var src=document.querySelector('.lbar-src');if(!src||document.querySelector('.mdk-lbar'))return; var items=[];[].forEach.call(src.querySelectorAll('a[data-k]'),function(a){var href=a.getAttribute('href')||'#';var ext=/^https?:/.test(href)&&href.indexOf(location.host)===-1;items.push({k:a.getAttribute('data-k'),label:a.textContent.trim(),href:href,ext:ext,target:a.getAttribute('target')})}); if(!items.length)return; var bar=document.createElement('nav');bar.className='mdk-lbar';bar.setAttribute('aria-label',T('التنقل السريع')); var bg=sv('svg',{'class':'bg',preserveAspectRatio:'none','aria-hidden':'true'});var path=sv('path',{});bg.appendChild(path);bar.appendChild(bg); var safe=document.createElement('div');safe.className='safe';bar.appendChild(safe); var row=document.createElement('div');row.className='row';bar.appendChild(row); var bub=document.createElement('div');bub.className='bub';bar.appendChild(bub); items.forEach(function(it,i){var a=document.createElement('a');a.href=it.href;if(it.target)a.target=it.target;if(it.ext)a.rel='noopener';a.appendChild(icon(it.k));var s=document.createElement('span');s.textContent=it.label;a.appendChild(s);row.appendChild(a);it.a=a;var bi=icon(it.k);bub.appendChild(bi);it.bi=bi; a.addEventListener('click',function(e){ if(it.ext){a.classList.remove('tap');void a.offsetWidth;a.classList.add('tap');return} if(i===cur||e.metaKey||e.ctrlKey||e.shiftKey)return; e.preventDefault();var went=false,go=function(){if(went)return;went=true;location.href=it.href}; if(reduce){setActive(i);go();return} animate(cur,i,go);setTimeout(go,DUR+260); }); }); document.body.appendChild(bar);document.documentElement.classList.add('mdk-lbar-on'); var Wd=0,X=[],cur=-1,raf=0; function measure(){Wd=bar.clientWidth;bg.setAttribute('viewBox','0 0 '+Wd+' 62');var r0=bar.getBoundingClientRect().left;X=items.map(function(it){var r=it.a.getBoundingClientRect();return r.left-r0+r.width/2})} function draw(socks,bx,by,sx,sy,showBub){var list=socks.filter(function(s){return s[1]>.02}).sort(function(a,b){return a[0]-b[0]});var dd='M0,62 L0,0';list.forEach(function(s){dd+=sock(s[0],s[1])});dd+=' L'+Wd+',0 L'+Wd+',62 Z';path.setAttribute('d',dd); bub.style.transform='translate3d('+bx.toFixed(2)+'px,'+by.toFixed(2)+'px,0) scale('+sx.toFixed(3)+','+sy.toFixed(3)+')';bub.classList.toggle('vis',!!showBub)} function setIcon(i){items.forEach(function(it,j){it.bi.classList.toggle('on',j===i);it.a.classList.toggle('on',j===i);if(j===i)it.a.setAttribute('aria-current','page');else it.a.removeAttribute('aria-current')})} function setActive(i){cur=i;setIcon(i);if(0>i){draw([],Wd/2,BY,1,1,false);return}draw([[X[i],1]],X[i],BY,1,1,true)} function frame(a,b,t){ var oT=0>a?0:1-ein(clamp(t/.62)),nT=eout(clamp((t-.3)/.7)),e=eio(t); var bx,by,sx=1,sy=1; if(0>a){bx=X[b];by=BY+(1-eout(clamp(t/.8)))*40;var sc=.35+.65*eout(clamp(t/.8));sx=sy=sc} else{bx=X[a]+(X[b]-X[a])*e;var arc=Math.sin(Math.PI*e);by=BY-16*arc;sx=1+.16*arc;sy=1-.12*arc} draw([[X[b],nT]].concat(0>a?[]:[[X[a],oT]]),bx,by,sx,sy,true); } function animate(a,b,done){cancelAnimationFrame(raf);var t0=performance.now();items.forEach(function(it,j){it.a.classList.toggle('on',j===b)});var swapped=false; function step(now){var t=clamp((now-t0)/DUR);if(!swapped&&t>=.45){swapped=true;items.forEach(function(it,j){it.bi.classList.toggle('on',j===b)})}frame(a,b,t);if(1>t)raf=requestAnimationFrame(step);else{cur=b;setIcon(b);if(done)setTimeout(done,40)}} if(0>a){items.forEach(function(it,j){it.bi.classList.toggle('on',j===b)});swapped=true} raf=requestAnimationFrame(step)} bar.classList.add('init');measure();setActive(activeFor(items));requestAnimationFrame(function(){requestAnimationFrame(function(){bar.classList.remove('init')})}); var lw=window.innerWidth;window.addEventListener('resize',function(){if(window.innerWidth===lw)return;lw=window.innerWidth;measure();setActive(cur)}); window.addEventListener('pageshow',function(ev){if(ev.persisted){measure();setActive(activeFor(items))}}); } if(document.readyState!=='loading')init();else document.addEventListener('DOMContentLoaded',init); })();
+  /* ---------- bottom bar (phones and tablets): a floating capsule with three links read from .lbar-src.
+     Ammar 14 Nov 2026 about the old bar with the moving bubble: «ما حلو الموديل اعمل واحد حديث اكتر وانيق وبسيط». ---------- */
+  (function () {
+    var NS = 'http://www.w3.org/2000/svg';
+    var ICONS = { shop: ['M5 8.5h14l-1.1 11.5H6.1z', 'M9 8.5V7.2a3 3 0 0 1 6 0v1.3'], home: ['M3.5 11.2 12 4l8.5 7.2', 'M6 9.6V20h12V9.6', 'M10.2 20v-5.2h3.6V20'],
+      quote: ['M12 3.6a8.3 8.3 0 0 0-7.2 12.4l-1.2 4.4 4.5-1.2A8.3 8.3 0 1 0 12 3.6z', 'M8.6 10.4h6.8', 'M8.6 13.4h4.4'] };
+    function icon(n) {
+      var s = d.createElementNS(NS, 'svg'); s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('aria-hidden', 'true'); s.setAttribute('focusable', 'false');
+      (ICONS[n] || []).forEach(function (p) { var e = d.createElementNS(NS, 'path'); e.setAttribute('d', p); s.appendChild(e); });
+      return s;
+    }
+    function isOn(k) {
+      var p = location.pathname;
+      if (k === 'home') return p === '/' || p === '' || p === ROOT;
+      return k === 'shop' && /^\/(?:(?:en|tr)\/)?(shop|product-category|product|category|urunler|urun|kategori)(\/|$)/.test(p);
+    }
+    function init() {
+      var src = $('.lbar-src'); if (!src || $('.mdk-lbar')) return;
+      var bar = d.createElement('nav'); bar.className = 'mdk-lbar'; bar.setAttribute('aria-label', T('التنقل السريع'));
+      $$('a[data-k]', src).forEach(function (o) {
+        var a = d.createElement('a'), k = o.getAttribute('data-k'), s = d.createElement('span');
+        a.href = o.getAttribute('href') || '#';
+        if (o.getAttribute('target')) { a.target = o.getAttribute('target'); a.rel = 'noopener'; }
+        if (isOn(k)) { a.className = 'on'; a.setAttribute('aria-current', 'page'); }
+        s.textContent = o.textContent.trim(); a.appendChild(icon(k)); a.appendChild(s); bar.appendChild(a);
+      });
+      if (!bar.firstChild) return;
+      d.body.appendChild(bar); de.classList.add('mdk-lbar-on');
+    }
+    if (d.readyState !== 'loading') init(); else on(d, 'DOMContentLoaded', init);
+  })();
 
   /* ---------- fold long text + FAQ accordions ---------- */
   (function(){

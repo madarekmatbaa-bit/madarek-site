@@ -4,6 +4,7 @@
 # 1. every page at 360 px and 1280 px: sideways scrolling, script errors, broken first images, cut buttons
 # 2. phone emulation (360/390/412) on the main page types: menu, search, languages, sideways swipe, scroll
 # 3. header at 24 widths in ar/en/tr: nothing overlaps
+# 4. the opening film of the home page at real screen sizes (browser bars counted) in ar/en/tr: its text and scene never meet
 # Needs node + playwright. Exit code 1 when anything is found.
 set -u
 cd "$(dirname "$0")/../.."
@@ -21,5 +22,7 @@ node tools/qa/qa_mobile.js http://127.0.0.1:8765 tools/qa/phone_pages.json "$OUT
 grep -q "issues 0$" "$OUT/phone.log" || fail=1
 node tools/qa/hdrcheck.js http://127.0.0.1:8765 | tee "$OUT/header.log"
 grep -q ":" <(grep -v "OK at all widths" "$OUT/header.log") && fail=1
+node tools/qa/hero_fit.js http://127.0.0.1:8765 | tee "$OUT/hero.log"
+grep -q "overlaps 0$" "$OUT/hero.log" || fail=1
 echo "QA $([ $fail = 0 ] && echo passed || echo FOUND PROBLEMS) — details in $OUT"
 exit $fail

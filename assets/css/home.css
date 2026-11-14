@@ -40,7 +40,9 @@ html.over-hero .m-search:focus-within{background:rgba(255,255,255,.16);border-co
 .home .mdk-story .ms-stats span{font-size:14.5px;margin-top:6px;color:rgba(255,255,255,.7)}
 .home .mdk-story .ms-hint{color:rgba(255,255,255,.55);bottom:26px;left:34%}
 .home .mdk-story .ms-hint:after{background:linear-gradient(#fff,rgba(255,255,255,0))}
-/* بالإنكليزي والتركي العنوان أطول، فبيصغر شوي حتى ما يطلع عن الشاشة */
+/* بالإنكليزي والتركي العنوان أطول، فبيصغر شوي حتى ما يطلع عن الشاشة. والكلام بيبلّش من طرف العمود القريب عالمشهد،
+   فالعمود أضيق والمشهد أصغر وأبعد (بسكربت الفيلم) حتى ما يتلامسوا */
+html[dir=ltr] .home .mdk-story .ms-copy{width:min(520px,40vw)}
 html[dir=ltr] .home .mdk-story .ms-ch h1{font-size:clamp(32px,min(3.9vw,7.2vh),60px);line-height:1.14}
 html[dir=ltr] .home .mdk-story .ms-ch h2{font-size:clamp(30px,min(3.7vw,7vh),56px);line-height:1.14}
 /* أول ظهور: الكلام بيطلع سطر ورا سطر والعلبة بتستقر */
@@ -68,6 +70,7 @@ html[dir=ltr] .home .mdk-story .ms-ch h2{font-size:clamp(30px,min(3.7vw,7vh),56p
   .home .mdk-story .ms-bg{background:radial-gradient(96% 44% at 50% var(--ms-oy,68%),#1F4488 0%,#12326E 28%,#0B2049 58%,#07132C 100%)}
   .home .mdk-story .ms-world{top:0}
   .home .mdk-story .ms-copy{width:auto;height:auto;right:20px;left:20px;top:88px;text-align:center}
+  html[dir=ltr] .home .mdk-story .ms-copy{width:auto}
   .home .mdk-story .ms-ch{top:0;translate:none;text-align:center}
   .home .mdk-story .ms-btn{flex:1 1 0}
   .home .mdk-story .ms-ch-hero{align-items:center}
@@ -81,6 +84,7 @@ html[dir=ltr] .home .mdk-story .ms-ch h2{font-size:clamp(30px,min(3.7vw,7vh),56p
   .home .mdk-story .ms-cta{width:100%;max-width:360px;margin-top:20px;gap:10px;justify-content:center}
   .home .mdk-story .ms-btn{height:48px;padding:0 14px;font-size:15px;white-space:nowrap}
   html[dir=ltr] .home .mdk-story .ms-btn{font-size:14px;padding:0 10px}
+  @media (max-width:340px){html[dir=ltr] .home .mdk-story .ms-btn{font-size:12.5px;padding:0 6px}}
   .home .mdk-story .ms-cats,.home .mdk-story .ms-ch:not(.ms-ch-hero) .ms-kick,.home .mdk-story .ms-ch:not(.ms-ch-hero) .ms-cta{display:none}
   .home .mdk-story .ms-stats{gap:30px;margin-top:20px;justify-content:center}
   .home .mdk-story .ms-stats div{align-items:center}
@@ -132,11 +136,10 @@ html[dir=ltr] .home .mdk-h2,html[dir=ltr] .home .mdk-agb h2,html[dir=ltr] .home 
 .home .mdk-cat:nth-child(-n+2) h3{font-size:clamp(28px,2.8vw,38px);margin-bottom:10px}
 .home .mdk-cat p{font-size:15px;line-height:1.7;color:var(--text-2);padding:0;margin:0 auto;max-width:30ch}
 .home .mdk-cat:nth-child(-n+2) p{font-size:17px;max-width:38ch}
-.home .mdk-cat-img{flex:1;display:flex;align-items:flex-end;justify-content:center;width:100%;padding:26px 0 38px}
-/* رسومات الهوية فيها فراغ من فوق وتحت، فبتنسحب لحتى تقعد القطعة بمكانها */
-.home .mdk-cat-img img{width:auto;height:266px;max-width:100%;max-height:none;margin:-40px 0 -22px;object-fit:contain}
-.home .mdk-cat:nth-child(-n+2) .mdk-cat-img img{height:404px;margin:-62px 0 -30px}
-.home .mdk-cat.is-art .mdk-cat-img img{mix-blend-mode:normal;height:196px;max-width:min(62%,236px);margin:0;filter:drop-shadow(0 16px 14px rgba(13,36,76,.16))}
+.home .mdk-cat-img{flex:1;display:flex;align-items:flex-end;justify-content:center;width:100%;padding:22px 0 30px}
+/* صور استوديو من قطع الهوية الثلاثية الأبعاد (tools/studio)، وظلّها جوّا الصورة. أول بطاقتين فيهم القطعة بألوانها الثلاثة */
+.home .mdk-cat-img img{width:auto;height:212px;max-width:min(78%,290px);max-height:none;margin:0;object-fit:contain;object-position:center bottom;mix-blend-mode:normal}
+.home .mdk-cat:nth-child(-n+2) .mdk-cat-img img{height:336px;max-width:86%}
 .home .mdk-cat .mdk-arrow{left:auto;inset-inline-end:20px;bottom:20px;width:40px;height:40px;background:var(--la-08);color:var(--heading);transition:background-color .2s ease,color .2s ease,transform .25s var(--ease-out)}
 .home .mdk-cat:hover .mdk-arrow{background:var(--btn-navy);color:#fff}
 .home .mdk-cat:focus-visible{outline:2px solid var(--focus,#3263DB);outline-offset:3px}
@@ -147,17 +150,15 @@ html[dir=ltr] .home .mdk-h2,html[dir=ltr] .home .mdk-agb h2,html[dir=ltr] .home 
   .home .mdk-cat:nth-child(-n+2){min-height:420px;padding-top:40px}
   .home .mdk-cat h3{font-size:20px}
   .home .mdk-cat p{font-size:14px}
-  .home .mdk-cat-img img{height:200px;margin:-30px 0 -16px}
-  .home .mdk-cat:nth-child(-n+2) .mdk-cat-img img{height:290px;margin:-44px 0 -22px}
-  .home .mdk-cat.is-art .mdk-cat-img img{height:140px;margin:0}
+  .home .mdk-cat-img img{height:158px}
+  .home .mdk-cat:nth-child(-n+2) .mdk-cat-img img{height:250px}
 }
 @media (max-width:640px){
   .home .mdk-cats.mdk-bento{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
   .home .mdk-cat,.home .mdk-cat:nth-child(-n+2){grid-column:auto;min-height:0;padding:22px 12px 0;border-radius:22px}
   .home .mdk-cat h3,.home .mdk-cat:nth-child(-n+2) h3{font-size:16px;margin:0}
   .home .mdk-cat-img{padding:14px 0 20px}
-  .home .mdk-cat-img img,.home .mdk-cat:nth-child(-n+2) .mdk-cat-img img{height:150px;margin:-22px 0 -12px}
-  .home .mdk-cat.is-art .mdk-cat-img img{height:104px;max-width:62%;margin:0}
+  .home .mdk-cat-img img,.home .mdk-cat:nth-child(-n+2) .mdk-cat-img img{height:118px;max-width:86%}
 }
 
 /* ---------- أجندة 2027: بطاقة كحلية كبيرة ---------- */
@@ -225,21 +226,60 @@ html[dir=ltr] .home .mdk-h2,html[dir=ltr] .home .mdk-agb h2,html[dir=ltr] .home 
 .home .mdk-figs .mdk-fig>span{font-size:15px;margin-top:6px}
 @media (max-width:1024px){.home .mdk-works .mdk-head{margin-bottom:32px}}
 
-/* ---------- لماذا مدارك ---------- */
-.home .mdk-why2 .mdk-why2-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(32px,6vw,96px)}
+/* ---------- تقليل الكتابة (عمار 14 ت2: «قلل الكتابة بدون ما تاثر على ال seo») ----------
+   التفاصيل والنص الطويل صاروا <details>: العنوان ظاهر والسطر بيفتح بكبسة. النص كله بيضل بالصفحة، فغوغل بيقراه متل قبل.
+   عالشاشات الواسعة نقاط «أكثر من مطبعة» والخطوات بتضل مفتوحة (site.js بيسكّرها عالموبايل بس). */
+.home details>summary{list-style:none}
+.home details>summary::-webkit-details-marker{display:none}
+.home details>summary:focus-visible{outline:2px solid var(--focus,#3263DB);outline-offset:4px;border-radius:6px}
+/* علامة الزائد مرسومة بخطين، وبتدور لما يفتح السطر */
+.home .mdk-seo-col>summary::after,.home details[data-wide]>summary::after{content:"";flex:none;width:14px;height:14px;color:var(--text-3);background:linear-gradient(currentColor,currentColor) center/100% 1.5px no-repeat,linear-gradient(currentColor,currentColor) center/1.5px 100% no-repeat;transition:transform .3s var(--ease-out)}
+.home .mdk-seo-col[open]>summary::after,.home details[data-wide][open]>summary::after{transform:rotate(45deg)}
+@media (prefers-reduced-motion:no-preference){.home details[open]>p{animation:hxOpen .32s var(--ease-out)}}
+@keyframes hxOpen{from{opacity:0;transform:translate3d(0,-6px,0)}}
+@media (min-width:861px){
+  .home details[data-wide]>summary{pointer-events:none}
+  .home details[data-wide]>summary::after{display:none}
+}
+
+/* ---------- لماذا مدارك: صورة استوديو لعيلة المنتجات جنب العنوان (عمار 14 ت2 عن التصوير: «ماعنا دبر حالك») ---------- */
+.home .mdk-why2 .mdk-why2-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"hd shot" "list shot";gap:0 clamp(32px,5vw,80px);align-items:start}
+.home .mdk-why2-hd{grid-area:hd}
+.home .mdk-why2-shot{grid-area:shot;align-self:center;background:var(--surface);border-radius:var(--hx-r);padding:clamp(18px,2.6vw,40px)}
+.home .mdk-why2-shot img{display:block;width:100%;height:auto}
 .home .mdk-why2 .mdk-h2{font-size:clamp(28px,3.3vw,48px)}
-.home .mdk-why2 .mdk-why2-list{column-gap:44px;row-gap:0}
-.home .mdk-why2 .mdk-why2-list li{padding:26px 0 32px;border-top:1px solid var(--line)}
-.home .mdk-why2 .mdk-why2-list h3{font-size:clamp(19px,1.7vw,23px);margin:0 0 8px}
-.home .mdk-why2 .mdk-why2-list p{font-size:16px;line-height:1.8;color:var(--text-2)}
+.home .mdk-why2 .mdk-why2-list{grid-area:list;column-gap:36px;row-gap:0;margin-top:clamp(28px,3.2vw,48px)}
+.home .mdk-why2 .mdk-why2-list li{padding:0;border-top:1px solid var(--line)}
+.home .mdk-why2 .mdk-why2-list summary{display:block;padding:22px 0 0}
+.home .mdk-why2 .mdk-why2-list h3{font-size:clamp(18px,1.5vw,21px);margin:0}
+.home .mdk-why2 .mdk-why2-list p{font-size:15.5px;line-height:1.8;color:var(--text-2);padding:8px 0 26px}
+@media (max-width:860px){
+  .home .mdk-why2 .mdk-why2-grid{grid-template-columns:minmax(0,1fr);grid-template-areas:none;gap:0}
+  .home .mdk-why2-hd,.home .mdk-why2-shot,.home .mdk-why2 .mdk-why2-list{grid-area:auto}
+  .home .mdk-why2-hd{text-align:center}
+  .home .mdk-why2-hd .mdk-lead{margin-inline:auto}
+  .home .mdk-why2-shot{margin-top:28px;padding:16px;border-radius:22px}
+  .home .mdk-why2 .mdk-why2-list{grid-template-columns:minmax(0,1fr);margin-top:20px;border-bottom:1px solid var(--line)}
+  .home .mdk-why2 .mdk-why2-list summary{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;cursor:pointer}
+  .home .mdk-why2 .mdk-why2-list h3{font-size:17px}
+  .home .mdk-why2 .mdk-why2-list p{padding:0 0 18px}
+}
 
 /* ---------- الخطوات ---------- */
 .home .mdk-process{background:var(--surface)}
+.home .mdk-process .mdk-step>summary{display:block}
 .home .mdk-process .mdk-step .n{width:44px;height:44px;font-size:15px;margin-bottom:24px;box-shadow:0 0 0 10px var(--surface)}
 .home .mdk-process .mdk-step h3{font-size:clamp(17px,1.5vw,21px);margin-bottom:10px}
 .home .mdk-process .mdk-step p{font-size:15.5px;color:var(--text-2)}
 @media (min-width:861px){.home .mdk-process .mdk-step::before{top:21.5px}}
-@media (max-width:860px){.home .mdk-process .mdk-step .n{margin:0;box-shadow:none}.home .mdk-process .mdk-step{grid-template-columns:44px 1fr}.home .mdk-process .mdk-step::before{inset-inline-start:21.5px;top:44px}}
+@media (max-width:860px){
+  .home .mdk-process .mdk-step{display:block;padding:0}
+  .home .mdk-process .mdk-step>summary{display:flex;align-items:center;gap:16px;padding:9px 0;cursor:pointer}
+  .home .mdk-process .mdk-step .n{flex:none;margin:0;box-shadow:none}
+  .home .mdk-process .mdk-step h3{flex:1;margin:0;font-size:17px}
+  .home .mdk-process .mdk-step p{padding:0 0 12px;padding-inline-start:60px;font-size:15px}
+  .home .mdk-process .mdk-step::before{inset-inline-start:21.5px;top:53px;bottom:-9px}
+}
 
 /* ---------- مراكز التنفيذ والتسليم: فصل كحلي بخطوط رفيعة بدل البطاقات ---------- */
 .home .mdk-markets .mdk-h2,.home .mdk-markets .mdk-lead{text-align:center;margin-inline:auto}
@@ -295,19 +335,26 @@ html[dir=ltr] .home .mdk-h2,html[dir=ltr] .home .mdk-agb h2,html[dir=ltr] .home 
 .home .mdk-contact:hover i{background:#E6ECFB}
 @media (max-width:1024px){.home .mdk-cta-band{grid-template-columns:1fr;border-radius:22px}}
 
-/* ---------- نص محركات البحث: أعمدة بلا بطاقات ---------- */
+/* ---------- النص الطويل بآخر الصفحة: ثلاث عناوين، وكل عنوان بيفتح نصّه ---------- */
 .home .mdk-seo{background:var(--surface)}
-.home .mdk-seo .mdk-head{align-items:flex-start;text-align:start;max-width:none;margin-bottom:36px}
+.home .mdk-seo .mdk-head{align-items:flex-start;text-align:start;max-width:none;margin:0 0 28px}
 .home .mdk-seo .mdk-h2{font-size:clamp(24px,2.4vw,34px)}
-.home .mdk-seo-grid{gap:44px}
-.home .mdk-seo-col{padding:22px 0 0;background:none;border-radius:0;border-top:1px solid var(--line)}
-.home .mdk-seo-col h3{font-size:19px;margin-bottom:12px}
-.home .mdk-seo-col p{font-size:15.5px;color:var(--text-2)}
-.home .mdk-seo-more button{text-decoration-color:var(--t-blue)}
-@media (max-width:1024px){.home .mdk-seo-grid{gap:28px}}
+.home .mdk-seo-grid{display:block;border-top:1px solid var(--line)}
+.home .mdk-seo-col{padding:0;background:none;border-radius:0;border-bottom:1px solid var(--line)}
+.home .mdk-seo-col>summary{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:22px 0;cursor:pointer}
+.home .mdk-seo-col h3{font-size:clamp(17px,1.45vw,20px);font-weight:600;line-height:1.5;margin:0;transition:color .15s ease}
+.home .mdk-seo-col>summary:hover h3{color:var(--t-blue)}
+.home .mdk-seo-col p{font-size:16px;line-height:1.95;color:var(--text-2);max-width:72ch;padding:0 0 26px}
+.home .mdk-seo-mk{margin-top:0;padding-top:20px;border-top:0}
+.home .mdk-seo-grid+.mdk-seo-mk{margin-top:28px}
+@media (min-width:1025px){
+  .home .mdk-seo>.mdk-wrap{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);column-gap:clamp(28px,5vw,72px);align-items:start}
+  .home .mdk-seo .mdk-head{margin:0}
+  .home .mdk-seo-mk{grid-column:1/-1}
+}
 
 /* ---------- الوضع الليلي: بطاقات الأقسام بتضل فاتحة لأن رسوماتها مقصوصة لخلفية فاتحة ---------- */
-html[data-theme=dark] .home .mdk-cat,html[data-theme=dark] .home .mdk-cat:hover{background:#E9E6E0}
+html[data-theme=dark] .home .mdk-cat,html[data-theme=dark] .home .mdk-cat:hover,html[data-theme=dark] .home .mdk-why2-shot{background:#E9E6E0}
 html[data-theme=dark] .home .mdk-cat-img{background:none}
 html[data-theme=dark] .home .mdk-cat h3{color:#0D244C}
 html[data-theme=dark] .home .mdk-cat p{color:#4A5568}

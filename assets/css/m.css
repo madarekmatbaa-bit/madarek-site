@@ -27,7 +27,7 @@
 .m-hdr.is-hidden{transform:translateY(-100%)}
 .m-hdr-in{max-width:calc(var(--wrap) + 160px);margin-inline:auto;padding-inline:var(--gut);height:76px;display:flex;align-items:center;gap:36px}
 .m-logo{flex:none;display:flex;align-items:center}
-.m-logo img{display:block;width:auto;height:58px}
+.m-logo img{display:block;width:auto;height:52px}
 .m-nav{flex:1 1 auto;min-width:0}
 .m-nav-list{list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:28px}
 .m-nav-link{position:relative;display:inline-flex;align-items:center;gap:5px;height:76px;font-size:15px;font-weight:500;color:var(--text);white-space:nowrap}
@@ -464,7 +464,7 @@ body .mdk-markets .mdk-eyebrow,body .mdk-cta-band .mdk-eyebrow{color:var(--md-te
   .m-nav,.m-search,.m-hdr-cta{display:none}
   .m-search-btn,.m-burger{display:inline-flex}
   .m-logo{order:0;margin-inline-end:auto;padding-inline-start:4px}
-  .m-logo img{height:50px}
+  .m-logo img{height:42px}
   .m-tools{gap:2px;margin-inline-start:0}
   .m-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:32px 20px}
   .m-pdp-grid{grid-template-columns:1fr}
@@ -529,7 +529,20 @@ body .mdk-markets .mdk-eyebrow,body .mdk-cta-band .mdk-eyebrow{color:var(--md-te
   .ptabs-nav{gap:22px}
 }
 @media (min-width:1025px){.mnav,.mnav-shade,.m-sheet{display:none!important}}
-@media (max-width:1024px){html.mdk-lbar-on body{padding-bottom:calc(62px + env(safe-area-inset-bottom,0px))}}
+/* ---------- الشريط السفلي عالموبايل والتابلت: كبسولة عايمة بثلاث روابط ----------
+   (عمار 14 ت2 عن الشريط القديم أبو الدائرة المتحركة: «ما حلو الموديل اعمل واحد حديث اكتر وانيق وبسيط»). الروابط بيبنيها site.js من .lbar-src. */
+.mdk-lbar{display:none}
+@media (max-width:1024px){
+  /* الكبسولة عايمة، فمساحتها بتنحسب من آخر الفوتر الكحلي حتى ما يبيّن شريط أبيض تحته */
+  html.mdk-lbar-on .m-ftr{padding-bottom:calc(104px + env(safe-area-inset-bottom,0px))}
+  .mdk-lbar{display:flex;gap:4px;position:fixed;z-index:390;inset-inline:0;bottom:calc(12px + env(safe-area-inset-bottom,0px));width:min(100% - 32px,400px);height:60px;margin-inline:auto;padding:6px;border:1px solid var(--line);border-radius:999px;background:var(--bg);background:color-mix(in srgb,var(--bg) 94%,transparent);-webkit-backdrop-filter:saturate(1.6) blur(18px);backdrop-filter:saturate(1.6) blur(18px);box-shadow:0 12px 32px -16px rgba(13,36,76,.4),0 2px 6px -3px rgba(13,36,76,.12)}
+  .mdk-lbar a{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border-radius:999px;color:var(--text-2)!important;text-decoration:none!important;font-size:11.5px;font-weight:500;line-height:1.25;-webkit-tap-highlight-color:transparent;transition:background-color .2s ease,color .2s ease,transform .16s var(--ease-out)}
+  .mdk-lbar a svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .mdk-lbar a.on{background:var(--la-08);color:var(--heading)!important;font-weight:600}
+  .mdk-lbar a:active{transform:scale(.96)}
+  .mdk-lbar a:focus-visible{outline:2px solid var(--focus,#3263DB);outline-offset:-2px}
+}
+@media (prefers-reduced-motion:reduce){.mdk-lbar a{transition:none}}
 /* motion (Ammar 5 Nov): see the motion block in site.js. Strong ease-out, short rise, no motion when reduced. */
 @media (prefers-reduced-motion:no-preference){
 .rv-on .rv{opacity:0;transform:translate3d(0,22px,0)}

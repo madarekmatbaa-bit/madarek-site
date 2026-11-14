@@ -1,0 +1,5 @@
+{"rig": 1.5, "tilt": 11, "look": "Medium High Contrast", "mx": 0.03, "mt": 0.02, "mb": 0.04, "items": [
+ {"i":"thermos","v":"white","x":-0.085,"y":0.07},
+ {"i":"thermos","v":"navy","x":0.0,"y":0.0},
+ {"i":"thermos","v":"blue","x":0.085,"y":0.07}
+]}
