@@ -682,8 +682,9 @@ HOME_KEYS = [('story', 'class="mdk-story"'), ('agb', 'class="mdk mdk-agb"'), ('d
 
 
 # The opening film on phones and upright tablets (Ammar 14 Nov: «داخل ببعضها»): the text sits on top and the scene under it. The script measures
-# the text and the bottom bar, then sizes and places the scene in what is left, so the two cannot meet on any screen. The numbers 303, 631, 300
-# and 240 are the scene's reach above and below its centre, measured from the rendered film. The media query is the same one home.css uses.
+# the text and the bottom bar, then sizes and places the scene in what is left, so the two cannot meet on any screen. The numbers 250, 545, 300
+# and 240 are the scene's reach above and below its centre, measured from the rendered film with the box of tools/home_box_2026_11_14.py
+# (the closed box reaches 250 up and 295 down). The media query is the same one home.css uses.
 STORY_EDITS = [
     ('else { base = Math.min(w / 1500, h / 860); offX = -w * .14; }',
      # side by side: on narrow screens, and in English and Turkish (their text starts at the column's edge nearest the scene),
@@ -698,8 +699,8 @@ STORY_EDITS = [
       var cpT = root.querySelector('.ms-copy').offsetTop, hh = chs[0].offsetHeight, fh = 0, lb = document.querySelector('.mdk-lbar');
       for (var ci = 1; ci < chs.length; ci++) fh = Math.max(fh, chs[ci].offsetHeight);
       var L = h - (lb ? window.innerHeight - lb.getBoundingClientRect().top + 12 : 84), bh = cpT + hh + 24, bf = cpT + fh + 18;
-      base = clamp((L - bh) / 631, w / 1250, w / 860); offX = 0;
-      oyH = bh + 303 * base;
+      base = clamp((L - bh) / 545, w / 1250, w / 860); offX = 0;
+      oyH = bh + 250 * base;
       oyF = Math.max(bf + 300 * base, Math.min(h * .66, L - 240 * base));
       root.style.setProperty('--ms-oy', ((oyF + 30 * base) / h * 100).toFixed(1) + '%');
     }"""),
