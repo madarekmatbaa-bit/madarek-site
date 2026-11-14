@@ -82,6 +82,12 @@ html[dir=ltr] .mdk,html[dir=ltr] .mdk-story,html[dir=ltr] .mdk-story *,html[dir=
   html[dir=ltr] .m-nav-link{font-size:14.5px}
   html[dir=ltr] .m-lang-cur{display:none}
 }
+/* Turkish has the longest menu: between 1025 and 1279 its last word ran under the search icon */
+@media (min-width:1025px) and (max-width:1279px){
+  html[lang=tr] .m-hdr-in{gap:14px}
+  html[lang=tr] .m-nav-list{gap:11px}
+  html[lang=tr] .m-nav-link{font-size:13.5px}
+}
 @media (min-width:1025px) and (max-width:1199px){
   html[dir=ltr] .m-hdr-cta{width:44px;min-width:44px;padding:0}
   html[dir=ltr] .m-hdr-cta span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}

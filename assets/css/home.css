@@ -20,7 +20,9 @@ html.over-hero .m-search:focus-within{background:rgba(255,255,255,.16);border-co
 .home .mdk-story .ms-ch h1,.home .mdk-story .ms-ch h2{color:#fff;font-weight:700;line-height:1.22}
 .home .mdk-story .ms-ch h1{font-size:clamp(38px,min(4.9vw,8.8vh),76px)}
 .home .mdk-story .ms-ch h2{font-size:clamp(34px,min(4.5vw,8.2vh),68px)}
-.home .mdk-story .ms-ch p{color:rgba(255,255,255,.78);font-size:clamp(16px,1.4vw,20px);line-height:1.8;max-width:500px;margin-top:20px}
+.home .mdk-story .ms-ch p{color:rgba(255,255,255,.78);font-size:clamp(16px,1.4vw,20px);line-height:1.8;max-width:min(500px,34vw);margin-top:20px}
+/* عناوين فصول الفيلم بتنكسر على سطرين متوازنين: عالشاشات القصيرة كان العنوان يطلع بسطر واحد طويل ويوصل لفوق القطع */
+.home .mdk-story .ms-ch h2{max-width:8.6em;text-wrap:balance}
 .home .mdk-story .ms-kick{color:#9DBBFF;font-size:14px;font-weight:500;margin-bottom:18px;gap:0}
 .home .mdk-story .ms-kick:before{display:none}
 .home .mdk-story .ms-cta{gap:12px;margin-top:32px}
@@ -43,8 +45,12 @@ html.over-hero .m-search:focus-within{background:rgba(255,255,255,.16);border-co
 /* بالإنكليزي والتركي العنوان أطول، فبيصغر شوي حتى ما يطلع عن الشاشة. والكلام بيبلّش من طرف العمود القريب عالمشهد،
    فالعمود أضيق والمشهد أصغر وأبعد (بسكربت الفيلم) حتى ما يتلامسوا */
 html[dir=ltr] .home .mdk-story .ms-copy{width:min(520px,40vw)}
-html[dir=ltr] .home .mdk-story .ms-ch h1{font-size:clamp(32px,min(3.9vw,7.2vh),60px);line-height:1.14}
-html[dir=ltr] .home .mdk-story .ms-ch h2{font-size:clamp(30px,min(3.7vw,7vh),56px);line-height:1.14}
+html[dir=ltr] .home .mdk-story .ms-ch h1{font-size:clamp(30px,min(3.1vw,5.6vh),48px);line-height:1.14}
+html[dir=ltr] .home .mdk-story .ms-ch h2{font-size:clamp(28px,min(3vw,5.4vh),46px);line-height:1.14}
+html[dir=ltr] .home .mdk-story .ms-ch p{font-size:clamp(15px,1.2vw,18px)}
+/* اللابتوب بيعرض ارتفاع أقل من مقاس شاشته بسبب أشرطة المتصفح (1366×768 بتطلع حوالي 650). عالشاشات القصيرة روابط الأقسام
+   ما بتظهر، حتى يضل الكلام بين الهيدر وآخر الشاشة */
+@media (max-height:700px){.home .mdk-story .ms-cats{display:none}}
 /* أول ظهور: الكلام بيطلع سطر ورا سطر والعلبة بتستقر */
 @media (prefers-reduced-motion:no-preference){
   .home .mdk-story .ms-ch-hero>*{animation:hxRise .9s var(--ease-out) both}
@@ -76,7 +82,7 @@ html[dir=ltr] .home .mdk-story .ms-ch h2{font-size:clamp(30px,min(3.7vw,7vh),56p
   .home .mdk-story .ms-ch-hero{align-items:center}
   .home .mdk-story .ms-ch-hero .ms-kick{align-self:center}
   .home .mdk-story .ms-ch h1{font-size:clamp(29px,8.6vw,40px);text-wrap:balance}
-  .home .mdk-story .ms-ch h2{font-size:clamp(27px,8vw,36px);text-wrap:balance}
+  .home .mdk-story .ms-ch h2{font-size:clamp(27px,8vw,36px);max-width:none;text-wrap:balance}
   html[dir=ltr] .home .mdk-story .ms-ch h1{font-size:clamp(24px,6.7vw,30px)}
   html[dir=ltr] .home .mdk-story .ms-ch h2{font-size:clamp(24px,6.6vw,30px)}
   .home .mdk-story .ms-ch p{font-size:15.5px;line-height:1.75;margin:12px auto 0;max-width:340px;text-wrap:balance}
