@@ -712,11 +712,19 @@ STORY_EDITS = [
      "var lbs = document.querySelector('.mdk-lbar'), bt = lbs ? (getComputedStyle(lbs).display !== 'none' ? lbs.getBoundingClientRect().top - (window.innerHeight - h) : 0) : (window.matchMedia('(max-width:1024px)').matches ? h - 72 : 0); "
      "if (bt) base = Math.min(base, (bt - 6 - world.offsetTop) / 415); "
      # with the bar on screen the text sits between the header and the bar, on a phone on its side with a few px to spare:
-     # a chapter drifts 8 px as it fades, not 24, and under 350 and 300 px tall the text is set tighter (ms-xs, ms-xxs
-     # in home.css). The height is the section's own, which stays put when the address bar hides: a media query
-     # would change the type mid-scroll
+     # a chapter drifts 8 px as it fades, not 24, and up to 350 px tall the text is set tighter (ms-xs in home.css). The
+     # height is the section's own, which stays put when the address bar hides: a media query would change the type
+     # mid-scroll
      "var sw = window.matchMedia('(max-width:1024px)').matches; dr = sw ? 8 : 24; "
-     "root.classList.toggle('ms-xs', sw && h <= 350); root.classList.toggle('ms-xxs', sw && h <= 300); }"),
+     "root.classList.toggle('ms-xs', sw && h <= 350); root.classList.remove('ms-xxs'); "
+     # a phone on its side: when the opening text or the last chapter is still taller than the room between the header
+     # and the bar (6 px to spare on each side, for the drift), ms-xxs drops the opening sentence and the last chapter's
+     # buttons. It is measured, not set by size: a 780x280 phone has room for the sentence, a 568x270 one has not, and
+     # Turkish needs more lines than Arabic. And the pieces laid out reach about 352 px to the right of the scene's
+     # centre at size 1: they stop 12 px short of the text column (it binds on narrow and squarish windows)
+     "if (sw && h <= 520) { var hd = document.querySelector('.m-hdr'), band = bt - (hd ? hd.offsetHeight : 65) - 12; "
+     "if (chs[0].offsetHeight > band || chs[4].offsetHeight > band) root.classList.add('ms-xxs'); "
+     "base = Math.min(base, (root.querySelector('.ms-copy').offsetLeft - 12 - (w / 2 + offX)) / 352); } }"),
     # Stacked (phones and upright tablets): each part of the film is sized and placed from what it measures on this screen,
     # between the bottom of that part's text and the bottom bar (Ammar 14 Nov, from his phone: «فايت ببعضه»). One size and
     # one place for the whole film left the scene small under a wide empty band, and let the bag and, in Turkish, the
@@ -725,7 +733,7 @@ STORY_EDITS = [
     # for each (1 + q after the film's own end). Floor shadows and the lid are not measured: the lid is away in the
     # middle parts, closed it adds a few px that the spare 6 px cover, and in the first second it is still settling.
     ('var mobile = false, base = 1, offX = 0;',
-     '''var mobile = false, base = 1, offX = 0, FZ = [1, 1, 1, 1, 1, 1], FO = [0, 0, 0, 0, 0, 0], meas = 0, mZ = 1, mO = 0, fitKey = '', up = -14, dr = 24;
+     '''var mobile = false, base = 1, offX = 0, FZ = [1, 1, 1, 1, 1, 1], FO = [0, 0, 0, 0, 0, 0], meas = 0, mZ = 1, mO = 0, fitMemo = {}, up = -14, dr = 24;
   var POSE = [[0], [.3], [.7], [.96], [1.32, 1.4, 1.45, 1.5, 1.56], [1.84, 2]], PARTS = [];
   [box, bag].forEach(function (g) { [].forEach.call(g.children, function (e) { if (e !== boxSh && e !== bagSh) { e._own = g; PARTS.push(e); } }); });
   Object.keys(ITEMS).forEach(function (k) { ITEMS[k].el._own = ITEMS[k].el; PARTS.push(ITEMS[k].el); });
@@ -742,9 +750,9 @@ STORY_EDITS = [
   }
   function fit(w, L, cpT) {
     var TH = [chs[0].offsetHeight + 6, Math.max(chs[1].offsetHeight, chs[2].offsetHeight), chs[3].offsetHeight, chs[4].offsetHeight, chs[4].offsetHeight, chs[4].offsetHeight];
-    var key = [w, L, cpT, base].concat(TH).join();
-    if (key === fitKey) return;   // the page is laid out again when the fonts and the pictures are in: mostly nothing has moved
-    fitKey = key; meas = 1;
+    var key = [w, L, cpT, base].concat(TH).join(), m = fitMemo[key];
+    if (m) { FZ = m[0]; FO = m[1]; return m[2]; }   // the page is laid out again when the fonts and the pictures are in: mostly nothing has moved
+    var fz = [], fo = [], over = 0; meas = 1;
     POSE.forEach(function (ps, k) {
       var T = cpT + TH[k] + 18, z = 1, o = (T + L) / 2;
       for (var pass = 0; pass < 2; pass++) {
@@ -756,22 +764,36 @@ STORY_EDITS = [
         o = T + U * z + Math.max(0, L - T - (U + D) * z) / 2;
         if (Math.abs(z / z0 - 1) < .08) break;   // a second look only when the size moved enough for the perspective to matter
       }
-      FZ[k] = z; FO[k] = o;
+      fz[k] = z; fo[k] = o;
+      // at its smallest size this part still ends within 4 px of the bar, or under it;
+      // or the opening box comes out narrower than about a quarter of the screen
+      if ((U + D - 6) * z - (L - T) > 8 || (k === 0 && 2 * hw * z / z0 < w * .26)) over = 1;
     });
-    meas = 0;
+    meas = 0; FZ = fz; FO = fo; fitMemo[key] = [fz, fo, over];
+    return over;
   }'''),
     # stacked: upright phones and tablets, and narrow windows with some height. A phone on its side (wide, up to 520 px
     # tall) has no height for text over the scene and takes the side-by-side layout (home.css has the same condition)
     ('mobile = w < 768;', "mobile = window.matchMedia('(max-width:1024px) and (orientation:portrait),(max-width:767px) and (min-height:520.02px)').matches;"),
+    # the type is tried as it is first. When a part of the film then cannot clear the bottom bar even at its smallest
+    # size, or the text leaves so little room that the opening box comes out under about a quarter of the screen's width
+    # (60 px on an iPhone SE in English), the tighter type (ms-tiny in home.css: smaller text, no kicker, the three
+    # figures in one row) is set and the film is fitted again. It is decided by measuring, not by the screen's height:
+    # at the same height English and Turkish need it where Arabic does not (a 360x530 screen), and a larger system
+    # font needs it sooner
     ('if (mobile) { base = Math.min(w / 860, h / 1300); offX = 0; }',
      """if (mobile) {
       root.classList.toggle('ms-short', h < 640);
       root.classList.toggle('ms-low', h >= 640 && h < 740);
-      root.classList.toggle('ms-tiny', h < 520); up = h < 520 ? 0 : -14; dr = 24;
-      var cpT = root.querySelector('.ms-copy').offsetTop, lb = document.querySelector('.mdk-lbar');
-      var L = h - (lb ? window.innerHeight - lb.getBoundingClientRect().top + 12 : 84), bh = cpT + chs[0].offsetHeight + 24;
-      base = clamp((L - bh) / 545, w / 1500, w / 860); offX = 0;
-      fit(w, L, cpT);
+      var cp = root.querySelector('.ms-copy'), lb = document.querySelector('.mdk-lbar');
+      var L = h - (lb ? window.innerHeight - lb.getBoundingClientRect().top + 12 : 84);
+      offX = 0; dr = 24;
+      for (var tn = 0; tn < 2; tn++) {
+        root.classList.toggle('ms-tiny', tn > 0); up = tn ? 0 : -14;
+        var cpT = cp.offsetTop, bh = cpT + chs[0].offsetHeight + 24;
+        base = clamp((L - bh) / 545, w / 1500, w / 860);
+        if (!fit(w, L, cpT)) break;
+      }
       root.style.setProperty('--ms-oy', ((FO[1] + 30 * base) / h * 100).toFixed(1) + '%');
     }"""),
     # stacked: the size and the place move from one part's fit to the next as the film goes (while measuring, the one being tried).
@@ -798,6 +820,12 @@ STORY_EDITS = [
     # chapter's own text already gives the paper weights. They stay for the side-by-side film
     ("var labO = p < LAB[0] || p > LAB[3] ? 0 : p < LAB[1] ? (p - LAB[0]) / (LAB[1] - LAB[0]) : p > LAB[2] ? 1 - (p - LAB[2]) / (LAB[3] - LAB[2]) : 1;",
      "var labO = mobile || p < LAB[0] || p > LAB[3] ? 0 : p < LAB[1] ? (p - LAB[0]) / (LAB[1] - LAB[0]) : p > LAB[2] ? 1 - (p - LAB[2]) / (LAB[3] - LAB[2]) : 1;"),
+    # stacked, a resize at the same width was skipped: the address bar hiding fires one on every scroll. The layout now
+    # depends on the height too (a short wide window is side by side), so a change of the section's own height, which
+    # the address bar does not move, lays the film out again (split screen, a window dragged shorter)
+    ("var lastW = window.innerWidth;", "var lastW = window.innerWidth, lastH = pin.clientHeight;"),
+    ("if (Math.abs(window.innerWidth - lastW) < 2 && mobile) return;\n    lastW = window.innerWidth; layout();",
+     "if (Math.abs(window.innerWidth - lastW) < 2 && Math.abs(pin.clientHeight - lastH) < 2 && mobile) return;\n    lastW = window.innerWidth; lastH = pin.clientHeight; layout();"),
     # text sizes settle once the font is in and the bottom bar exists, so the scene is placed again then
     ("window.addEventListener('load', function () { cache(); onScroll(); });",
      "window.addEventListener('load', function () { layout(); cache(); onScroll(); render(cur, true); });\n"
