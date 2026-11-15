@@ -716,14 +716,17 @@ STORY_EDITS = [
      # height is the section's own, which stays put when the address bar hides: a media query would change the type
      # mid-scroll
      "var sw = window.matchMedia('(max-width:1024px)').matches; dr = sw ? 8 : 24; "
-     "root.classList.toggle('ms-xs', sw && h <= 350); root.classList.remove('ms-xxs'); "
+     "root.classList.toggle('ms-xs', sw && h <= 350); root.classList.remove('ms-xxs', 'ms-x3', 'ms-short', 'ms-low', 'ms-tiny'); "
      # a phone on its side: when the opening text or the last chapter is still taller than the room between the header
      # and the bar (6 px to spare on each side, for the drift), ms-xxs drops the opening sentence and the last chapter's
      # buttons. It is measured, not set by size: a 780x280 phone has room for the sentence, a 568x270 one has not, and
-     # Turkish needs more lines than Arabic. And the pieces laid out reach about 352 px to the right of the scene's
-     # centre at size 1: they stop 12 px short of the text column (it binds on narrow and squarish windows)
-     "if (sw && h <= 520) { var hd = document.querySelector('.m-hdr'), band = bt - (hd ? hd.offsetHeight : 65) - 12; "
-     "if (chs[0].offsetHeight > band || chs[4].offsetHeight > band) root.classList.add('ms-xxs'); "
+     # Turkish needs more lines than Arabic. A window too small even for that (split screen, 360x280) keeps the headings
+     # only (ms-x3): the bottom bar under them has the same two buttons. And the pieces laid out reach about 352 px to
+     # the right of the scene's centre at size 1: they stop 12 px short of the text column (it binds on narrow and
+     # squarish windows)
+     "if (sw && h <= 520) { var hd = document.querySelector('.m-hdr'), band = bt - (hd ? hd.offsetHeight : 65) - 12, "
+     "tall = function () { return Math.max.apply(0, chs.map(function (c) { return c.offsetHeight; })) > band; }; "
+     "if (tall()) { root.classList.add('ms-xxs'); if (tall()) root.classList.add('ms-x3'); } "
      "base = Math.min(base, (root.querySelector('.ms-copy').offsetLeft - 12 - (w / 2 + offX)) / 352); } }"),
     # Stacked (phones and upright tablets): each part of the film is sized and placed from what it measures on this screen,
     # between the bottom of that part's text and the bottom bar (Ammar 14 Nov, from his phone: «فايت ببعضه»). One size and
@@ -748,9 +751,9 @@ STORY_EDITS = [
     });
     return [t, b, hw];
   }
-  function fit(w, L, cpT) {
+  function fit(w, L, cpT, fl) {
     var TH = [chs[0].offsetHeight + 6, Math.max(chs[1].offsetHeight, chs[2].offsetHeight), chs[3].offsetHeight, chs[4].offsetHeight, chs[4].offsetHeight, chs[4].offsetHeight];
-    var key = [w, L, cpT, base].concat(TH).join(), m = fitMemo[key];
+    var key = [w, L, cpT, base, fl].concat(TH).join(), m = fitMemo[key];
     if (m) { FZ = m[0]; FO = m[1]; return m[2]; }   // the page is laid out again when the fonts and the pictures are in: mostly nothing has moved
     var fz = [], fo = [], over = 0; meas = 1;
     POSE.forEach(function (ps, k) {
@@ -759,40 +762,45 @@ STORY_EDITS = [
         mZ = z; mO = o; var t = 1e9, b = -1e9, hw = 1, z0 = z;
         ps.forEach(function (v) { var s = span(v); t = Math.min(t, s[0]); b = Math.max(b, s[1]); hw = Math.max(hw, s[2]); });
         var U = (o - t) / z + 6, D = (b - o) / z + 6;
-        // down to .45: a small scene clear of the text and the bar reads better than a larger one under either
-        z = clamp(Math.min((L - T) / (U + D), k < 4 ? (w / 2 - 8) * z / hw : 9), .45, k === 0 ? 1.12 : k === 2 ? 1.1 : 1.3);   // the bag slides in from the side, so its width is not a limit
+        // down to .45 (fl): a small scene clear of the text and the bar reads better than a larger one under either
+        z = clamp(Math.min((L - T) / (U + D), k < 4 ? (w / 2 - 8) * z / hw : 9), fl, k === 0 ? 1.12 : k === 2 ? 1.1 : 1.3);   // the bag slides in from the side, so its width is not a limit
         o = T + U * z + Math.max(0, L - T - (U + D) * z) / 2;
         if (Math.abs(z / z0 - 1) < .08) break;   // a second look only when the size moved enough for the perspective to matter
       }
       fz[k] = z; fo[k] = o;
-      // at its smallest size this part still ends within 4 px of the bar, or under it;
-      // or the opening box comes out narrower than about a quarter of the screen
-      if ((U + D - 6) * z - (L - T) > 8 || (k === 0 && 2 * hw * z / z0 < w * .26)) over = 1;
+      // 2: at its smallest size this part still ends within 4 px of the bar, or under it;
+      // 1: the opening box comes out narrower than about a quarter of the screen
+      if ((U + D - 6) * z - (L - T) > 8) over = 2;
+      else if (!over && k === 0 && 2 * hw * z / z0 < w * .26) over = 1;
     });
     meas = 0; FZ = fz; FO = fo; fitMemo[key] = [fz, fo, over];
     return over;
   }'''),
     # stacked: upright phones and tablets, and narrow windows with some height. A phone on its side (wide, up to 520 px
-    # tall) has no height for text over the scene and takes the side-by-side layout (home.css has the same condition)
-    ('mobile = w < 768;', "mobile = window.matchMedia('(max-width:1024px) and (orientation:portrait),(max-width:767px) and (min-height:520.02px)').matches;"),
+    # tall) has no height for text over the scene and takes the side-by-side layout, and so does an upright window
+    # under 400 px tall (split screen; the shortest upright phone shows about 450) (home.css has the same condition)
+    ('mobile = w < 768;', "mobile = window.matchMedia('(max-width:1024px) and (orientation:portrait) and (min-height:400.02px),(max-width:767px) and (min-height:520.02px)').matches;"),
     # the type is tried as it is first. When a part of the film then cannot clear the bottom bar even at its smallest
     # size, or the text leaves so little room that the opening box comes out under about a quarter of the screen's width
     # (60 px on an iPhone SE in English), the tighter type (ms-tiny in home.css: smaller text, no kicker, the three
     # figures in one row) is set and the film is fitted again. It is decided by measuring, not by the screen's height:
     # at the same height English and Turkish need it where Arabic does not (a 360x530 screen), and a larger system
-    # font needs it sooner
+    # font needs it sooner. If a part still cannot clear the bar (an upright window under about 450 px tall: split
+    # screen), a third fit lets the scene go under its usual smallest size
     ('if (mobile) { base = Math.min(w / 860, h / 1300); offX = 0; }',
      """if (mobile) {
       root.classList.toggle('ms-short', h < 640);
       root.classList.toggle('ms-low', h >= 640 && h < 740);
+      root.classList.remove('ms-xs', 'ms-xxs', 'ms-x3');
       var cp = root.querySelector('.ms-copy'), lb = document.querySelector('.mdk-lbar');
       var L = h - (lb ? window.innerHeight - lb.getBoundingClientRect().top + 12 : 84);
       offX = 0; dr = 24;
-      for (var tn = 0; tn < 2; tn++) {
+      for (var tn = 0; tn < 3; tn++) {
         root.classList.toggle('ms-tiny', tn > 0); up = tn ? 0 : -14;
         var cpT = cp.offsetTop, bh = cpT + chs[0].offsetHeight + 24;
         base = clamp((L - bh) / 545, w / 1500, w / 860);
-        if (!fit(w, L, cpT)) break;
+        var ov = fit(w, L, cpT, tn > 1 ? .1 : .45);
+        if (!ov || (tn && ov < 2)) break;
       }
       root.style.setProperty('--ms-oy', ((FO[1] + 30 * base) / h * 100).toFixed(1) + '%');
     }"""),

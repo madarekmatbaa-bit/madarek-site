@@ -84,14 +84,14 @@ html[dir=ltr] .home .mdk-story .ms-ch p{font-size:clamp(15px,1.2vw,18px)}
 @media (max-width:1024px){.home .mdk-story{margin-top:-65px}}
 /* عالموبايل والتابلت الواقف (عمار 14 ت2: «داخل ببعضها»): الكلام فوق بالنص والعلبة تحته. مكان العلبة وحجمها بينحسبوا بسكربت الفيلم
    من ارتفاع الكلام والشريط السفلي، حتى ما يدخلوا ببعض على أي مقاس. نفس الشرط مكتوب بالسكربت (matchMedia)، فإذا تغيّر هون بيتغيّر هناك.
-   الموبايل المقلوب (عريض وارتفاعه لحد 520) مو من هون: ما فيه ارتفاع للكلام فوق العلبة، وإله ترتيبه تحت. (520.02 مو 521 حتى ما يضل
-   ارتفاع بكسور، متل 520.5 مع تكبير المتصفح، برّات الترتيبين.)
+   الموبايل المقلوب (عريض وارتفاعه لحد 520) مو من هون: ما فيه ارتفاع للكلام فوق العلبة، وإله ترتيبه تحت. ومتله النافذة الواقفة
+   الأقصر من 400 (تقسيم الشاشة). (520.02 مو 521 حتى ما يضل ارتفاع بكسور، متل 520.5 مع تكبير المتصفح، برّات الترتيبين.)
    روابط الأقسام وأزرار آخر الفيلم ما بتظهر هون لأنها موجودة ببطاقات الأقسام بعد الفيلم وبالشريط السفلي. */
 @media (max-width:1279px){
   .home .mdk-story .ms-copy{width:min(520px,42vw)}
   .home .mdk-story .ms-cats{display:none}
 }
-@media (max-width:1024px) and (orientation:portrait),(max-width:767px) and (min-height:520.02px){
+@media (max-width:1024px) and (orientation:portrait) and (min-height:400.02px),(max-width:767px) and (min-height:520.02px){
   .home .mdk-story{height:460vh}
   .home .mdk-story .ms-bg{background:radial-gradient(96% 44% at 50% var(--ms-oy,68%),#1F4488 0%,#12326E 28%,#0B2049 58%,#07132C 100%)}
   .home .mdk-story .ms-world{top:0}
@@ -163,7 +163,7 @@ html[dir=ltr] .home .mdk-story .ms-ch p{font-size:clamp(15px,1.2vw,18px)}
    وكله بين القائمة فوق والشريط السفلي تحت. القواعد هون بترجّع ترتيب الكمبيوتر فوق قواعد الموبايل يلي بالفيلم نفسه (لحد 767).
    ms-xs بيحطه سكربت الفيلم من ارتفاع الشاشة الثابت (لحد 350)، مو من media، حتى ما يتغيّر الخط لما يختفي شريط العنوان بالنزول.
    وارتفاع الخط على svh (الارتفاع الثابت نفسه) لنفس السبب، وvh قبله للمتصفحات يلي ما بتعرف svh */
-@media (max-width:1024px) and (orientation:landscape) and (max-height:520px){
+@media (max-width:1024px) and (orientation:landscape) and (max-height:520px),(max-width:1024px) and (max-height:400px){
   .home .mdk-story .ms-bg{background:radial-gradient(62% 80% at 29% 47%,#1B3D7D 0%,#11306A 26%,#0B2049 54%,#07132C 100%)}
   .home .mdk-story .ms-world{top:46%}
   .home .mdk-story .ms-copy{left:auto;right:20px;top:calc(50% - 4px);height:0;width:46vw;text-align:start}
@@ -190,6 +190,8 @@ html[dir=ltr] .home .mdk-story .ms-ch p{font-size:clamp(15px,1.2vw,18px)}
   /* وإذا لسا الكلام أطول من المكان بين القائمة والشريط (السكربت بيقيس وبيحط ms-xxs): العنوان والأزرار بأول شاشة،
      وآخر شاشة بلا أزرارها لأنها نفسها بالشريط السفلي */
   .home .mdk-story.ms-xxs .ms-ch-hero p,.home .mdk-story.ms-xxs .ms-ch:not(.ms-ch-hero) .ms-cta{display:none}
+  /* ونافذة أصغر من هيك (تقسيم الشاشة، ms-x3): العناوين بس */
+  .home .mdk-story.ms-x3 .ms-ch p,.home .mdk-story.ms-x3 .ms-cta,.home .mdk-story.ms-x3 .ms-stats{display:none}
 }
 /* التابلت المقلوب (عرضه من 768 لـ 1024 وارتفاعه فوق 520؛ الأضيق من هيك بياخد ترتيب الموبايل فوق): الشريط السفلي ظاهر هون كمان، فالكلام بيتوسّط بين القائمة والشريط
    (عالكمبيوتر نازل 28 تحت النص لأنه ما في شريط)، والأرقام التلاتة بسطر واحد، والمسافات والأزرار أصغر شوي حتى ما يوصل شي لتحت الشريط */

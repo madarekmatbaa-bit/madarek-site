@@ -6,7 +6,8 @@
 //   node tools/qa/hero_fit.js <base url> [languages: ar,en,tr] [sizes: 412x748,1440x900]
 // Sizes are what the browser really shows with its bars: small and common phones (360x530 is a small phone inside an
 // app's own browser), an unfolded phone, phones on their side (a 360 px wide Android phone turned over shows about 280 px
-// of page under its two bars), a narrow short window (split screen), tablets both ways, laptops, desktop.
+// of page under its two bars), narrow short windows (split screen, upright and on its side), tablets both ways, laptops,
+// desktop.
 // At each size the film is stepped from start to end; every point inside the visible text is hit-tested against the scene.
 // Wherever the bottom bar shows (up to 1024 px wide) the scene and the text must also stay above it (Ammar 14 Nov, again
 // from his phone: «فايت ببعضه»; 15 Nov, about phones on their side and the smallest phone: «حلها»). Shadows on the floor
@@ -15,7 +16,7 @@ const { chromium } = require('playwright');
 const base = process.argv[2] || 'http://127.0.0.1:8765';
 const LANGS = (process.argv[3] || 'ar,en,tr').split(',').map(l => l === 'ar' ? '' : l);
 const SIZES = process.argv[4] ? process.argv[4].split(',').map(s => s.split('x').map(Number)) : [[320, 480], [360, 530], [360, 560], [360, 640], [375, 553],
-  [390, 664], [393, 760], [412, 748], [430, 780], [480, 320], [640, 280], [667, 375], [750, 340], [780, 280], [915, 356], [673, 700], [768, 900], [820, 1180], [960, 540],
+  [390, 664], [393, 760], [412, 430], [412, 748], [430, 780], [412, 250], [480, 320], [640, 280], [667, 375], [750, 340], [780, 280], [915, 356], [673, 700], [768, 900], [820, 1180], [960, 540],
   [1024, 650], [1180, 720], [1280, 600], [1366, 650], [1440, 790], [1536, 730], [1920, 950]];
 // .08 and .11 are where the lid slides out while the next chapter's text comes in; .91 to .945 are where the bag comes in
 // (it used to pass behind the bottom bar there, between two of the older steps)
