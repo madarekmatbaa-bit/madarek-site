@@ -12,7 +12,8 @@ const LANGS = (process.argv[3] || 'ar,en,tr').split(',').map(l => l === 'ar' ? '
 const SIZES = process.argv[4] ? process.argv[4].split(',').map(s => s.split('x').map(Number)) : [[320, 480], [360, 560], [360, 640], [375, 553],
   [390, 664], [393, 760], [412, 748], [430, 780], [768, 900], [820, 1180], [1024, 650], [1180, 720], [1280, 600], [1366, 650], [1440, 790], [1536, 730],
   [1920, 950]];
-const STEPS = [0, .02, .04, .06, .1, .14, .2, .3, .4, .5, .56, .62, .66, .7, .72, .74, .78, .84, .9, .96, 1];
+// .08 and .11 are where the lid slides out while the next chapter's text comes in
+const STEPS = [0, .02, .04, .06, .08, .1, .11, .14, .2, .3, .4, .5, .56, .62, .66, .7, .72, .74, .78, .84, .9, .96, 1];
 (async () => {
   const b = await chromium.launch(); const bad = []; let n = 0;
   for (const lang of LANGS) {

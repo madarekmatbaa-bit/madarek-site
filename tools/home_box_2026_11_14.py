@@ -14,6 +14,18 @@ The second pass («طوره اكثر») keeps the same box and its sizes and wor
   - the bag is plain white with the logo and blue handles, without the wave band, like the box.
 The first moments (the lid settling, the light crossing it) are CSS in assets/css/home.css.
 
+Then, the same evening, from his phone at the «افتح العلبة» chapter: «فايت ببعضه شوف». The lid used to be put down beside
+the base. Since the lid became as tall as the box it cut into the base there, and on a phone the screen edge cut the lid.
+Now the lid lifts straight up until it clears the base, slides out of the screen to the left, and comes back the same way
+to close the box. It is never put down, so it has nothing to cut into, and it only tilts once it is above the base.
+The other things in the film that went through something are settled the same way:
+  - the empty base used to sink under the floor before the pieces are laid out, and the bag used to rise from under it;
+    on a phone both showed behind the bottom bar. They slide in and out on the left like the lid;
+  - the paper cup used to fly in and out through the pile of pieces, half see-through. It appears and goes where it stands.
+Left on the screen means back and to the left on the floor (x and y together): along x alone a piece would also drift down
+the screen and pass behind the phone's bottom bar. A piece that is off the screen is switched off (visibility), so a very
+wide screen does not show it waiting at the edge.
+
     python3 tools/home_box_2026_11_14.py
 
 It rewrites the block that builds the box inside the film's script (content/pages-raw.json, the home page, first part) and
@@ -103,18 +115,38 @@ BAG_FRONT_OLD = """holes + bwaves +
 BAG_FRONT = """holes +
     '<img decoding="async" src="' + A + 'wm_navy.webp" style="position:absolute;left:50%;top:50%;width:44%;transform:translate(-50%,-50%);opacity:.96" alt=""></div>'"""
 
-# Lines outside the block, as (what was there, what is there now). The first six are from the first pass (the lid became as
-# tall as the box, so where it rests, how high it lifts and the middle the box turns around all moved).
+# The lid's path (see the note at the top): straight up, out to the left, back, straight down.
+LID_PATH = """  K.lid = fill([[0, { x: 0, y: 0, z: LIP, rz: 0, rx: 0 }], [.07, { x: 0, y: 0, z: 150, rz: 0, rx: 0 }], [.14, { x: -1240, y: -835, z: 215, rz: -12, rx: -5 }],
+    [.82, { x: -1240, y: -835, z: 230, rz: -12, rx: -5 }], [.88, { x: 0, y: 0, z: 170, rz: 0, rx: 0 }], [.915, { x: 0, y: 0, z: LIP, rz: 0, rx: 0 }], [1, { x: 0, y: 0, z: LIP, rz: 0, rx: 0 }]]);
+"""
+BASE_PATH = """  K.box = fill([[0, { x: 0, y: 0, z: 0 }], [.45, { x: 0, y: 0, z: 0 }], [.56, { x: -1240, y: -835, z: 0 }], [.76, { x: -1240, y: -835, z: 0 }], [.84, { x: 0, y: 0, z: 0 }], [1, { x: 0, y: 0, z: 0, rz: 0 }]]);
+"""
+CUP_PATH = """  K.cup = fill([[0, { x: -395, y: 165, z: 50, o: 0 }], [.53, { x: -395, y: 165, z: 50, o: 0 }], [.62, { x: -395, y: 165, z: 0, o: 1 }], [.76, { x: -395, y: 165, z: 0, o: 1 }],
+    [.81, { x: -395, y: 165, z: 30, o: 0 }], [1, { x: -395, y: 165, z: 30, o: 0 }]]);
+"""
+BAG_PATH = """  K.bag = fill([[0, { x: -1240, y: -835, z: 0 }], [.3, { x: -1240, y: -835, z: 0 }], [.56, { x: 0, y: 0, z: 0 }], [1, { x: 0, y: 0, z: 0 }]]);
+"""
+# In the frame: the lid, the base and the bag are switched off while they are off the screen, the lid's own shadow shows
+# only while it sits on the box, and the foil of the logo moves with the film (three passes of light from start to end).
+FRAME = """css(lid, 'visibility', p > .145 && p < .815 ? 'hidden' : 'visible');
+    css(box, 'visibility', p > .565 && p < .755 ? 'hidden' : 'visible');
+    css(bag, 'visibility', q < .29 ? 'hidden' : 'visible');
+    css(boxSh, 'opacity', fadeG.toFixed(3)); css(lidSh, 'opacity', (fadeG * (1 - clamp((sample(K.lid, p, 'z') - LIP) / 40, 0, 1))).toFixed(3));
+    css(foil, 'backgroundPosition', ((pp * 450) % 150).toFixed(1) + '% 0');
+    """
+# Whole statements, found by where they start and end, so the tool gives the same result from any earlier version.
+SETS = [
+    (r"  K\.lid = fill\(\[.*?\]\]\);\n", LID_PATH),
+    (r"  K\.box = fill\(\[.*?\]\]\);\n", BASE_PATH),
+    (r"  K\.cup = fill\(\[.*?\]\]\);\n", CUP_PATH),
+    (r"  K\.bag = fill\(\[.*?\]\]\);\n", BAG_PATH),
+    (r"(?:var lidO = [^\n]*\n\s*lidFaces[^\n]*\n\s*|css\(lid, 'visibility'[^\n]*\n\s*css\(box, 'visibility'[^\n]*\n\s*css\(bag, 'visibility'[^\n]*\n\s*)?css\(boxSh, 'opacity'.*?(?=css\(world,)", FRAME),
+]
+# Single lines, as (what was there, what is there now).
 EDITS = [
-    ("K.lid = fill([[0, { x: 0, y: 0, z: BH, rz: 0, rx: 0 }]", "K.lid = fill([[0, { x: 0, y: 0, z: LIP, rz: 0, rx: 0 }]"),
-    ("[.93, { x: 0, y: 0, z: BH, rz: 0, rx: 0 }], [1, { x: 0, y: 0, z: BH, rz: 0, rx: 0 }]]);", "[.93, { x: 0, y: 0, z: LIP, rz: 0, rx: 0 }], [1, { x: 0, y: 0, z: LIP, rz: 0, rx: 0 }]]);"),
+    # the lid is as tall as the box, so the middle the box turns around when it stands up moved
     ("K.grp = fill([[0, { z: 72, rx: 0 }], [.04, { z: 72, rx: 0 }],", "K.grp = fill([[0, { z: MID, rx: 0 }], [.04, { z: MID, rx: 0 }],"),
-    ("[.08, { x: -40, y: -10, z: 330, rz: -6, rx: -8 }]", "[.08, { x: -40, y: -10, z: 250, rz: -6, rx: -8 }]"),
-    ("[.86, { x: -80, y: -20, z: 360, rz: -6, rx: -6 }]", "[.86, { x: -80, y: -20, z: 270, rz: -6, rx: -6 }]"),
     ("ga.toFixed(2) + 'deg) translate3d(0,0,-72px)');", "ga.toFixed(2) + 'deg) translate3d(0,0,' + (-MID) + 'px)');"),
-    # the foil of the logo moves with the film: three passes of light from the first frame to the last
-    ("css(boxSh, 'opacity', fadeG.toFixed(3)); css(lidSh, 'opacity', fadeG.toFixed(3));\n    css(world,",
-     "css(boxSh, 'opacity', fadeG.toFixed(3)); css(lidSh, 'opacity', fadeG.toFixed(3));\n    css(foil, 'backgroundPosition', ((pp * 450) % 150).toFixed(1) + '% 0');\n    css(world,"),
     # the box stands up with its lid to the viewer, so the logo shows before it goes into the bag
     ("[.32, { z: 690, rx: 90 }], [.5, { z: 690, rx: 90 }], [.82, { z: 213, rx: 90 }], [1, { z: 213, rx: 90 }]]);",
      "[.32, { z: 690, rx: -90 }], [.5, { z: 690, rx: -90 }], [.82, { z: 213, rx: -90 }], [1, { z: 213, rx: -90 }]]);"),
@@ -131,6 +163,10 @@ def box_edit(h):
     if not tex:
         raise SystemExit('the paper texture line of the box was not found')
     h = h[:a] + NEW_BLOCK.replace('  __TEX__\n', tex.group(0)) + h[b:]
+    for pattern, statement in SETS:
+        h, n = re.subn(pattern, lambda m: statement, h, count=1, flags=re.S)
+        if n != 1:
+            raise SystemExit('a statement the box depends on was not found: ' + pattern[:40])
     for old, new in EDITS:
         if new and h.count(new) == 1:
             continue  # already there

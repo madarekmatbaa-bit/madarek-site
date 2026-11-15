@@ -691,7 +691,7 @@ STORY_EDITS = [
      # the scene is smaller and stands further from the text
      "else { var tight = (w < 1280 ? 1 : 0) + (document.documentElement.dir === 'ltr' ? 1 : 0); "
      "base = Math.min(w / 1380, h / 800) * [1, .84, .72][tight]; offX = -w * [.15, .2, .23][tight]; }"),
-    ('var mobile = false, base = 1, offX = 0;', 'var mobile = false, base = 1, offX = 0, oyH = 0, oyF = 0;'),
+    ('var mobile = false, base = 1, offX = 0;', 'var mobile = false, base = 1, offX = 0, oyH = 0, oyF = 0, upL = 0;'),
     ('mobile = w < 768;', "mobile = window.matchMedia('(max-width:767px),(max-width:1024px) and (orientation:portrait)').matches;"),
     ('if (mobile) { base = Math.min(w / 860, h / 1300); offX = 0; }',
      """if (mobile) {
@@ -702,16 +702,28 @@ STORY_EDITS = [
       base = clamp((L - bh) / 545, w / 1250, w / 860); offX = 0;
       oyH = bh + 250 * base;
       oyF = Math.max(bf + 300 * base, Math.min(h * .66, L - 240 * base));
+      upL = Math.min(70, (oyF - bf) * .28);
       root.style.setProperty('--ms-oy', ((oyF + 30 * base) / h * 100).toFixed(1) + '%');
     }"""),
+    # stacked: the scene moves from under the opening text to its place for the film. While the pieces are laid out side by
+    # side (laid = 1) they reach both edges of a phone and sit low, so they are drawn a little smaller and upL higher
     ("css(world, 'transform', 'translate(' + offX.toFixed(1) + 'px,' + cy.toFixed(1) + 'px) scale('",
-     "if (mobile) cy += oyH + (oyF - oyH) * ease(clamp(p / .1, 0, 1));\n"
+     "if (mobile) { var laid = ease(clamp((p - .45) / .11, 0, 1)) - ease(clamp((p - .76) / .1, 0, 1)), zz = 1 - .07 * laid; "
+     "cs *= zz; cy = cy * zz + oyH + (oyF - oyH) * ease(clamp(p / .1, 0, 1)) - laid * upL; }\n"
      "    css(world, 'transform', 'translate(' + offX.toFixed(1) + 'px,' + cy.toFixed(1) + 'px) scale('"),
     # stacked: the opening text leaves before the lid lifts, and the last chapter waits until the lid is back
     ('var CH = [[-1, 0, .08, .12], [.12, .15, .28, .31], [.32, .35, .48, .51], [.54, .57, .74, .77], [.8, .84, 2, 2]];',
      'var CH = [[-1, 0, .08, .12], [.12, .15, .28, .31], [.32, .35, .48, .51], [.54, .57, .74, .77], [.8, .84, 2, 2]];\n'
-     '  var CHM = [[-1, 0, .008, .034], [.12, .15, .28, .31], [.32, .35, .48, .51], [.54, .57, .74, .77], [.88, .92, 2, 2]];'),
+     '  var CHM = [[-1, 0, .008, .034], [.12, .15, .28, .31], [.32, .35, .48, .51], [.54, .57, .74, .77], [.9, .94, 2, 2]];'),
     ('var w = CH[i], o;', 'var w = (mobile ? CHM : CH)[i], o;'),
+    # stacked: the opening text leaves upward. Every chapter drifts 24 px down as it fades, and under the opening text is
+    # the box: on the smallest phone in Turkish the fading buttons came down onto the lid as it began to lift
+    ("css(c, 'transform', 'translateY(' + ((1 - o) * 24).toFixed(1) + 'px)');",
+     "css(c, 'transform', 'translateY(' + ((1 - o) * (mobile && i === 0 ? -14 : 24)).toFixed(1) + 'px)');"),
+    # stacked: the name tags over the laid-out pieces come out about 5 px tall on a phone, too small to read, and the
+    # chapter's own text already gives the paper weights. They stay for the side-by-side film
+    ("var labO = p < LAB[0] || p > LAB[3] ? 0 : p < LAB[1] ? (p - LAB[0]) / (LAB[1] - LAB[0]) : p > LAB[2] ? 1 - (p - LAB[2]) / (LAB[3] - LAB[2]) : 1;",
+     "var labO = mobile || p < LAB[0] || p > LAB[3] ? 0 : p < LAB[1] ? (p - LAB[0]) / (LAB[1] - LAB[0]) : p > LAB[2] ? 1 - (p - LAB[2]) / (LAB[3] - LAB[2]) : 1;"),
     # text sizes settle once the font is in and the bottom bar exists, so the scene is placed again then
     ("window.addEventListener('load', function () { cache(); onScroll(); });",
      "window.addEventListener('load', function () { layout(); cache(); onScroll(); render(cur, true); });\n"
