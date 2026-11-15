@@ -214,8 +214,12 @@ def seo_paged(seo, base_path, page, pages):
 def strip_js_notes(js):
     """Working notes stay in the source and are not sent to visitors: // comments that fill a line, and /* */ blocks that
     stand on their own lines. A comment after code on the same line stays, since cutting those safely needs a parser.
-    (The CSS is minified, so its notes never shipped; the scripts did, with who asked for what and when.)"""
-    js = re.sub(r'^[ \t]*/\*(?:(?!\*/).)*\*/[ \t]*\n', '', js, flags=re.S | re.M)
+    (The CSS is minified, so its notes never shipped; the scripts did, with who asked for what and when.)
+    It works line by line, so it stops the build on a template literal (a line inside one could start like a comment),
+    and it keeps /*! blocks, the form licence notices take."""
+    if '`' in js:
+        raise SystemExit('strip_js_notes: a template literal in a shipped script; teach the stripper to skip it first')
+    js = re.sub(r'^[ \t]*/\*(?!!)(?:(?!\*/).)*\*/[ \t]*\n', '', js, flags=re.S | re.M)
     return re.sub(r'^[ \t]*//[^\n]*\n', '', js, flags=re.M)
 
 
@@ -700,9 +704,11 @@ STORY_EDITS = [
      "else { var tight = (w < 1280 ? 1 : 0) + (document.documentElement.dir === 'ltr' ? 1 : 0); "
      "base = Math.min(w / 1380, h / 800) * [1, .84, .72][tight]; offX = -w * [.15, .2, .23][tight]; "
      # up to 1024 px wide the bottom bar is on screen in this layout too (a tablet on its side). The lowest the scene goes
-     # is the bag coming in, about 395 px under the scene's origin (56% down the screen) at size 1: it must end above the bar
-     "var lbs = document.querySelector('.mdk-lbar'); if (lbs && getComputedStyle(lbs).display !== 'none') "
-     "base = Math.min(base, (lbs.getBoundingClientRect().top - (window.innerHeight - h) - 6 - .56 * h) / 395); }"),
+     # is the bag coming in, about 415 px under the scene's origin (56% down the screen) at size 1: it must end above the bar
+     # (the bar is built by the deferred script: until it exists its place is taken as 72 px from the bottom, where the
+     # CSS puts it, so the scene does not change size a second after it is first drawn)
+     "var lbs = document.querySelector('.mdk-lbar'), bt = lbs ? (getComputedStyle(lbs).display !== 'none' ? lbs.getBoundingClientRect().top - (window.innerHeight - h) : 0) : (w <= 1024 ? h - 72 : 0); "
+     "if (bt) base = Math.min(base, (bt - 6 - .56 * h) / 415); }"),
     # Stacked (phones and upright tablets): each part of the film is sized and placed from what it measures on this screen,
     # between the bottom of that part's text and the bottom bar (Ammar 14 Nov, from his phone: «فايت ببعضه»). One size and
     # one place for the whole film left the scene small under a wide empty band, and let the bag and, in Turkish, the
@@ -711,7 +717,7 @@ STORY_EDITS = [
     # for each (1 + q after the film's own end). Floor shadows and the lid are not measured: the lid is away in the
     # middle parts, closed it adds a few px that the spare 6 px cover, and in the first second it is still settling.
     ('var mobile = false, base = 1, offX = 0;',
-     '''var mobile = false, base = 1, offX = 0, FZ = [1, 1, 1, 1, 1, 1], FO = [0, 0, 0, 0, 0, 0], meas = 0, mZ = 1, mO = 0;
+     '''var mobile = false, base = 1, offX = 0, FZ = [1, 1, 1, 1, 1, 1], FO = [0, 0, 0, 0, 0, 0], meas = 0, mZ = 1, mO = 0, fitKey = '';
   var POSE = [[0], [.3], [.7], [.96], [1.32, 1.4, 1.45, 1.5, 1.56], [1.84, 2]], PARTS = [];
   [box, bag].forEach(function (g) { [].forEach.call(g.children, function (e) { if (e !== boxSh && e !== bagSh) { e._own = g; PARTS.push(e); } }); });
   Object.keys(ITEMS).forEach(function (k) { ITEMS[k].el._own = ITEMS[k].el; PARTS.push(ITEMS[k].el); });
@@ -728,15 +734,19 @@ STORY_EDITS = [
   }
   function fit(w, L, cpT) {
     var TH = [chs[0].offsetHeight + 6, Math.max(chs[1].offsetHeight, chs[2].offsetHeight), chs[3].offsetHeight, chs[4].offsetHeight, chs[4].offsetHeight, chs[4].offsetHeight];
-    meas = 1;
+    var key = [w, L, cpT, base].concat(TH).join();
+    if (key === fitKey) return;   // the page is laid out again when the fonts and the pictures are in: mostly nothing has moved
+    fitKey = key; meas = 1;
     POSE.forEach(function (ps, k) {
       var T = cpT + TH[k] + 18, z = 1, o = (T + L) / 2;
       for (var pass = 0; pass < 2; pass++) {
-        mZ = z; mO = o; var t = 1e9, b = -1e9, hw = 1;
+        mZ = z; mO = o; var t = 1e9, b = -1e9, hw = 1, z0 = z;
         ps.forEach(function (v) { var s = span(v); t = Math.min(t, s[0]); b = Math.max(b, s[1]); hw = Math.max(hw, s[2]); });
         var U = (o - t) / z + 6, D = (b - o) / z + 6;
-        z = clamp(Math.min((L - T) / (U + D), k < 4 ? (w / 2 - 8) * z / hw : 9), .7, k === 0 ? 1.12 : k === 2 ? 1.1 : 1.3);   // the bag slides in from the side, so its width is not a limit
+        // down to .45: a small scene clear of the text and the bar reads better than a larger one under either
+        z = clamp(Math.min((L - T) / (U + D), k < 4 ? (w / 2 - 8) * z / hw : 9), .45, k === 0 ? 1.12 : k === 2 ? 1.1 : 1.3);   // the bag slides in from the side, so its width is not a limit
         o = T + U * z + Math.max(0, L - T - (U + D) * z) / 2;
+        if (Math.abs(z / z0 - 1) < .08) break;   // a second look only when the size moved enough for the perspective to matter
       }
       FZ[k] = z; FO[k] = o;
     });
