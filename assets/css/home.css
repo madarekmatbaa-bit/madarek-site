@@ -114,8 +114,8 @@ html[dir=ltr] .home .mdk-story .ms-ch p{font-size:clamp(15px,1.2vw,18px)}
   .home .mdk-story .ms-stats div{align-items:center}
   .home .mdk-story .ms-stats b{font-size:28px;text-align:center}
   .home .mdk-story .ms-hint{display:none}
-  /* التابلت الواقف: نفس الترتيب بخط أكبر. الشاشة العريضة والواطية (موبايل مفتوح، نافذة صغيرة: الصنف ms-low من السكربت) بتضل
-     على خط الموبايل، لأن الخط الكبير هناك ما بيترك مكان للعلبة فوق الشريط السفلي */
+  /* التابلت الواقف: نفس الترتيب بخط أكبر. الشاشة العريضة والواطية (موبايل مفتوح، نافذة صغيرة: الصنف ms-low من السكربت، من 640 لـ 739 بكسل ارتفاع) بتضل
+     على خط الموبايل، لأن الخط الكبير هناك ما بيترك مكان للعلبة فوق الشريط السفلي. الأوطى من 640 (موبايل مقلوب) إلها ms-short وبتضل متل ما كانت */
   @media (min-width:600px){
     .home .mdk-story:not(.ms-low) .ms-copy{top:112px}
     .home .mdk-story:not(.ms-low) .ms-ch h1{font-size:clamp(40px,6.6vw,58px)}

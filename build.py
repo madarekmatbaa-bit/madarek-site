@@ -757,7 +757,7 @@ STORY_EDITS = [
     ('if (mobile) { base = Math.min(w / 860, h / 1300); offX = 0; }',
      """if (mobile) {
       root.classList.toggle('ms-short', h < 640);
-      root.classList.toggle('ms-low', h < 740);
+      root.classList.toggle('ms-low', h >= 640 && h < 740);
       var cpT = root.querySelector('.ms-copy').offsetTop, lb = document.querySelector('.mdk-lbar');
       var L = h - (lb ? window.innerHeight - lb.getBoundingClientRect().top + 12 : 84), bh = cpT + chs[0].offsetHeight + 24;
       base = clamp((L - bh) / 545, w / 1500, w / 860); offX = 0;
