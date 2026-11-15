@@ -211,6 +211,14 @@ def seo_paged(seo, base_path, page, pages):
 
 
 # ---------------------------------------------------------------- assets
+def strip_js_notes(js):
+    """Working notes stay in the source and are not sent to visitors: // comments that fill a line, and /* */ blocks that
+    stand on their own lines. A comment after code on the same line stays, since cutting those safely needs a parser.
+    (The CSS is minified, so its notes never shipped; the scripts did, with who asked for what and when.)"""
+    js = re.sub(r'^[ \t]*/\*(?:(?!\*/).)*\*/[ \t]*\n', '', js, flags=re.S | re.M)
+    return re.sub(r'^[ \t]*//[^\n]*\n', '', js, flags=re.M)
+
+
 def build_assets():
     css_order = ['base.css', 'legacy-theme.css', 'legacy-tidy.css', 'legacy-block.css', 'legacy-shop.css', 'm.css', 'home.css', 'i18n.css', 'dark.css']
     css = '\n'.join(open(os.path.join(ROOT, 'assets/css', f), encoding='utf-8').read() for f in css_order)
@@ -221,7 +229,7 @@ def build_assets():
     shelf = open(os.path.join(ROOT, 'assets/js/legacy-shop.js'), encoding='utf-8').read()
     shelf = shelf.replace('.elementor-element-49de9f4', '.sh-nav').replace('.elementor-element-195c2fd1', '.sh-hero')
     shelf = shelf.replace('"https://www.madarekmatbaa.com/wp-content/', '"/wp-content/')
-    js = js + '\n;/*@shelf*/' + shelf
+    js = strip_js_notes(js) + '\n;/*@shelf*/' + strip_js_notes(shelf)
     names = {}
     for name, body in (('site.css', css), ('site.js', js)):
         h = hashlib.sha1(body.encode()).hexdigest()[:10]
@@ -670,7 +678,7 @@ def home_cats(html):
 
 # The home page as one premium piece (Ammar 14 Nov 2026: «طورها كلها بشكل تصير احترافية حتى فكرة العلبة اذا بدك غيره اعمل
 # دراسة وبدي شغلة فخمه كتير تشبه الشركات الضخمة متل ابل وسامسونج»). The study is in the project docs
-# (claude/site-home-premium-study-2026-11-14.md). What it settled:
+# (the home page study of 14 Nov 2026). What it settled:
 #   - the box stays as the opening, on a dark stage, without the outline lettering behind it, and shorter;
 #   - products come right after it, then the agenda, the ready products, the catalogues, our work, how we work,
 #     where we deliver, the team and the contacts;
@@ -690,27 +698,68 @@ STORY_EDITS = [
      # side by side: on narrow screens, and in English and Turkish (their text starts at the column's edge nearest the scene),
      # the scene is smaller and stands further from the text
      "else { var tight = (w < 1280 ? 1 : 0) + (document.documentElement.dir === 'ltr' ? 1 : 0); "
-     "base = Math.min(w / 1380, h / 800) * [1, .84, .72][tight]; offX = -w * [.15, .2, .23][tight]; }"),
-    ('var mobile = false, base = 1, offX = 0;', 'var mobile = false, base = 1, offX = 0, oyH = 0, oyF = 0, upL = 0;'),
+     "base = Math.min(w / 1380, h / 800) * [1, .84, .72][tight]; offX = -w * [.15, .2, .23][tight]; "
+     # up to 1024 px wide the bottom bar is on screen in this layout too (a tablet on its side). The lowest the scene goes
+     # is the bag coming in, about 395 px under the scene's origin (56% down the screen) at size 1: it must end above the bar
+     "var lbs = document.querySelector('.mdk-lbar'); if (lbs && getComputedStyle(lbs).display !== 'none') "
+     "base = Math.min(base, (lbs.getBoundingClientRect().top - (window.innerHeight - h) - 6 - .56 * h) / 395); }"),
+    # Stacked (phones and upright tablets): each part of the film is sized and placed from what it measures on this screen,
+    # between the bottom of that part's text and the bottom bar (Ammar 14 Nov, from his phone: «فايت ببعضه»). One size and
+    # one place for the whole film left the scene small under a wide empty band, and let the bag and, in Turkish, the
+    # opening box reach under the bar. FZ and FO hold the size and the place for: the opening screen, the open box, the
+    # pieces laid out, the closed box, the box standing over the bag, the box in the bag. POSE lists the moments measured
+    # for each (1 + q after the film's own end). Floor shadows and the lid are not measured: the lid is away in the
+    # middle parts, closed it adds a few px that the spare 6 px cover, and in the first second it is still settling.
+    ('var mobile = false, base = 1, offX = 0;',
+     '''var mobile = false, base = 1, offX = 0, FZ = [1, 1, 1, 1, 1, 1], FO = [0, 0, 0, 0, 0, 0], meas = 0, mZ = 1, mO = 0;
+  var POSE = [[0], [.3], [.7], [.96], [1.32, 1.4, 1.45, 1.5, 1.56], [1.84, 2]], PARTS = [];
+  [box, bag].forEach(function (g) { [].forEach.call(g.children, function (e) { if (e !== boxSh && e !== bagSh) { e._own = g; PARTS.push(e); } }); });
+  Object.keys(ITEMS).forEach(function (k) { ITEMS[k].el._own = ITEMS[k].el; PARTS.push(ITEMS[k].el); });
+  cup._own = cup; PARTS.push(cup);
+  function span(v) {
+    render(v > 1 ? PE + (v - 1) * (1 - PE) : v * PE, true);
+    var s0 = world.parentNode.getBoundingClientRect(), mid = s0.left + s0.width / 2, t = 1e9, b = -1e9, hw = 1;
+    PARTS.forEach(function (e) {
+      if (e._own._visibility === 'hidden' || e._own._opacity === '0.000') return;
+      var r = e.getBoundingClientRect(); if (r.width < 2 || r.right < s0.left + 4 || r.left > s0.right - 4) return;   // off the screen
+      t = Math.min(t, r.top - s0.top); b = Math.max(b, r.bottom - s0.top); hw = Math.max(hw, mid - r.left, r.right - mid);
+    });
+    return [t, b, hw];
+  }
+  function fit(w, L, cpT) {
+    var TH = [chs[0].offsetHeight + 6, Math.max(chs[1].offsetHeight, chs[2].offsetHeight), chs[3].offsetHeight, chs[4].offsetHeight, chs[4].offsetHeight, chs[4].offsetHeight];
+    meas = 1;
+    POSE.forEach(function (ps, k) {
+      var T = cpT + TH[k] + 18, z = 1, o = (T + L) / 2;
+      for (var pass = 0; pass < 2; pass++) {
+        mZ = z; mO = o; var t = 1e9, b = -1e9, hw = 1;
+        ps.forEach(function (v) { var s = span(v); t = Math.min(t, s[0]); b = Math.max(b, s[1]); hw = Math.max(hw, s[2]); });
+        var U = (o - t) / z + 6, D = (b - o) / z + 6;
+        z = clamp(Math.min((L - T) / (U + D), k < 4 ? (w / 2 - 8) * z / hw : 9), .7, k === 0 ? 1.12 : k === 2 ? 1.1 : 1.3);   // the bag slides in from the side, so its width is not a limit
+        o = T + U * z + Math.max(0, L - T - (U + D) * z) / 2;
+      }
+      FZ[k] = z; FO[k] = o;
+    });
+    meas = 0;
+  }'''),
     ('mobile = w < 768;', "mobile = window.matchMedia('(max-width:767px),(max-width:1024px) and (orientation:portrait)').matches;"),
     ('if (mobile) { base = Math.min(w / 860, h / 1300); offX = 0; }',
      """if (mobile) {
       root.classList.toggle('ms-short', h < 640);
-      var cpT = root.querySelector('.ms-copy').offsetTop, hh = chs[0].offsetHeight, fh = 0, lb = document.querySelector('.mdk-lbar');
-      for (var ci = 1; ci < chs.length; ci++) fh = Math.max(fh, chs[ci].offsetHeight);
-      var L = h - (lb ? window.innerHeight - lb.getBoundingClientRect().top + 12 : 84), bh = cpT + hh + 24, bf = cpT + fh + 18;
-      base = clamp((L - bh) / 545, w / 1250, w / 860); offX = 0;
-      oyH = bh + 250 * base;
-      oyF = Math.max(bf + 300 * base, Math.min(h * .66, L - 240 * base));
-      upL = Math.min(70, (oyF - bf) * .28);
-      root.style.setProperty('--ms-oy', ((oyF + 30 * base) / h * 100).toFixed(1) + '%');
+      var cpT = root.querySelector('.ms-copy').offsetTop, lb = document.querySelector('.mdk-lbar');
+      var L = h - (lb ? window.innerHeight - lb.getBoundingClientRect().top + 12 : 84), bh = cpT + chs[0].offsetHeight + 24;
+      base = clamp((L - bh) / 545, w / 1500, w / 860); offX = 0;
+      fit(w, L, cpT);
+      root.style.setProperty('--ms-oy', ((FO[1] + 30 * base) / h * 100).toFixed(1) + '%');
     }"""),
-    # stacked: the scene moves from under the opening text to its place for the film. While the pieces are laid out side by
-    # side (laid = 1) they reach both edges of a phone and sit low, so they are drawn a little smaller and upL higher
+    # stacked: the size and the place move from one part's fit to the next as the film goes (while measuring, the one being tried)
     ("css(world, 'transform', 'translate(' + offX.toFixed(1) + 'px,' + cy.toFixed(1) + 'px) scale('",
-     "if (mobile) { var laid = ease(clamp((p - .45) / .11, 0, 1)) - ease(clamp((p - .76) / .1, 0, 1)), zz = 1 - .07 * laid; "
-     "cs *= zz; cy = cy * zz + oyH + (oyF - oyH) * ease(clamp(p / .1, 0, 1)) - laid * upL; }\n"
+     "if (mobile) { var zz = mZ, oy = mO; if (!meas) { var W = [ease(clamp(p / .1, 0, 1)), ease(clamp((p - .45) / .11, 0, 1)), ease(clamp((p - .76) / .1, 0, 1)), "
+     "ease(clamp(q / .3, 0, 1)), ease(clamp((q - .56) / .28, 0, 1))]; zz = FZ[0]; oy = FO[0]; "
+     "for (var wi = 0; wi < 5; wi++) { zz += (FZ[wi + 1] - FZ[wi]) * W[wi]; oy += (FO[wi + 1] - FO[wi]) * W[wi]; } } cs *= zz; cy = cy * zz + oy; }\n"
      "    css(world, 'transform', 'translate(' + offX.toFixed(1) + 'px,' + cy.toFixed(1) + 'px) scale('"),
+    # measuring places the pieces only: the text, the dark stage and the hint keep the state of the real frame
+    ('    // copy chapters\n', '    if (meas) return;\n    // copy chapters\n'),
     # stacked: the opening text leaves before the lid lifts, and the last chapter waits until the lid is back
     ('var CH = [[-1, 0, .08, .12], [.12, .15, .28, .31], [.32, .35, .48, .51], [.54, .57, .74, .77], [.8, .84, 2, 2]];',
      'var CH = [[-1, 0, .08, .12], [.12, .15, .28, .31], [.32, .35, .48, .51], [.54, .57, .74, .77], [.8, .84, 2, 2]];\n'
@@ -740,6 +789,10 @@ def home_story(html):
         if html.count(old) != 1:
             raise SystemExit('home: the opening film changed, so its staging has no place: ' + old[:70])
         html = html.replace(old, new, 1)
+    # the film's working notes stay here (after the edits above, which find their place by some of those notes)
+    html, n = re.subn(r'(<script>)(.*?)(</script>)', lambda m: m.group(1) + strip_js_notes(m.group(2)) + m.group(3), html, count=1, flags=re.S)
+    if not n:
+        raise SystemExit('home: the opening film has no script')
     # «350 غ» stays on one line (the translation memory reads any white space as one space, so the key is the same)
     return re.sub(r'(?<=\d) (?=غ[ ،.])', '\u00a0', html)
 

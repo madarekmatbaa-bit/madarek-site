@@ -6,6 +6,9 @@
 //   node tools/qa/hero_fit.js <base url> [languages: ar,en,tr] [sizes: 412x748,1440x900]
 // Sizes are what the browser really shows with its bars: small and common phones, tablets both ways, laptops, desktop.
 // At each size the film is stepped from start to end; every point inside the visible text is hit-tested against the scene.
+// On phones and upright tablets the scene must also stay above the bottom bar (Ammar 14 Nov, again from his phone: «فايت
+// ببعضه»). Shadows on the floor do not count. Screens under 640 px tall are left out of this one: there the last chapter's
+// text leaves less room than the smallest scene needs, and the bar covers the foot of the scene.
 const { chromium } = require('playwright');
 const base = process.argv[2] || 'http://127.0.0.1:8765';
 const LANGS = (process.argv[3] || 'ar,en,tr').split(',').map(l => l === 'ar' ? '' : l);
@@ -36,6 +39,16 @@ const STEPS = [0, .02, .04, .06, .08, .1, .11, .14, .2, .3, .4, .5, .56, .62, .6
             const r = t.getBoundingClientRect(); if (r.height < 2) continue;
             if (r.top < hb - 1) return (t.textContent || '').trim().slice(0, 24) + ' <- under the header';
             if (r.bottom > innerHeight + 1) return (t.textContent || '').trim().slice(0, 24) + ' <- past the bottom of the screen';
+          }
+          // the scene against the bottom bar
+          const bar = document.querySelector('.mdk-lbar');
+          if (bar && innerHeight >= 640 && getComputedStyle(bar).display !== 'none') {
+            const bt = bar.getBoundingClientRect().top;
+            for (const e of world.querySelectorAll('.ms-face,.ms-plane,.ms-label')) {
+              if (['30px', '24px', '40%'].includes(e.style.borderRadius) || e.closest('.ms-gshadow,.sh') || !seen(e)) continue;   // floor shadows
+              const r = e.getBoundingClientRect();
+              if (r.width > 2 && r.right > 2 && r.left < innerWidth - 2 && r.top < bt && r.bottom > bt + 1) return 'the bottom bar <- ' + (e.className || e.tagName) + ' by ' + Math.round(r.bottom - bt) + 'px';
+            }
           }
           for (const t of texts) {
             // where the words really are: each line of text has its own box (a heading's own box is as wide as its column)

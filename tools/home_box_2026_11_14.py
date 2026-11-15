@@ -115,16 +115,18 @@ BAG_FRONT_OLD = """holes + bwaves +
 BAG_FRONT = """holes +
     '<img decoding="async" src="' + A + 'wm_navy.webp" style="position:absolute;left:50%;top:50%;width:44%;transform:translate(-50%,-50%);opacity:.96" alt=""></div>'"""
 
-# The lid's path (see the note at the top): straight up, out to the left, back, straight down.
+# The lid's path (see the note at the top): straight up, out to the left, back, straight down. It comes back 190 above the
+# floor: the pieces are still on their way down into the base then, the highest about 175 up.
 LID_PATH = """  K.lid = fill([[0, { x: 0, y: 0, z: LIP, rz: 0, rx: 0 }], [.07, { x: 0, y: 0, z: 150, rz: 0, rx: 0 }], [.14, { x: -1240, y: -835, z: 215, rz: -12, rx: -5 }],
-    [.82, { x: -1240, y: -835, z: 230, rz: -12, rx: -5 }], [.88, { x: 0, y: 0, z: 170, rz: 0, rx: 0 }], [.915, { x: 0, y: 0, z: LIP, rz: 0, rx: 0 }], [1, { x: 0, y: 0, z: LIP, rz: 0, rx: 0 }]]);
+    [.82, { x: -1240, y: -835, z: 250, rz: -12, rx: -5 }], [.88, { x: 0, y: 0, z: 190, rz: 0, rx: 0 }], [.915, { x: 0, y: 0, z: LIP, rz: 0, rx: 0 }], [1, { x: 0, y: 0, z: LIP, rz: 0, rx: 0 }]]);
 """
 BASE_PATH = """  K.box = fill([[0, { x: 0, y: 0, z: 0 }], [.45, { x: 0, y: 0, z: 0 }], [.56, { x: -1240, y: -835, z: 0 }], [.76, { x: -1240, y: -835, z: 0 }], [.84, { x: 0, y: 0, z: 0 }], [1, { x: 0, y: 0, z: 0, rz: 0 }]]);
 """
 CUP_PATH = """  K.cup = fill([[0, { x: -395, y: 165, z: 50, o: 0 }], [.53, { x: -395, y: 165, z: 50, o: 0 }], [.62, { x: -395, y: 165, z: 0, o: 1 }], [.76, { x: -395, y: 165, z: 0, o: 1 }],
     [.81, { x: -395, y: 165, z: 30, o: 0 }], [1, { x: -395, y: 165, z: 30, o: 0 }]]);
 """
-BAG_PATH = """  K.bag = fill([[0, { x: -1240, y: -835, z: 0 }], [.3, { x: -1240, y: -835, z: 0 }], [.56, { x: 0, y: 0, z: 0 }], [1, { x: 0, y: 0, z: 0 }]]);
+# the camera is turned a little more in the last scene, so level on the screen is a little further back there
+BAG_PATH = """  K.bag = fill([[0, { x: -1240, y: -1078, z: 0 }], [.3, { x: -1240, y: -1078, z: 0 }], [.56, { x: 0, y: 0, z: 0 }], [1, { x: 0, y: 0, z: 0 }]]);
 """
 # In the frame: the lid, the base and the bag are switched off while they are off the screen, the lid's own shadow shows
 # only while it sits on the box, and the foil of the logo moves with the film (three passes of light from start to end).
@@ -140,7 +142,7 @@ SETS = [
     (r"  K\.box = fill\(\[.*?\]\]\);\n", BASE_PATH),
     (r"  K\.cup = fill\(\[.*?\]\]\);\n", CUP_PATH),
     (r"  K\.bag = fill\(\[.*?\]\]\);\n", BAG_PATH),
-    (r"(?:var lidO = [^\n]*\n\s*lidFaces[^\n]*\n\s*|css\(lid, 'visibility'[^\n]*\n\s*css\(box, 'visibility'[^\n]*\n\s*css\(bag, 'visibility'[^\n]*\n\s*)?css\(boxSh, 'opacity'.*?(?=css\(world,)", FRAME),
+    (r"(?:css\(lid, 'visibility'[^\n]*\n\s*css\(box, 'visibility'[^\n]*\n\s*css\(bag, 'visibility'[^\n]*\n\s*)?css\(boxSh, 'opacity'.*?(?=css\(world,)", FRAME),
 ]
 # Single lines, as (what was there, what is there now).
 EDITS = [
