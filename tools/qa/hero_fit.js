@@ -60,8 +60,12 @@ const STEPS = [0, .02, .04, .06, .08, .1, .11, .14, .2, .3, .4, .5, .56, .62, .6
             for (const r of boxes) {
               if (r.width < 2 || r.height < 2 || r.bottom < 0 || r.top > innerHeight) continue;
               for (let y = r.top + 2; y < r.bottom; y += 6) for (let x = r.left + 2; x < r.right; x += 6) {
-                // .prw is the moving window of the print reveal: it has a box where nothing is painted, so only what is inside it counts
-                const under = document.elementsFromPoint(x, y).find(e => world.contains(e) && e !== world && !e.classList.contains('prw') && !e.closest('.ms-gshadow,.sh') && seen(e));
+                // .prw is the moving window of the print reveal: it has a box where nothing is painted, so only what is inside it counts.
+                // A face seen almost edge-on can be reported at a point far outside it (the browser's 3D hit test loses its
+                // footing there: on 320x480 a side of the standing box, 8 px wide and 30 px lower, was reported under the
+                // figures), so a hit counts only when the point is inside the face's own box on screen.
+                const inside = e => { const q = e.getBoundingClientRect(); return x >= q.left - 1 && x <= q.right + 1 && y >= q.top - 1 && y <= q.bottom + 1 };
+                const under = document.elementsFromPoint(x, y).find(e => world.contains(e) && e !== world && !e.classList.contains('prw') && !e.closest('.ms-gshadow,.sh') && seen(e) && inside(e));
                 if (under) return (t.textContent || '').trim().slice(0, 24) + ' <- ' + (under.className || under.tagName);
               }
             }

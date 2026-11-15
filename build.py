@@ -762,9 +762,11 @@ STORY_EDITS = [
       fit(w, L, cpT);
       root.style.setProperty('--ms-oy', ((FO[1] + 30 * base) / h * 100).toFixed(1) + '%');
     }"""),
-    # stacked: the size and the place move from one part's fit to the next as the film goes (while measuring, the one being tried)
+    # stacked: the size and the place move from one part's fit to the next as the film goes (while measuring, the one being tried).
+    # The move away from the opening screen starts at .03, once the opening text has gone: the next part often sits higher,
+    # and moving earlier brought the box up into the fading text (Turkish, 320 px wide)
     ("css(world, 'transform', 'translate(' + offX.toFixed(1) + 'px,' + cy.toFixed(1) + 'px) scale('",
-     "if (mobile) { var zz = mZ, oy = mO; if (!meas) { var W = [ease(clamp(p / .1, 0, 1)), ease(clamp((p - .45) / .11, 0, 1)), ease(clamp((p - .76) / .1, 0, 1)), "
+     "if (mobile) { var zz = mZ, oy = mO; if (!meas) { var W = [ease(clamp((p - .03) / .09, 0, 1)), ease(clamp((p - .45) / .11, 0, 1)), ease(clamp((p - .76) / .1, 0, 1)), "
      "ease(clamp(q / .3, 0, 1)), ease(clamp((q - .56) / .28, 0, 1))]; zz = FZ[0]; oy = FO[0]; "
      "for (var wi = 0; wi < 5; wi++) { zz += (FZ[wi + 1] - FZ[wi]) * W[wi]; oy += (FO[wi + 1] - FO[wi]) * W[wi]; } } cs *= zz; cy = cy * zz + oy; }\n"
      "    css(world, 'transform', 'translate(' + offX.toFixed(1) + 'px,' + cy.toFixed(1) + 'px) scale('"),
