@@ -706,8 +706,9 @@ STORY_EDITS = [
      # up to 1024 px wide the bottom bar is on screen in this layout too (a tablet on its side). The lowest the scene goes
      # is the bag coming in, about 415 px under the scene's origin (56% down the screen) at size 1: it must end above the bar
      # (the bar is built by the deferred script: until it exists its place is taken as 72 px from the bottom, where the
-     # CSS puts it, so the scene does not change size a second after it is first drawn)
-     "var lbs = document.querySelector('.mdk-lbar'), bt = lbs ? (getComputedStyle(lbs).display !== 'none' ? lbs.getBoundingClientRect().top - (window.innerHeight - h) : 0) : (w <= 1024 ? h - 72 : 0); "
+     # CSS puts it, so the scene does not change size a second after it is first drawn. Whether the bar will show is asked
+     # the way the CSS asks it, by the window's width: the section's own width leaves out a desktop scrollbar)
+     "var lbs = document.querySelector('.mdk-lbar'), bt = lbs ? (getComputedStyle(lbs).display !== 'none' ? lbs.getBoundingClientRect().top - (window.innerHeight - h) : 0) : (window.matchMedia('(max-width:1024px)').matches ? h - 72 : 0); "
      "if (bt) base = Math.min(base, (bt - 6 - .56 * h) / 415); }"),
     # Stacked (phones and upright tablets): each part of the film is sized and placed from what it measures on this screen,
     # between the bottom of that part's text and the bottom bar (Ammar 14 Nov, from his phone: «فايت ببعضه»). One size and
@@ -756,6 +757,7 @@ STORY_EDITS = [
     ('if (mobile) { base = Math.min(w / 860, h / 1300); offX = 0; }',
      """if (mobile) {
       root.classList.toggle('ms-short', h < 640);
+      root.classList.toggle('ms-low', h < 740);
       var cpT = root.querySelector('.ms-copy').offsetTop, lb = document.querySelector('.mdk-lbar');
       var L = h - (lb ? window.innerHeight - lb.getBoundingClientRect().top + 12 : 84), bh = cpT + chs[0].offsetHeight + 24;
       base = clamp((L - bh) / 545, w / 1500, w / 860); offX = 0;

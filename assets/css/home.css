@@ -114,19 +114,20 @@ html[dir=ltr] .home .mdk-story .ms-ch p{font-size:clamp(15px,1.2vw,18px)}
   .home .mdk-story .ms-stats div{align-items:center}
   .home .mdk-story .ms-stats b{font-size:28px;text-align:center}
   .home .mdk-story .ms-hint{display:none}
-  /* التابلت الواقف: نفس الترتيب بخط أكبر */
+  /* التابلت الواقف: نفس الترتيب بخط أكبر. الشاشة العريضة والواطية (موبايل مفتوح، نافذة صغيرة: الصنف ms-low من السكربت) بتضل
+     على خط الموبايل، لأن الخط الكبير هناك ما بيترك مكان للعلبة فوق الشريط السفلي */
   @media (min-width:600px){
-    .home .mdk-story .ms-copy{top:112px}
-    .home .mdk-story .ms-ch h1{font-size:clamp(40px,6.6vw,58px)}
-    .home .mdk-story .ms-ch h2{font-size:clamp(36px,6vw,52px)}
-    html[dir=ltr] .home .mdk-story .ms-ch h1{font-size:clamp(36px,5.6vw,48px)}
-    html[dir=ltr] .home .mdk-story .ms-ch h2{font-size:clamp(34px,5.2vw,44px)}
-    .home .mdk-story .ms-ch p{font-size:18px;max-width:520px;margin-top:16px}
-    .home .mdk-story .ms-kick{font-size:14px;margin-bottom:14px}
-    .home .mdk-story .ms-cta{margin-top:28px}
-    .home .mdk-story .ms-btn{height:52px;font-size:16px}
-    .home .mdk-story .ms-stats b{font-size:40px}
-    .home .mdk-story .ms-stats{gap:44px;margin-top:26px}
+    .home .mdk-story:not(.ms-low) .ms-copy{top:112px}
+    .home .mdk-story:not(.ms-low) .ms-ch h1{font-size:clamp(40px,6.6vw,58px)}
+    .home .mdk-story:not(.ms-low) .ms-ch h2{font-size:clamp(36px,6vw,52px)}
+    html[dir=ltr] .home .mdk-story:not(.ms-low) .ms-ch h1{font-size:clamp(36px,5.6vw,48px)}
+    html[dir=ltr] .home .mdk-story:not(.ms-low) .ms-ch h2{font-size:clamp(34px,5.2vw,44px)}
+    .home .mdk-story:not(.ms-low) .ms-ch p{font-size:18px;max-width:520px;margin-top:16px}
+    .home .mdk-story:not(.ms-low) .ms-kick{font-size:14px;margin-bottom:14px}
+    .home .mdk-story:not(.ms-low) .ms-cta{margin-top:28px}
+    .home .mdk-story:not(.ms-low) .ms-btn{height:52px;font-size:16px}
+    .home .mdk-story:not(.ms-low) .ms-stats b{font-size:40px}
+    .home .mdk-story:not(.ms-low) .ms-stats{gap:44px;margin-top:26px}
   }
   /* الشاشات القصيرة (الصنف بينحط من السكربت حسب ارتفاع الشاشة الثابت، مو من media حتى ما يتغيّر الخط مع طلوع شريط العنوان ونزوله) */
   .home .mdk-story.ms-short .ms-copy{top:76px}
