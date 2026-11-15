@@ -84,12 +84,14 @@ html[dir=ltr] .home .mdk-story .ms-ch p{font-size:clamp(15px,1.2vw,18px)}
 @media (max-width:1024px){.home .mdk-story{margin-top:-65px}}
 /* عالموبايل والتابلت الواقف (عمار 14 ت2: «داخل ببعضها»): الكلام فوق بالنص والعلبة تحته. مكان العلبة وحجمها بينحسبوا بسكربت الفيلم
    من ارتفاع الكلام والشريط السفلي، حتى ما يدخلوا ببعض على أي مقاس. نفس الشرط مكتوب بالسكربت (matchMedia)، فإذا تغيّر هون بيتغيّر هناك.
+   الموبايل المقلوب (عريض وارتفاعه لحد 520) مو من هون: ما فيه ارتفاع للكلام فوق العلبة، وإله ترتيبه تحت. (520.02 مو 521 حتى ما يضل
+   ارتفاع بكسور، متل 520.5 مع تكبير المتصفح، برّات الترتيبين.)
    روابط الأقسام وأزرار آخر الفيلم ما بتظهر هون لأنها موجودة ببطاقات الأقسام بعد الفيلم وبالشريط السفلي. */
 @media (max-width:1279px){
   .home .mdk-story .ms-copy{width:min(520px,42vw)}
   .home .mdk-story .ms-cats{display:none}
 }
-@media (max-width:767px),(max-width:1024px) and (orientation:portrait){
+@media (max-width:1024px) and (orientation:portrait),(max-width:767px) and (min-height:520.02px){
   .home .mdk-story{height:460vh}
   .home .mdk-story .ms-bg{background:radial-gradient(96% 44% at 50% var(--ms-oy,68%),#1F4488 0%,#12326E 28%,#0B2049 58%,#07132C 100%)}
   .home .mdk-story .ms-world{top:0}
@@ -115,7 +117,7 @@ html[dir=ltr] .home .mdk-story .ms-ch p{font-size:clamp(15px,1.2vw,18px)}
   .home .mdk-story .ms-stats b{font-size:28px;text-align:center}
   .home .mdk-story .ms-hint{display:none}
   /* التابلت الواقف: نفس الترتيب بخط أكبر. الشاشة العريضة والواطية (موبايل مفتوح، نافذة صغيرة: الصنف ms-low من السكربت، من 640 لـ 739 بكسل ارتفاع) بتضل
-     على خط الموبايل، لأن الخط الكبير هناك ما بيترك مكان للعلبة فوق الشريط السفلي. الأوطى من 640 (موبايل مقلوب) إلها ms-short وبتضل متل ما كانت */
+     على خط الموبايل، لأن الخط الكبير هناك ما بيترك مكان للعلبة فوق الشريط السفلي. الأوطى من 640 إلها ms-short وبتضل متل ما كانت */
   @media (min-width:600px){
     .home .mdk-story:not(.ms-low) .ms-copy{top:112px}
     .home .mdk-story:not(.ms-low) .ms-ch h1{font-size:clamp(40px,6.6vw,58px)}
@@ -139,6 +141,67 @@ html[dir=ltr] .home .mdk-story .ms-ch p{font-size:clamp(15px,1.2vw,18px)}
   .home .mdk-story.ms-short .ms-kick{margin-bottom:6px}
   .home .mdk-story.ms-short .ms-cta{margin-top:14px}
   .home .mdk-story.ms-short .ms-btn{height:44px}
+  /* أصغر الموبايلات (ارتفاع أقل من 520، متل 320×480): خط أصغر وبلا سطر «منذ 2020»، ليضل مكان للعلبة فوق الشريط السفلي */
+  .home .mdk-story.ms-tiny .ms-copy{top:66px}
+  .home .mdk-story.ms-tiny .ms-ch h1{font-size:clamp(20px,6.6vw,24px)}
+  .home .mdk-story.ms-tiny .ms-ch h2{font-size:clamp(20px,6.4vw,23px)}
+  html[dir=ltr] .home .mdk-story.ms-tiny .ms-ch h1{font-size:clamp(17px,5.6vw,20px)}
+  html[dir=ltr] .home .mdk-story.ms-tiny .ms-ch h2{font-size:clamp(17px,5.6vw,20px)}
+  .home .mdk-story.ms-tiny .ms-ch p,html[dir=ltr] .home .mdk-story.ms-tiny .ms-ch p{font-size:13px;line-height:1.5;margin-top:6px}
+  .home .mdk-story.ms-tiny .ms-ch-hero .ms-kick{display:none}
+  .home .mdk-story.ms-tiny .ms-cta{margin-top:10px}
+  .home .mdk-story.ms-tiny .ms-btn{height:40px}
+  .home .mdk-story.ms-tiny .ms-stats{margin-top:10px}
+  .home .mdk-story.ms-tiny .ms-stats b{font-size:22px}
+  /* بالإنكليزي والتركي أسماء الأرقام طويلة وبتنزل سطرين من الأرقام: هون بتضل الأرقام التلاتة بسطر واحد واسمها تحتها بسطرين */
+  html[dir=ltr] .home .mdk-story.ms-tiny .ms-stats{flex-wrap:nowrap;gap:12px}
+  html[dir=ltr] .home .mdk-story.ms-tiny .ms-stats div{flex:0 1 auto;min-width:0}
+  html[dir=ltr] .home .mdk-story.ms-tiny .ms-stats span{font-size:12px;line-height:1.35;margin-top:2px;text-align:center;text-wrap:balance}
+}
+/* الموبايل المقلوب (عمار 15 ت2 عن العلبة يلي بتضل تحت الشريط السفلي هناك: «حلها»): الكلام عاليمين بخط أصغر والعلبة عاليسار،
+   وكله بين القائمة فوق والشريط السفلي تحت. القواعد هون بترجّع ترتيب الكمبيوتر فوق قواعد الموبايل يلي بالفيلم نفسه (لحد 767).
+   ms-xs وms-xxs بيحطهم سكربت الفيلم من ارتفاع الشاشة الثابت (350 و300)، مو من media، حتى ما يتغيّر الخط لما يختفي شريط العنوان بالنزول */
+@media (max-width:1024px) and (orientation:landscape) and (max-height:520px){
+  .home .mdk-story .ms-bg{background:radial-gradient(62% 80% at 29% 47%,#1B3D7D 0%,#11306A 26%,#0B2049 54%,#07132C 100%)}
+  .home .mdk-story .ms-world{top:46%}
+  .home .mdk-story .ms-copy{left:auto;right:20px;top:calc(50% - 4px);height:0;width:46vw;text-align:start}
+  html[dir=ltr] .home .mdk-story .ms-copy{width:46vw}
+  .home .mdk-story .ms-ch{top:0;translate:0 -50%;text-align:start}
+  .home .mdk-story .ms-ch h1{font-size:clamp(17px,5.6vh,24px);line-height:1.28;text-wrap:balance}
+  .home .mdk-story .ms-ch h2{font-size:clamp(17px,5.4vh,23px);line-height:1.28;max-width:none}
+  html[dir=ltr] .home .mdk-story .ms-ch h1,html[dir=ltr] .home .mdk-story .ms-ch h2{font-size:clamp(15px,4.8vh,21px);line-height:1.2}
+  .home .mdk-story .ms-ch p,html[dir=ltr] .home .mdk-story .ms-ch p{font-size:13px;line-height:1.55;margin:6px 0 0;max-width:none}
+  .home .mdk-story .ms-kick,.home .mdk-story .ms-cats,.home .mdk-story .ms-hint,.home .mdk-story .ms-label{display:none}
+  .home .mdk-story .ms-cta{margin-top:10px;gap:8px;width:auto;max-width:none;justify-content:flex-start}
+  .home .mdk-story .ms-btn{height:38px;padding:0 14px;font-size:13.5px;flex:0 0 auto;white-space:nowrap}
+  html[dir=ltr] .home .mdk-story .ms-btn{font-size:13px;padding:0 11px}
+  .home .mdk-story .ms-stats{flex-wrap:nowrap;gap:16px;margin-top:8px;justify-content:flex-start}
+  .home .mdk-story .ms-stats div{flex:0 1 auto;min-width:0}
+  .home .mdk-story .ms-stats b{font-size:20px}
+  .home .mdk-story .ms-stats span{font-size:12px;line-height:1.35;margin-top:2px;text-wrap:balance}
+  /* أقصر شي (المتصفح آخد من ارتفاع الشاشة لشريط العنوان، فبيضل شي 300): عمود الكلام أعرض شوي وخطه أصغر */
+  .home .mdk-story.ms-xs .ms-copy,html[dir=ltr] .home .mdk-story.ms-xs .ms-copy{width:50vw}
+  .home .mdk-story.ms-xs .ms-ch p{margin-top:4px}
+  html[dir=ltr] .home .mdk-story.ms-xs .ms-ch p{font-size:12px;line-height:1.42;margin-top:4px}
+  .home .mdk-story.ms-xs .ms-cta{margin-top:7px}
+  .home .mdk-story.ms-xs .ms-btn{height:34px}
+  /* وتحت الـ 300 (موبايلات قديمة صغيرة): العنوان والأزرار بأول شاشة، وآخر شاشة بلا أزرارها لأنها نفسها بالشريط السفلي */
+  .home .mdk-story.ms-xxs .ms-ch-hero p,.home .mdk-story.ms-xxs .ms-ch:not(.ms-ch-hero) .ms-cta{display:none}
+}
+/* التابلت المقلوب (عرضه من 768 لـ 1024 وارتفاعه فوق 520؛ الأضيق من هيك بياخد ترتيب الموبايل فوق): الشريط السفلي ظاهر هون كمان، فالكلام بيتوسّط بين القائمة والشريط
+   (عالكمبيوتر نازل 28 تحت النص لأنه ما في شريط)، والأرقام التلاتة بسطر واحد، والمسافات والأزرار أصغر شوي حتى ما يوصل شي لتحت الشريط */
+@media (min-width:767.02px) and (max-width:1024px) and (orientation:landscape) and (min-height:520.02px){
+  .home .mdk-story .ms-copy{top:calc(50% - 4px)}
+  .home .mdk-story .ms-kick{margin-bottom:10px}
+  html[dir=ltr] .home .mdk-story .ms-ch h1{font-size:clamp(22px,min(3.1vw,4.6vh),48px)}
+  html[dir=ltr] .home .mdk-story .ms-ch h2{font-size:clamp(22px,min(3vw,4.5vh),46px);max-width:none}
+  .home .mdk-story .ms-ch p{margin-top:14px}
+  .home .mdk-story .ms-cta{margin-top:22px}
+  .home .mdk-story .ms-btn{height:46px;padding:0 24px}
+  .home .mdk-story .ms-stats{flex-wrap:nowrap;gap:28px;margin-top:22px}
+  .home .mdk-story .ms-stats div{flex:0 1 auto;min-width:0}
+  .home .mdk-story .ms-stats b{font-size:32px}
+  .home .mdk-story .ms-stats span{font-size:13.5px;line-height:1.4;text-wrap:balance}
 }
 
 /* ---------- قواعد الأقسام: مسافات واسعة وعناوين كبيرة بالوسط ---------- */

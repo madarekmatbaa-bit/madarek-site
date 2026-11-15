@@ -4,17 +4,17 @@
 // used an 800 px tall phone, which no browser with its bars on screen really has. Laptops are the same: a 1366x768
 // screen shows about 650 px of page.)
 //   node tools/qa/hero_fit.js <base url> [languages: ar,en,tr] [sizes: 412x748,1440x900]
-// Sizes are what the browser really shows with its bars: small and common phones, an unfolded phone, tablets both ways,
-// laptops, desktop.
+// Sizes are what the browser really shows with its bars: small and common phones, an unfolded phone, phones on their side
+// (a 360x640 phone turned over shows about 640x304 of page), tablets both ways, laptops, desktop.
 // At each size the film is stepped from start to end; every point inside the visible text is hit-tested against the scene.
-// Wherever the bottom bar shows (up to 1024 px wide) the scene must also stay above it (Ammar 14 Nov, again from his phone:
-// «فايت ببعضه»). Shadows on the floor do not count. Screens under 540 px tall are left out of this one: on a 320x480
-// phone the opening text alone fills the screen, and the bar covers the foot of the box.
+// Wherever the bottom bar shows (up to 1024 px wide) the scene and the text must also stay above it (Ammar 14 Nov, again
+// from his phone: «فايت ببعضه»; 15 Nov, about phones on their side and the smallest phone: «حلها»). Shadows on the floor
+// do not count.
 const { chromium } = require('playwright');
 const base = process.argv[2] || 'http://127.0.0.1:8765';
 const LANGS = (process.argv[3] || 'ar,en,tr').split(',').map(l => l === 'ar' ? '' : l);
 const SIZES = process.argv[4] ? process.argv[4].split(',').map(s => s.split('x').map(Number)) : [[320, 480], [360, 560], [360, 640], [375, 553],
-  [390, 664], [393, 760], [412, 748], [430, 780], [673, 700], [768, 900], [820, 1180], [1024, 650], [1180, 720], [1280, 600], [1366, 650], [1440, 790],
+  [390, 664], [393, 760], [412, 748], [430, 780], [640, 304], [667, 375], [673, 700], [750, 340], [768, 900], [915, 356], [960, 540], [820, 1180], [1024, 650], [1180, 720], [1280, 600], [1366, 650], [1440, 790],
   [1536, 730], [1920, 950]];
 // .08 and .11 are where the lid slides out while the next chapter's text comes in; .91 to .945 are where the bag comes in
 // (it used to pass behind the bottom bar there, between two of the older steps)
@@ -42,10 +42,14 @@ const STEPS = [0, .02, .04, .06, .08, .1, .11, .14, .2, .3, .4, .5, .56, .62, .6
             if (r.top < hb - 1) return (t.textContent || '').trim().slice(0, 24) + ' <- under the header';
             if (r.bottom > innerHeight + 1) return (t.textContent || '').trim().slice(0, 24) + ' <- past the bottom of the screen';
           }
-          // the scene against the bottom bar
+          // the text and the scene against the bottom bar
           const bar = document.querySelector('.mdk-lbar');
-          if (bar && innerHeight >= 540 && getComputedStyle(bar).display !== 'none') {
+          if (bar && getComputedStyle(bar).display !== 'none') {
             const bt = bar.getBoundingClientRect().top;
+            for (const t of texts) {
+              const r = t.getBoundingClientRect();
+              if (r.height >= 2 && r.bottom > bt + 1) return (t.textContent || '').trim().slice(0, 24) + ' <- under the bottom bar by ' + Math.round(r.bottom - bt) + 'px';
+            }
             // faces of the box, the lid and the bag, the flat pieces, the name tags, and the cup (a picture, not a face)
             for (const e of world.querySelectorAll('.ms-face,.ms-plane,.ms-label,.ms-world>.ms-el>img')) {
               if (['30px', '24px', '40%'].includes(e.style.borderRadius) || e.closest('.ms-gshadow,.sh') || !seen(e)) continue;   // floor shadows

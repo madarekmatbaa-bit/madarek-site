@@ -704,12 +704,19 @@ STORY_EDITS = [
      "else { var tight = (w < 1280 ? 1 : 0) + (document.documentElement.dir === 'ltr' ? 1 : 0); "
      "base = Math.min(w / 1380, h / 800) * [1, .84, .72][tight]; offX = -w * [.15, .2, .23][tight]; "
      # up to 1024 px wide the bottom bar is on screen in this layout too (a tablet on its side). The lowest the scene goes
-     # is the bag coming in, about 415 px under the scene's origin (56% down the screen) at size 1: it must end above the bar
+     # is the bag coming in, about 415 px under the scene's origin at size 1: it must end above the bar. The origin's place
+     # is read from the page (56% down the screen, 46% on a phone on its side)
      # (the bar is built by the deferred script: until it exists its place is taken as 72 px from the bottom, where the
      # CSS puts it, so the scene does not change size a second after it is first drawn. Whether the bar will show is asked
      # the way the CSS asks it, by the window's width: the section's own width leaves out a desktop scrollbar)
      "var lbs = document.querySelector('.mdk-lbar'), bt = lbs ? (getComputedStyle(lbs).display !== 'none' ? lbs.getBoundingClientRect().top - (window.innerHeight - h) : 0) : (window.matchMedia('(max-width:1024px)').matches ? h - 72 : 0); "
-     "if (bt) base = Math.min(base, (bt - 6 - .56 * h) / 415); }"),
+     "if (bt) base = Math.min(base, (bt - 6 - world.offsetTop) / 415); "
+     # with the bar on screen the text sits between the header and the bar, on a phone on its side with a few px to spare:
+     # a chapter drifts 8 px as it fades, not 24, and under 350 and 300 px tall the text is set tighter (ms-xs, ms-xxs
+     # in home.css). The height is the section's own, which stays put when the address bar hides: a media query
+     # would change the type mid-scroll
+     "var sw = window.matchMedia('(max-width:1024px)').matches; dr = sw ? 8 : 24; "
+     "root.classList.toggle('ms-xs', sw && h <= 350); root.classList.toggle('ms-xxs', sw && h <= 300); }"),
     # Stacked (phones and upright tablets): each part of the film is sized and placed from what it measures on this screen,
     # between the bottom of that part's text and the bottom bar (Ammar 14 Nov, from his phone: «فايت ببعضه»). One size and
     # one place for the whole film left the scene small under a wide empty band, and let the bag and, in Turkish, the
@@ -718,7 +725,7 @@ STORY_EDITS = [
     # for each (1 + q after the film's own end). Floor shadows and the lid are not measured: the lid is away in the
     # middle parts, closed it adds a few px that the spare 6 px cover, and in the first second it is still settling.
     ('var mobile = false, base = 1, offX = 0;',
-     '''var mobile = false, base = 1, offX = 0, FZ = [1, 1, 1, 1, 1, 1], FO = [0, 0, 0, 0, 0, 0], meas = 0, mZ = 1, mO = 0, fitKey = '';
+     '''var mobile = false, base = 1, offX = 0, FZ = [1, 1, 1, 1, 1, 1], FO = [0, 0, 0, 0, 0, 0], meas = 0, mZ = 1, mO = 0, fitKey = '', up = -14, dr = 24;
   var POSE = [[0], [.3], [.7], [.96], [1.32, 1.4, 1.45, 1.5, 1.56], [1.84, 2]], PARTS = [];
   [box, bag].forEach(function (g) { [].forEach.call(g.children, function (e) { if (e !== boxSh && e !== bagSh) { e._own = g; PARTS.push(e); } }); });
   Object.keys(ITEMS).forEach(function (k) { ITEMS[k].el._own = ITEMS[k].el; PARTS.push(ITEMS[k].el); });
@@ -753,11 +760,14 @@ STORY_EDITS = [
     });
     meas = 0;
   }'''),
-    ('mobile = w < 768;', "mobile = window.matchMedia('(max-width:767px),(max-width:1024px) and (orientation:portrait)').matches;"),
+    # stacked: upright phones and tablets, and narrow windows with some height. A phone on its side (wide, up to 520 px
+    # tall) has no height for text over the scene and takes the side-by-side layout (home.css has the same condition)
+    ('mobile = w < 768;', "mobile = window.matchMedia('(max-width:1024px) and (orientation:portrait),(max-width:767px) and (min-height:520.02px)').matches;"),
     ('if (mobile) { base = Math.min(w / 860, h / 1300); offX = 0; }',
      """if (mobile) {
       root.classList.toggle('ms-short', h < 640);
       root.classList.toggle('ms-low', h >= 640 && h < 740);
+      root.classList.toggle('ms-tiny', h < 520); up = h < 520 ? 0 : -14; dr = 24;
       var cpT = root.querySelector('.ms-copy').offsetTop, lb = document.querySelector('.mdk-lbar');
       var L = h - (lb ? window.innerHeight - lb.getBoundingClientRect().top + 12 : 84), bh = cpT + chs[0].offsetHeight + 24;
       base = clamp((L - bh) / 545, w / 1500, w / 860); offX = 0;
@@ -780,9 +790,10 @@ STORY_EDITS = [
      '  var CHM = [[-1, 0, .008, .034], [.12, .15, .28, .31], [.32, .35, .48, .51], [.54, .57, .74, .77], [.9, .94, 2, 2]];'),
     ('var w = CH[i], o;', 'var w = (mobile ? CHM : CH)[i], o;'),
     # stacked: the opening text leaves upward. Every chapter drifts 24 px down as it fades, and under the opening text is
-    # the box: on the smallest phone in Turkish the fading buttons came down onto the lid as it began to lift
+    # the box: on the smallest phone in Turkish the fading buttons came down onto the lid as it began to lift.
+    # Under 520 px tall the text starts right under the header and has nowhere to go up to: it fades where it is
     ("css(c, 'transform', 'translateY(' + ((1 - o) * 24).toFixed(1) + 'px)');",
-     "css(c, 'transform', 'translateY(' + ((1 - o) * (mobile && i === 0 ? -14 : 24)).toFixed(1) + 'px)');"),
+     "css(c, 'transform', 'translateY(' + ((1 - o) * (mobile && i === 0 ? up : dr)).toFixed(1) + 'px)');"),
     # stacked: the name tags over the laid-out pieces come out about 5 px tall on a phone, too small to read, and the
     # chapter's own text already gives the paper weights. They stay for the side-by-side film
     ("var labO = p < LAB[0] || p > LAB[3] ? 0 : p < LAB[1] ? (p - LAB[0]) / (LAB[1] - LAB[0]) : p > LAB[2] ? 1 - (p - LAB[2]) / (LAB[3] - LAB[2]) : 1;",
