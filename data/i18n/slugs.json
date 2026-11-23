@@ -906,7 +906,8 @@
 "/return-policy/": "/en/return-policy/",
 "/search/": "/en/search/",
 "/shipping/": "/en/shipping/",
-"/shop/": "/en/shop/"
+"/shop/": "/en/shop/",
+"/terms/": "/en/terms/"
 },
 "tr": {
 "/": "/tr/",
@@ -1815,6 +1816,7 @@
 "/return-policy/": "/tr/iade-politikasi/",
 "/search/": "/tr/arama/",
 "/shipping/": "/tr/sevkiyat/",
-"/shop/": "/tr/urunler/"
+"/shop/": "/tr/urunler/",
+"/terms/": "/tr/kullanim-ve-satis-kosullari/"
 }
 }
