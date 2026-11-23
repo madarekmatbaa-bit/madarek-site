@@ -11,11 +11,11 @@ fbq('init','1950171045798068');fbq('track','PageView');
 {% if track_product %}fbq('track','ViewContent',{content_ids:[{{ track_product.fb_id|tojson }}],content_type:'product',content_name:{{ track_product.name|tojson }},value:{{ track_product.value }},currency:'USD'});{% endif %}
 /* nothing is sent to Google or Meta until the visitor accepts in the cookie bar (privacy policy, «الكوكيز»).
    Accepted: consent is granted and the tag libraries load after paint or at the first tap/scroll; the events above wait in their queues. */
-(function(w,d){var done=0,armed=0;function load(){if(done)return;done=1;[['https://www.googletagmanager.com/gtag/js?id=G-SPX5KH9TWN'],['https://connect.facebook.net/en_US/fbevents.js']].forEach(function(x){var s=d.createElement('script');s.async=1;s.src=x[0];d.head.appendChild(s)})}
+(function(w,d){var done=0,armed=0,c=null;function load(){if(done||c!=='granted')return;done=1;[['https://www.googletagmanager.com/gtag/js?id=G-SPX5KH9TWN'],['https://connect.facebook.net/en_US/fbevents.js']].forEach(function(x){var s=d.createElement('script');s.async=1;s.src=x[0];d.head.appendChild(s)})}
 function arm(){if(armed)return;armed=1;gtag('consent','update',{analytics_storage:'granted',ad_storage:'granted',ad_user_data:'granted',ad_personalization:'granted'});
 ['pointerdown','keydown','scroll','touchstart'].forEach(function(e){w.addEventListener(e,load,{once:true,passive:true})});
 if(d.readyState==='complete'){(w.requestIdleCallback||function(f){setTimeout(f,1200)})(load,{timeout:2500})}else{w.addEventListener('load',function(){(w.requestIdleCallback||function(f){setTimeout(f,1200)})(load,{timeout:2500})})}}
-var c=null;try{c=localStorage.getItem('mdk-consent')}catch(e){}
-w.mdkConsent={get:function(){return c},set:function(v){c=v?'granted':'denied';try{localStorage.setItem('mdk-consent',c)}catch(e){}if(v)arm();else if(done){location.reload()}}};
+try{c=localStorage.getItem('mdk-consent')}catch(e){}
+w.mdkConsent={get:function(){return c},set:function(v){c=v?'granted':'denied';try{localStorage.setItem('mdk-consent',c)}catch(e){}if(v){arm()}else{gtag('consent','update',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});d.cookie.split(';').forEach(function(k){k=k.split('=')[0].trim();if(/^(_ga|_gid|_gcl|_fbp|_fbc)/.test(k)){d.cookie=k+'=;max-age=0;path=/';d.cookie=k+'=;max-age=0;path=/;domain=.'+location.hostname.replace(/^www\./,'')}});if(done)location.reload()}}};
 if(c==='granted')arm();})(window,document);
 </script>

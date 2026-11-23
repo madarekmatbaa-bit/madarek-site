@@ -23,11 +23,6 @@
 </head>
 <body class="{{ body_class }}">
 <a class="skip-link" href="#main">تخطَّ إلى المحتوى</a>
-{% include "partials/header.html" %}
-<main id="main" class="m-main{% if full %} is-full{% endif %}">
-{% block main %}{% endblock %}
-</main>
-{% include "partials/footer.html" %}
 {% if tracking %}<div class="m-ck" id="ck" role="region" aria-label="الكوكيز" hidden>
   <p>نستخدم كوكيز Google وMeta لقياس الزيارات وتحسين الإعلانات، ولا نشغّلها إلا بموافقتك. <a href="/privacy-policy/">سياسة الخصوصية</a></p>
   <div class="m-ck-btns"><button type="button" class="m-ck-btn" data-ck="1">قبول</button><button type="button" class="m-ck-btn" data-ck="0">رفض</button></div>
@@ -35,6 +30,11 @@
 <script>(function(d){var b=d.getElementById('ck'),m=window.mdkConsent;if(!b||!m)return;if(!m.get())b.hidden=false;
 b.addEventListener('click',function(e){var t=e.target.closest('[data-ck]');if(!t)return;m.set(t.getAttribute('data-ck')==='1');b.hidden=true});
 d.addEventListener('click',function(e){if(e.target.closest('[data-ck-open]')){e.preventDefault();b.hidden=false;var f=b.querySelector('button');if(f)f.focus()}})})(document);</script>{% endif %}
+{% include "partials/header.html" %}
+<main id="main" class="m-main{% if full %} is-full{% endif %}">
+{% block main %}{% endblock %}
+</main>
+{% include "partials/footer.html" %}
 {% include "partials/mnav.html" %}
 <div class="m-sheet" id="so" role="dialog" aria-modal="true" aria-label="البحث في المنتجات" hidden>
   <form class="m-sheet-form" action="/search/" method="get" role="search">

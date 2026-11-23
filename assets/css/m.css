@@ -680,4 +680,4 @@ html[dir=ltr] .mdk-link:after{content:" →"}
 .m-ck-btns{display:flex;gap:10px}
 .m-ck-btn{min-width:92px;min-height:40px;padding:8px 16px;border-radius:10px;border:1px solid #fff;background:transparent;color:#fff;font:inherit;font-weight:700;cursor:pointer}
 .m-ck-btn:hover,.m-ck-btn:focus-visible{background:#fff;color:#0D244C}
-@media (max-width:640px){.m-ck{bottom:calc(84px + env(safe-area-inset-bottom,0px))}}
+@media (max-width:1024px){.m-ck{bottom:calc(84px + env(safe-area-inset-bottom,0px))}}

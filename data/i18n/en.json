@@ -5039,6 +5039,10 @@
 "كما تطلب شركات دبي هدايا فاخرة لكبار العملاء، مثل أطقم القلم والدفتر والترامس المطبوعة. وبالتالي نقترح عليك الخيار الأنسب لميزانيتك.",
 "Dubai companies ask for luxury VIP gifts such as printed pen, notebook and vacuum flask sets, and we suggest the best option for your budget."
 ],
+"35038f2b7b873137": [
+"يعمل بعض مزوّدي الخدمة المذكورين على خوادم في الولايات المتحدة وأوروبا ودول أخرى، فقد تُنقل بياناتك إلى خارج بلدك. نختار مزوّدين يلتزمون بحماية البيانات، ونسعى إلى أن يتم نقل البيانات من تركيا وفق ما تشترطه المادة ⟨0⟩ من قانون حماية البيانات الشخصية التركي (⟨1⟩).",
+"Some of the providers listed above run servers in the United States, Europe and other countries, so your data may be transferred outside your country. We choose providers committed to data protection, and we aim to make transfers from Türkiye in line with the requirements of Article ⟨0⟩ of the Turkish Personal Data Protection Law (⟨1⟩)."
+],
 "3503fe1efb2feec4": [
 "ذاكرة ⟨0⟩ معدن · ⟨1⟩ غيغابايت ⟨2⟩ | مطبعة مدارك",
 "⟨0⟩ Metal Flash Drive · ⟨1⟩ GB ⟨2⟩ | Madarek Matbaa"
@@ -9211,6 +9215,10 @@
 "قلم حبر جاف — معدن — الكود ⟨0⟩",
 "Ballpoint Pen — Metal — Code ⟨0⟩"
 ],
+"61c2942794d1b497": [
+"إذا وصل تالفاً بسبب الإنتاج، أو بسبب الشحن متى كان الشحن على مسؤوليتنا بحسب شرط التسليم في عرض السعر.",
+"If it arrives damaged because of production, or because of shipping where shipping is our responsibility under the delivery term in the quote."
+],
 "61c37d50a5fe077f": [
 "المحتويات: ساعة، قلم، حامل أقلام، حامل كروت، ورق ملاحظات",
 "Contents: clock, pen, pen holder, card holder, note paper"
@@ -9282,6 +9290,10 @@
 "628ab487866093d7": [
 "منذ ⟨0⟩ نؤمن أن المطبوعة هي الانطباع الأول لعلامتك في يد عميلك. لذلك بنينا مطبعة مدارك: شبكة تنفيذ بين الصين وتركيا وسوريا، وفريقاً يعرف أسواق سوريا وليبيا والعراق والخليج.",
 "Since ⟨0⟩ we have believed print is your brand's first impression in the client's hands, so we built production across China, Turkey and Syria."
+],
+"628c218c3861e862": [
+"نسلّم في المكان والمدة المحدّدين في عرض السعر، وينتقل خطر الشحن إلى العميل بحسب شرط التسليم المذكور فيه. مدد الشحن تقديرية، وقد تتأخر لأسباب خارجة عن إرادتنا، مثل إجراءات الجمارك أو ظروف النقل. تفاصيل الشحن في ⟦1⟧صفحة الشحن⟦/1⟧.",
+"We deliver to the place and within the time stated in the quote, and the shipping risk passes to the customer according to the delivery term stated in it. Shipping times are estimates and may be delayed for reasons beyond our control, such as customs procedures or transport conditions. Shipping details are on our ⟦1⟧shipping page⟦/1⟧."
 ],
 "629184d3cc447521": [
 "من نخدم في العراق؟",
@@ -20783,6 +20795,10 @@
 "أظرف مطبوعة (كيس ودبلوماسي)",
 "Printed Envelopes (Bag and Diplomat)"
 ],
+"e255cb4411e4d8f9": [
+"يدفع العميل بالطريقة المتفق عليها في عرض السعر، ومنها الدفع بالبطاقة عبر رابط دفع آمن يرسله فريقنا مع عرض السعر، وتديره شركة Stripe.",
+"The customer pays by the method agreed in the quote, including card payment through a secure payment link our team sends with the quote, run by Stripe."
+],
 "e25c4026355bb969": [
 "كود المنتج: ⟨0⟩ المواصفات: معدن الخيارات المتاحة: ⟨1⟩ غيغابايت، ⟨2⟩ غيغابايت الخيار الكمية السعر معدن · ⟨3⟩ غيغابايت ⟨4⟩ قطعة ⟨5⟩ معدن · ⟨6⟩ غيغابايت ⟨7⟩ قطعة ⟨8⟩ قابل للتخصيص بشعار مؤسستك وألوانها، ونقترح عليك طريقة الطباعة الأنسب للخامة. اطلب عرض سعر عبر واتسابمبيعات سوريا الأسعار بالدولار للمنتج دون طباعة الشعار، ولا تشمل الضريبة والشحن. للكميات الكبيرة اطلب عرض سعر خاص.",
 "Product code: ⟨0⟩ Specifications: Metal Available options: ⟨1⟩ GB, ⟨2⟩ GB Option Quantity Price Metal · ⟨3⟩ GB ⟨4⟩ piece ⟨5⟩ Metal · ⟨6⟩ GB ⟨7⟩ piece ⟨8⟩ Customisable with your organisation's logo and colours. We suggest the best printing method for the material. Request a quote on WhatsApp. Syria Sales. Prices are in USD for the product without logo printing and exclude tax and shipping. For large quantities, request a special quote."
@@ -21734,6 +21750,10 @@
 "ed419efa3bbad661": [
 "نموذج تصميم للموافقة قبل التنفيذ.",
 "A design proof for approval before production."
+],
+"ed43c4915e460909": [
+"تنطبق هذه السياسة على كل الطلبات التي تنفّذها مطبعة مدارك، ومنها الطلبات المدفوعة بالبطاقة عبر رابط الدفع المرفق بعرض السعر. يتولّى تحصيل المدفوعات بالبطاقة Madarek Matbaa, ⟨0⟩.",
+"This policy applies to every order fulfilled by Madarek Matbaa, including orders paid by card through the payment link sent with the quote. Card payments are collected by Madarek Matbaa, ⟨0⟩."
 ],
 "ed45625b27a97481": [
 "مفرش ورقي للمطاعم من مطبعة مدارك بطباعة حسب تصميمك. يبدأ السعر من ⟨0⟩. اطلب عرض سعر عبر واتساب والشحن إلى سوريا وليبيا والعراق والخليج.",
@@ -23294,6 +23314,10 @@
 "fe437ca80f80fb30": [
 "مواصفات ترمس مقاوم للانقلاب",
 "Tip-Resistant Vacuum Flask Specifications"
+],
+"fe4a441ae150b8b6": [
+"لا يحتوي الموقع على حسابات للمستخدمين ولا نماذج تسجيل ولا تعليقات. يحفظ المتصفح بعض الإعدادات الضرورية لعمل الموقع، مثل اختيارك للكوكيز ومظهر الصفحة، ويحدّد الموقع بلدك تقريبياً عبر Cloudflare ليعرض لك رقم التواصل المناسب، دون أن نحفظ ذلك.",
+"The website has no user accounts, sign-up forms or comments. Your browser stores a few settings the website needs to work, such as your cookie choice and page theme, and the website estimates your country through Cloudflare to show you the right contact number, without us storing it."
 ],
 "fe51b52e815ff4ae": [
 "الموعد الذي تحتاج فيه الطلبية",

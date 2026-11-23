@@ -5039,6 +5039,10 @@
 "كما تطلب شركات دبي هدايا فاخرة لكبار العملاء، مثل أطقم القلم والدفتر والترامس المطبوعة. وبالتالي نقترح عليك الخيار الأنسب لميزانيتك.",
 "Dubai şirketleri üst düzey müşteriler için baskılı kalem, defter ve termos setleri gibi lüks hediyeler ister; bütçenize uygun seçeneği öneririz."
 ],
+"35038f2b7b873137": [
+"يعمل بعض مزوّدي الخدمة المذكورين على خوادم في الولايات المتحدة وأوروبا ودول أخرى، فقد تُنقل بياناتك إلى خارج بلدك. نختار مزوّدين يلتزمون بحماية البيانات، ونسعى إلى أن يتم نقل البيانات من تركيا وفق ما تشترطه المادة ⟨0⟩ من قانون حماية البيانات الشخصية التركي (⟨1⟩).",
+"Yukarıda sayılan sağlayıcıların bazıları ABD, Avrupa ve diğer ülkelerdeki sunucularda çalışır; bu nedenle verileriniz ülkeniz dışına aktarılabilir. Veri korumaya bağlı sağlayıcılar seçeriz ve Türkiye'den yapılan aktarımların Kişisel Verilerin Korunması Kanunu'nun (⟨1⟩) ⟨0⟩. maddesinin şartlarına uygun olmasını gözetiriz."
+],
 "3503fe1efb2feec4": [
 "ذاكرة ⟨0⟩ معدن · ⟨1⟩ غيغابايت ⟨2⟩ | مطبعة مدارك",
 "Metal ⟨0⟩ Bellek · ⟨1⟩ GB ⟨2⟩ | Madarek Matbaa"
@@ -9211,6 +9215,10 @@
 "قلم حبر جاف — معدن — الكود ⟨0⟩",
 "Tükenmez Kalem — Metal — Kod ⟨0⟩"
 ],
+"61c2942794d1b497": [
+"إذا وصل تالفاً بسبب الإنتاج، أو بسبب الشحن متى كان الشحن على مسؤوليتنا بحسب شرط التسليم في عرض السعر.",
+"Üretim nedeniyle ya da fiyat teklifindeki teslim şartına göre kargo bizim sorumluluğumuzdaysa kargo nedeniyle hasarlı ulaştıysa."
+],
 "61c37d50a5fe077f": [
 "المحتويات: ساعة، قلم، حامل أقلام، حامل كروت، ورق ملاحظات",
 "İçindekiler: saat, kalem, kalemlik, kartvizitlik, not kağıdı"
@@ -9282,6 +9290,10 @@
 "628ab487866093d7": [
 "منذ ⟨0⟩ نؤمن أن المطبوعة هي الانطباع الأول لعلامتك في يد عميلك. لذلك بنينا مطبعة مدارك: شبكة تنفيذ بين الصين وتركيا وسوريا، وفريقاً يعرف أسواق سوريا وليبيا والعراق والخليج.",
 "⟨0⟩ yılından beri baskının, markanızın müşterinizin elindeki ilk izlenimi olduğuna inanıyoruz. Madarek Matbaa'yı bu yüzden kurduk: Çin, Türkiye ve Suriye'de üretim ağı ve pazarları bilen bir ekip."
+],
+"628c218c3861e862": [
+"نسلّم في المكان والمدة المحدّدين في عرض السعر، وينتقل خطر الشحن إلى العميل بحسب شرط التسليم المذكور فيه. مدد الشحن تقديرية، وقد تتأخر لأسباب خارجة عن إرادتنا، مثل إجراءات الجمارك أو ظروف النقل. تفاصيل الشحن في ⟦1⟧صفحة الشحن⟦/1⟧.",
+"Fiyat teklifinde belirtilen yere ve süre içinde teslim ederiz; kargo riski, teklifte yazan teslim şartına göre müşteriye geçer. Kargo süreleri tahminidir; gümrük işlemleri veya taşıma koşulları gibi elimizde olmayan nedenlerle gecikebilir. Kargo ayrıntıları ⟦1⟧kargo sayfamızda⟦/1⟧."
 ],
 "629184d3cc447521": [
 "من نخدم في العراق؟",
@@ -20783,6 +20795,10 @@
 "أظرف مطبوعة (كيس ودبلوماسي)",
 "Baskılı Zarflar (Torba ve Diplomat)"
 ],
+"e255cb4411e4d8f9": [
+"يدفع العميل بالطريقة المتفق عليها في عرض السعر، ومنها الدفع بالبطاقة عبر رابط دفع آمن يرسله فريقنا مع عرض السعر، وتديره شركة Stripe.",
+"Müşteri, fiyat teklifinde kararlaştırılan yöntemle öder; buna ekibimizin teklifle birlikte gönderdiği, Stripe tarafından işletilen güvenli ödeme bağlantısıyla kartla ödeme de dahildir."
+],
 "e25c4026355bb969": [
 "كود المنتج: ⟨0⟩ المواصفات: معدن الخيارات المتاحة: ⟨1⟩ غيغابايت، ⟨2⟩ غيغابايت الخيار الكمية السعر معدن · ⟨3⟩ غيغابايت ⟨4⟩ قطعة ⟨5⟩ معدن · ⟨6⟩ غيغابايت ⟨7⟩ قطعة ⟨8⟩ قابل للتخصيص بشعار مؤسستك وألوانها، ونقترح عليك طريقة الطباعة الأنسب للخامة. اطلب عرض سعر عبر واتسابمبيعات سوريا الأسعار بالدولار للمنتج دون طباعة الشعار، ولا تشمل الضريبة والشحن. للكميات الكبيرة اطلب عرض سعر خاص.",
 "Ürün kodu: ⟨0⟩. Özellikler: Metal. Mevcut seçenekler: ⟨1⟩ GB, ⟨2⟩ GB. Seçenek Adet Fiyat Metal · ⟨3⟩ GB ⟨4⟩ adet ⟨5⟩ Metal · ⟨6⟩ GB ⟨7⟩ adet ⟨8⟩. Kurumunuzun logosu ve renkleriyle kişiselleştirilebilir; malzemeye en uygun baskı yöntemini size öneririz. WhatsApp üzerinden teklif isteyin. Suriye satışları. Fiyatlar, logo baskısı olmadan ürün başına dolar cinsindendir; vergi ve kargo dahil değildir. Büyük adetler için özel fiyat teklifi isteyin."
@@ -21734,6 +21750,10 @@
 "ed419efa3bbad661": [
 "نموذج تصميم للموافقة قبل التنفيذ.",
 "Uygulamadan önce onay için tasarım provası."
+],
+"ed43c4915e460909": [
+"تنطبق هذه السياسة على كل الطلبات التي تنفّذها مطبعة مدارك، ومنها الطلبات المدفوعة بالبطاقة عبر رابط الدفع المرفق بعرض السعر. يتولّى تحصيل المدفوعات بالبطاقة Madarek Matbaa, ⟨0⟩.",
+"Bu politika, Madarek Matbaa'nın yerine getirdiği tüm siparişler için geçerlidir; fiyat teklifiyle gönderilen ödeme bağlantısı üzerinden kartla ödenen siparişler de buna dahildir. Kartlı ödemeleri Madarek Matbaa, ⟨0⟩ tahsil eder."
 ],
 "ed45625b27a97481": [
 "مفرش ورقي للمطاعم من مطبعة مدارك بطباعة حسب تصميمك. يبدأ السعر من ⟨0⟩. اطلب عرض سعر عبر واتساب والشحن إلى سوريا وليبيا والعراق والخليج.",
@@ -23294,6 +23314,10 @@
 "fe437ca80f80fb30": [
 "مواصفات ترمس مقاوم للانقلاب",
 "Devrilmeye Dayanıklı Termos Özellikleri"
+],
+"fe4a441ae150b8b6": [
+"لا يحتوي الموقع على حسابات للمستخدمين ولا نماذج تسجيل ولا تعليقات. يحفظ المتصفح بعض الإعدادات الضرورية لعمل الموقع، مثل اختيارك للكوكيز ومظهر الصفحة، ويحدّد الموقع بلدك تقريبياً عبر Cloudflare ليعرض لك رقم التواصل المناسب، دون أن نحفظ ذلك.",
+"Web sitesinde kullanıcı hesabı, kayıt formu veya yorum bölümü yoktur. Tarayıcınız, sitenin çalışması için gereken bazı ayarları (çerez tercihiniz ve sayfa görünümü gibi) saklar; site, size doğru iletişim numarasını göstermek için ülkenizi Cloudflare üzerinden yaklaşık olarak belirler ve bunu saklamayız."
 ],
 "fe51b52e815ff4ae": [
 "الموعد الذي تحتاج فيه الطلبية",
